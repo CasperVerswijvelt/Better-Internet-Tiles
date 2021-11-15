@@ -19,8 +19,7 @@
             android:enabled="true"
             android:exported="true"
             android:label="Internet"
-            android:icon="@drawable/ic_baseline_public_24"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:icon="@drawable/ic_baseline_public_24">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE"/>
             </intent-filter>
