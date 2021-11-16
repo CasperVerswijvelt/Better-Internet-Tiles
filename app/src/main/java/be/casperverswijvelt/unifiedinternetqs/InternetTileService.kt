@@ -8,13 +8,14 @@ import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
 import android.widget.Toast
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
-
+import java.util.regex.Pattern
 
 class InternetTileService : TileService() {
 
@@ -114,11 +115,27 @@ class InternetTileService : TileService() {
         when {
             wifiEnabled -> {
 
+                var wifiSSID = ""
+
                 qsTile.icon = Icon.createWithResource(
                     this,
                     R.drawable.ic_baseline_signal_wifi_4_bar_24
                 )
                 qsTile.state = Tile.STATE_ACTIVE
+
+                val wifiDump = Shell.su("dumpsys netstats | grep -E 'iface=wlan.*networkId'").exec().out
+                val pattern = Pattern.compile("(?:networkId=\").*(?:\")")
+
+                wifiDump.forEach {
+                    val matcher = pattern.matcher(it)
+
+                    if (matcher.find()) {
+                        wifiSSID = matcher.group(1)?: ""
+                    }
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    qsTile.subtitle = wifiSSID
+                }
 
                 // TODO text based on wifi ssid and icon based on signal strength
 
