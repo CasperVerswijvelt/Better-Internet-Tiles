@@ -1,5 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs
 
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,10 +13,12 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
-import android.widget.Toast
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
 import java.util.regex.Pattern
+import android.content.DialogInterface
+
+import com.topjohnwu.superuser.internal.Utils.context
 
 class InternetTileService : TileService() {
 
@@ -29,8 +32,14 @@ class InternetTileService : TileService() {
                 Shell.Builder.create()
                     .setFlags(Shell.FLAG_REDIRECT_STDERR)
                     .setTimeout(10)
-            );
+            )
         }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        log("Internet tile service created")
     }
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -127,10 +136,13 @@ class InternetTileService : TileService() {
                 val pattern = Pattern.compile("(?:networkId=\").*(?:\")")
 
                 wifiDump.forEach {
+
+                    log("CASPER " + wifiDump)
+
                     val matcher = pattern.matcher(it)
 
                     if (matcher.find()) {
-                        wifiSSID = matcher.group(1)?: ""
+                       // wifiSSID = matcher.group(1)?: ""
                     }
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -170,12 +182,13 @@ class InternetTileService : TileService() {
         log("Root access: " + Shell.rootAccess())
         if (!Shell.rootAccess()) {
 
-            Toast.makeText(
-                this,
-                "Root is required to do this!",
-                Toast.LENGTH_SHORT
-            )
-                .show()
+            AlertDialog.Builder(context)
+                .setMessage("Root is required to do this!")
+                .setCancelable(true)
+                .setPositiveButton(
+                    "Ok",
+                    DialogInterface.OnClickListener { dialog, id -> dialog.cancel() }
+                ).show()
         }
     }
 
