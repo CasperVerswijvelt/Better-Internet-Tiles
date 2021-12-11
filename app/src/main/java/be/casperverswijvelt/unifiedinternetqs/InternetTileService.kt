@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs
 
-import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,15 +11,12 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import android.telephony.PhoneStateListener
 import android.util.Log
+import android.telephony.TelephonyManager
+import android.telephony.SignalStrength
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
-import android.content.DialogInterface
-
-import com.topjohnwu.superuser.internal.Utils.context
-
-import android.telephony.TelephonyManager
-
 
 class InternetTileService : TileService() {
 
@@ -29,7 +25,7 @@ class InternetTileService : TileService() {
 
         init {
             // Set settings before the main shell can be created
-            Shell.enableVerboseLogging = BuildConfig.DEBUG;
+            Shell.enableVerboseLogging = BuildConfig.DEBUG
             Shell.setDefaultBuilder(
                 Shell.Builder.create()
                     .setFlags(Shell.FLAG_REDIRECT_STDERR)
@@ -52,9 +48,16 @@ class InternetTileService : TileService() {
         override fun onReceive(context: Context?, intent: Intent?) {
 
             when (intent?.action) {
+                WifiManager.RSSI_CHANGED_ACTION,
                 WifiManager.NETWORK_STATE_CHANGED_ACTION,
                 WifiManager.WIFI_STATE_CHANGED_ACTION -> syncTile()
             }
+        }
+    }
+
+    private val phoneStateListener = object : PhoneStateListener() {
+        override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
+            syncTile()
         }
     }
 
@@ -63,6 +66,7 @@ class InternetTileService : TileService() {
     init {
         wifiStateReceiverIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
         wifiStateReceiverIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+        wifiStateReceiverIntentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION)
     }
 
     override fun onCreate() {
@@ -74,7 +78,7 @@ class InternetTileService : TileService() {
         super.onStartListening()
 
         setListeners()
-        syncTile ()
+        syncTile()
     }
 
 
@@ -90,7 +94,7 @@ class InternetTileService : TileService() {
         requestRoot()
 
         setListeners()
-        syncTile ()
+        syncTile()
     }
 
     override fun onTileRemoved() {
@@ -127,7 +131,7 @@ class InternetTileService : TileService() {
         syncTile()
     }
 
-    private fun syncTile () {
+    private fun syncTile() {
 
         val dataEnabled = getDataEnabled()
         val wifiEnabled = getWifiEnabled()
@@ -140,7 +144,7 @@ class InternetTileService : TileService() {
                 val wifiDump = Shell.su(
                     "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
                 ).exec().out
-                var ssid : String? = null
+                var ssid: String? = null
                 val pattern = "(?<=networkId=\").*(?=\")".toRegex()
                 wifiDump.forEach { wifiString ->
                     pattern.find(wifiString)?.let {
@@ -152,7 +156,7 @@ class InternetTileService : TileService() {
                 // Wi-fi signal level through WifiManager
 
                 val wm = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-                val rssi : Int? = try {
+                val rssi: Int? = try {
                     wm.connectionInfo.rssi
                 } catch (e: Exception) {
                     log("Could not get Wi-Fi RSSI: ${e.message}")
@@ -191,13 +195,13 @@ class InternetTileService : TileService() {
                         info.add(it)
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        signalStrength = tm.signalStrength?.level?:0
+                        signalStrength = tm.signalStrength?.level ?: 0
                     }
-                    log("NETWORKTYPE " + tm.dataNetworkType)
-                    getNetworkClassString(tm.networkType)?.let {
+                    // TODO fix permission to read dataNetworkType
+                    getNetworkClassString(tm.dataNetworkType)?.let {
                         info.add(it)
                     }
-                } catch (e : Exception) {
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
 
@@ -236,24 +240,18 @@ class InternetTileService : TileService() {
         qsTile.updateTile()
     }
 
-    private fun requestRoot () {
+    private fun requestRoot() {
 
         Shell.getShell()
         log("Root access: " + Shell.rootAccess())
 
         if (!Shell.rootAccess()) {
 
-            AlertDialog.Builder(context)
-                .setMessage("Root is required to do this!")
-                .setCancelable(true)
-                .setPositiveButton(
-                    "Ok",
-                    DialogInterface.OnClickListener { dialog, id -> dialog.cancel() }
-                ).show()
+            // TODO: Show message to user?
         }
     }
 
-    private fun getDataEnabled () : Boolean {
+    private fun getDataEnabled(): Boolean {
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
@@ -274,7 +272,7 @@ class InternetTileService : TileService() {
         return mobileDataEnabled
     }
 
-    private fun getWifiEnabled () : Boolean{
+    private fun getWifiEnabled(): Boolean {
 
         return (this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager).isWifiEnabled
     }
@@ -292,7 +290,7 @@ class InternetTileService : TileService() {
         }
     }
 
-    private fun setListeners () {
+    private fun setListeners() {
 
         // Network listener
 
@@ -300,18 +298,28 @@ class InternetTileService : TileService() {
                 as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
+        // Mobile signal strength listener
+
+        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        tm.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
+
         // Wi-Fi enabled state
 
         registerReceiver(wifiStateReceiver, wifiStateReceiverIntentFilter)
     }
 
-    private fun removeListeners () {
+    private fun removeListeners() {
 
         // Network
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
         connectivityManager.unregisterNetworkCallback(networkCallback)
+
+        // Mobile signal strength listener
+
+        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
 
         // Wi-Fi enabled state
 

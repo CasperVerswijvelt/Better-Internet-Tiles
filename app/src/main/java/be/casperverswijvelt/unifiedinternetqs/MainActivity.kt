@@ -41,6 +41,6 @@ class MainActivity : AppCompatActivity() {
 
         // Close activity when resuming (navigating back from internet settings)
 
-        //finish()
+        finish()
     }
 }
