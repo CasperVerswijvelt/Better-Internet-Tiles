@@ -129,8 +129,6 @@ class InternetTileService : TileService() {
     override fun onTileAdded() {
         super.onTileAdded()
 
-        requestRoot()
-
         setListeners()
         syncTile()
     }
@@ -144,7 +142,12 @@ class InternetTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        requestRoot()
+        if (!Shell.rootAccess()) {
+
+            // Root access is needed to enable/disable mobile data and Wi-Fi. There is currently
+            //  no other way to do this, so this functionality will not work without root access.
+            return
+        }
 
         // Cycle trough internet connection modes:
         //  If Wi-Fi is enabled -> disable Wi-Fi and enable mobile data
@@ -181,7 +184,7 @@ class InternetTileService : TileService() {
 
                 var ssid: String? = null
 
-                if (wifiConnected) {
+                if (wifiConnected && Shell.rootAccess()) {
                     val wifiDump = Shell.su(
                         "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
                     ).exec().out
@@ -277,17 +280,6 @@ class InternetTileService : TileService() {
         }
 
         qsTile.updateTile()
-    }
-
-    private fun requestRoot() {
-
-        Shell.getShell()
-        log("Root access: " + Shell.rootAccess())
-
-        if (!Shell.rootAccess()) {
-
-            // TODO: Show message to user?
-        }
     }
 
     private fun getDataEnabled(): Boolean {

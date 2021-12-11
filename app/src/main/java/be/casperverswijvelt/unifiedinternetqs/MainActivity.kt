@@ -35,4 +35,16 @@ class MainActivity : AppCompatActivity() {
 
         finish()
     }
+
+
+
+    private fun requestRoot() {
+
+        Shell.getShell()
+
+        if (!Shell.rootAccess()) {
+
+            // TODO: Show message to user?
+        }
+    }
 }
