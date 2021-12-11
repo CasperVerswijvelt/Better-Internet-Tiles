@@ -12,12 +12,14 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.telephony.PhoneStateListener
 import android.util.Log
 import android.telephony.TelephonyManager
 import android.telephony.SignalStrength
+import android.telephony.TelephonyCallback
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
 
@@ -83,6 +85,17 @@ class InternetTileService : TileService() {
             syncTile()
         }
     }
+
+    private val telephonyCallback : TelephonyCallback? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
+                override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
+                    syncTile()
+                }
+            }
+        } else {
+            null
+        }
 
     private val wifiStateReceiverIntentFilter = IntentFilter()
 
@@ -191,6 +204,9 @@ class InternetTileService : TileService() {
                     null
                 }
                 val signalStrength = rssi?.let {
+                    // We use 5 levels for our icon visualisation, so we use this deprecated
+                    //  calculation with 'numLevels' parameter. We don't want to use the system's
+                    //  level system since it might differ.
                     WifiManager.calculateSignalLevel(it, 5) // 0-4
                 } ?: 0
 
@@ -336,7 +352,11 @@ class InternetTileService : TileService() {
         // Mobile signal strength listener
 
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        tm.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            tm.registerTelephonyCallback(mainExecutor, telephonyCallback!!)
+        } else {
+            tm.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
+        }
 
         // Wi-Fi enabled state
 
@@ -356,7 +376,11 @@ class InternetTileService : TileService() {
         // Mobile signal strength listener
 
         val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            tm.unregisterTelephonyCallback(telephonyCallback!!)
+        } else {
+            tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
+        }
 
         // Wi-Fi enabled state
 
