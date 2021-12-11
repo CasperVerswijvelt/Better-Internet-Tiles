@@ -1,50 +1,29 @@
 package be.casperverswijvelt.unifiedinternetqs
 
-import android.Manifest
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.TextView
-import com.topjohnwu.superuser.Shell
+import android.widget.FrameLayout
 
 class MainActivity : AppCompatActivity() {
+
+    private val contentViewId = 10101010
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Shell.getShell()
 
-        val textView = TextView(this)
-        textView.text = "Get permissions"
+        val frame = FrameLayout(this)
+        frame.id = contentViewId
+        setContentView(
+            frame,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        )
 
-        addContentView(textView, ViewGroup.LayoutParams(500, 100))
-
-        textView.setOnClickListener {
-
-            // Permission mumbo jumo
-            val res = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-            if (res != PackageManager.PERMISSION_GRANTED) {
-                println("PERMISSION NOT GRANTED")
-                requestPermissions(
-                    arrayOf(Manifest.permission.READ_PHONE_STATE),
-                    1002
-                )
-            } else {
-                println("PERMISSION GRANTED")
-            }
-        }
-
-        finish()
-    }
-
-
-
-    private fun requestRoot() {
-
-        Shell.getShell()
-
-        if (!Shell.rootAccess()) {
-
-            // TODO: Show message to user?
-        }
+        supportFragmentManager
+            .beginTransaction()
+            .add(contentViewId, SettingsFragment())
+            .commit()
     }
 }

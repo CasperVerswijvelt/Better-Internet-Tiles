@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:text="@string/settings"
+        android:title="@string/settings">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_baseline_lock_24"
+            android:key="require_unlock"
+            android:summary="@string/require_unlock_summary"
+            android:title="@string/require_unlock_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:text="@string/permissions"
+        android:title="@string/permissions">
+
+        <Preference
+            android:icon="@drawable/magisk_24"
+            android:key="request_root_access"
+            android:summary="@string/request_root_access_summary"
+            android:title="@string/request_root_access_title" />
+        <Preference
+            android:icon="@drawable/ic_baseline_local_phone_24"
+            android:key="request_read_phone_state"
+            android:summary="@string/request_read_phone_state_summary"
+            android:title="@string/request_read_phone_state_title" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,10 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs
 
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
@@ -20,6 +17,7 @@ import android.util.Log
 import android.telephony.TelephonyManager
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
+import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
 
@@ -100,6 +98,12 @@ class InternetTileService : TileService() {
     private val wifiStateReceiverIntentFilter = IntentFilter()
 
     private var wifiConnected = false
+    private var sharedPreferences: SharedPreferences? = null
+    private val runCycleInternet = object: Runnable {
+        override fun run() {
+            cycleInternet()
+        }
+    }
 
     init {
         wifiStateReceiverIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
@@ -110,6 +114,9 @@ class InternetTileService : TileService() {
     override fun onCreate() {
         super.onCreate()
         log("Internet tile service created")
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
     }
 
     override fun onStartListening() {
@@ -149,6 +156,19 @@ class InternetTileService : TileService() {
             return
         }
 
+        if (sharedPreferences?.getBoolean("require_unlock", true) == true) {
+
+            unlockAndRun(runCycleInternet)
+
+        } else {
+
+            cycleInternet()
+        }
+
+        syncTile()
+    }
+
+    private fun cycleInternet() {
         // Cycle trough internet connection modes:
         //  If Wi-Fi is enabled -> disable Wi-Fi and enable mobile data
         //  If mobile data is enabled -> disable mobile data and enable Wi-Fi
@@ -168,8 +188,6 @@ class InternetTileService : TileService() {
                 Shell.su("svc wifi enable").exec()
             }
         }
-
-        syncTile()
     }
 
     private fun syncTile() {
