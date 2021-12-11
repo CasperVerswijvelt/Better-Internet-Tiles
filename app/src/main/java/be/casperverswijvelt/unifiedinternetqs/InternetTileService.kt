@@ -246,9 +246,6 @@ class InternetTileService : TileService() {
                     getNetworkClassString(tm.dataNetworkType)?.let {
                         info.add(it)
                     }
-                } else {
-
-                    // TODO: can we request permission from here?
                 }
 
                 // Update tile properties
