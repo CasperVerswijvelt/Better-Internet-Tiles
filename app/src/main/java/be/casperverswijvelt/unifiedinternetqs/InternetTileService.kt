@@ -321,7 +321,6 @@ class InternetTileService : TileService() {
 
         // Network listeners
 
-
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         var networkRequest = NetworkRequest.Builder()
