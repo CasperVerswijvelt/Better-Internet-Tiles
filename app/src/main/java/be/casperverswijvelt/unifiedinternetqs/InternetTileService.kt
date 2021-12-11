@@ -9,6 +9,8 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
@@ -35,12 +37,32 @@ class InternetTileService : TileService() {
         }
     }
 
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+    private val wifiNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            log("Wi-Fi network available")
+            wifiConnected = true
             syncTile()
         }
 
         override fun onLost(network: Network) {
+            super.onLost(network)
+            log("Wi-Fi network lost")
+            wifiConnected = false
+            syncTile()
+        }
+    }
+
+    private val mobileNetworkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            log("Mobile network available")
+            syncTile()
+        }
+
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            log("Mobile network lost")
             syncTile()
         }
     }
@@ -63,6 +85,8 @@ class InternetTileService : TileService() {
     }
 
     private val wifiStateReceiverIntentFilter = IntentFilter()
+
+    private var wifiConnected = false
 
     init {
         wifiStateReceiverIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
@@ -139,18 +163,21 @@ class InternetTileService : TileService() {
         when {
             wifiEnabled -> {
 
-                // Get Wi-Fi SSID through shell command and regex parsing since app needs access
+                // If Wi-Fi is connected, get Wi-Fi SSID through shell command and regex parsing since app needs access
                 //  to fine location to get SSID
 
-                val wifiDump = Shell.su(
-                    "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
-                ).exec().out
                 var ssid: String? = null
-                val pattern = "(?<=networkId=\").*(?=\")".toRegex()
-                wifiDump.forEach { wifiString ->
-                    pattern.find(wifiString)?.let {
-                        ssid = it.value
-                        return@forEach
+
+                if (wifiConnected) {
+                    val wifiDump = Shell.su(
+                        "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
+                    ).exec().out
+                    val pattern = "(?<=networkId=\").*(?=\")".toRegex()
+                    wifiDump.forEach { wifiString ->
+                        pattern.find(wifiString)?.let {
+                            ssid = it.value
+                            return@forEach
+                        }
                     }
                 }
 
@@ -288,11 +315,24 @@ class InternetTileService : TileService() {
 
     private fun setListeners() {
 
-        // Network listener
+        log("Setting listeners")
 
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
-                as ConnectivityManager
-        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+        wifiConnected = false
+
+        // Network listeners
+
+
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        var networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+        cm.registerNetworkCallback(networkRequest, wifiNetworkCallback)
+
+        networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        cm.registerNetworkCallback(networkRequest, mobileNetworkCallback)
 
         // Mobile signal strength listener
 
@@ -306,11 +346,13 @@ class InternetTileService : TileService() {
 
     private fun removeListeners() {
 
+        log("Removing listeners")
+
         // Network
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
-        connectivityManager.unregisterNetworkCallback(networkCallback)
+        connectivityManager.unregisterNetworkCallback(wifiNetworkCallback)
 
         // Mobile signal strength listener
 
