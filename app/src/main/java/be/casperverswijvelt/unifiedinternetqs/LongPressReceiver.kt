@@ -9,7 +9,7 @@ class LongPressReceiver : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
+        startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
 
         finish()
     }
