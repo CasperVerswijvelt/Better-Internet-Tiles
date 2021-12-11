@@ -1,10 +1,12 @@
 package be.casperverswijvelt.unifiedinternetqs
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -18,28 +20,22 @@ class MainActivity : AppCompatActivity() {
         val textView = TextView(this)
         textView.text = "Get permissions"
 
-        addContentView(textView, ViewGroup.LayoutParams(100, 100))
+        addContentView(textView, ViewGroup.LayoutParams(500, 100))
 
-        textView.setOnClickListener(View.OnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val res = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-                if (res != PackageManager.PERMISSION_GRANTED) {
-                    println("PERMISSIONG NOT GRANTED")
-                    requestPermissions(
-                        arrayOf(Manifest.permission.READ_PHONE_STATE),
-                        1002
-                    )
-                } else {
-                    println("PERMISSIONG GRANTED")
-                }
+        textView.setOnClickListener {
+
+            // Permission mumbo jumo
+            val res = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+            if (res != PackageManager.PERMISSION_GRANTED) {
+                println("PERMISSION NOT GRANTED")
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_PHONE_STATE),
+                    1002
+                )
+            } else {
+                println("PERMISSION GRANTED")
             }
-        })
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // Close activity when resuming (navigating back from internet settings)
+        }
 
         finish()
     }

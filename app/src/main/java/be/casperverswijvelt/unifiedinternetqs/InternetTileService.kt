@@ -1,14 +1,15 @@
 package be.casperverswijvelt.unifiedinternetqs
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.telephony.PhoneStateListener
@@ -39,7 +40,7 @@ class InternetTileService : TileService() {
             syncTile()
         }
 
-        override fun onLost(network: Network?) {
+        override fun onLost(network: Network) {
             syncTile()
         }
     }
@@ -179,9 +180,7 @@ class InternetTileService : TileService() {
                         else -> R.drawable.ic_baseline_signal_wifi_0_bar_24
                     }
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    qsTile.subtitle = ssid
-                }
+                qsTile.subtitle = ssid
             }
             dataEnabled -> {
 
@@ -190,19 +189,20 @@ class InternetTileService : TileService() {
 
                 val tm = applicationContext.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
 
-                try {
-                    tm.networkOperatorName?.let {
-                        info.add(it)
-                    }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        signalStrength = tm.signalStrength?.level ?: 0
-                    }
-                    // TODO fix permission to read dataNetworkType
+                tm.networkOperatorName?.let {
+                    info.add(it)
+                }
+                signalStrength = tm.signalStrength?.level ?: 0
+                if (
+                    checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                        == PackageManager.PERMISSION_GRANTED
+                ) {
                     getNetworkClassString(tm.dataNetworkType)?.let {
                         info.add(it)
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                } else {
+
+                    // TODO: can we request permission from here?
                 }
 
                 // Update tile properties
@@ -218,9 +218,7 @@ class InternetTileService : TileService() {
                         else -> R.drawable.ic_baseline_signal_cellular_null_24
                     }
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    qsTile.subtitle = info.joinToString(separator = ", ")
-                }
+                qsTile.subtitle = info.joinToString(separator = ", ")
             }
             else -> {
 
@@ -231,9 +229,7 @@ class InternetTileService : TileService() {
                     this,
                     R.drawable.ic_baseline_public_off_24
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    qsTile.subtitle = null
-                }
+                qsTile.subtitle = null
             }
         }
 
