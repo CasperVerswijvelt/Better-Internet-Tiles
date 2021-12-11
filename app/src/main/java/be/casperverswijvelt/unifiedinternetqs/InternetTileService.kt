@@ -15,10 +15,12 @@ import android.service.quicksettings.TileService
 import android.util.Log
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
-import java.util.regex.Pattern
 import android.content.DialogInterface
 
 import com.topjohnwu.superuser.internal.Utils.context
+
+import android.telephony.TelephonyManager
+
 
 class InternetTileService : TileService() {
 
@@ -36,12 +38,6 @@ class InternetTileService : TileService() {
         }
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-        log("Internet tile service created")
-    }
-
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             syncTile()
@@ -54,13 +50,25 @@ class InternetTileService : TileService() {
 
     private val wifiStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (WifiManager.NETWORK_STATE_CHANGED_ACTION == intent?.action) {
-                syncTile()
+
+            when (intent?.action) {
+                WifiManager.NETWORK_STATE_CHANGED_ACTION,
+                WifiManager.WIFI_STATE_CHANGED_ACTION -> syncTile()
             }
         }
     }
-    private val wifiStateReceiverIntentFilter =
-        IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+
+    private val wifiStateReceiverIntentFilter = IntentFilter()
+
+    init {
+        wifiStateReceiverIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+        wifiStateReceiverIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        log("Internet tile service created")
+    }
 
     override fun onStartListening() {
         super.onStartListening()
@@ -77,7 +85,6 @@ class InternetTileService : TileService() {
     }
 
     override fun onTileAdded() {
-
         super.onTileAdded()
 
         requestRoot()
@@ -96,6 +103,11 @@ class InternetTileService : TileService() {
         super.onClick()
 
         requestRoot()
+
+        // Cycle trough internet connection modes:
+        //  If Wi-Fi is enabled -> disable Wi-Fi and enable mobile data
+        //  If mobile data is enabled -> disable mobile data and enable Wi-Fi
+        //  Else -> enable Wi-Fi
 
         val dataEnabled = getDataEnabled()
         val wifiEnabled = getWifiEnabled()
@@ -119,57 +131,105 @@ class InternetTileService : TileService() {
 
         val dataEnabled = getDataEnabled()
         val wifiEnabled = getWifiEnabled()
-
-        // Logic
         when {
             wifiEnabled -> {
 
-                var wifiSSID = ""
+                // Get Wi-Fi SSID through shell command and regex parsing since app needs access
+                //  to fine location to get SSID
 
-                qsTile.icon = Icon.createWithResource(
-                    this,
-                    R.drawable.ic_baseline_signal_wifi_4_bar_24
-                )
-                qsTile.state = Tile.STATE_ACTIVE
-
-                val wifiDump = Shell.su("dumpsys netstats | grep -E 'iface=wlan.*networkId'").exec().out
-                val pattern = Pattern.compile("(?:networkId=\").*(?:\")")
-
-                wifiDump.forEach {
-
-                    log("CASPER " + wifiDump)
-
-                    val matcher = pattern.matcher(it)
-
-                    if (matcher.find()) {
-                       // wifiSSID = matcher.group(1)?: ""
+                val wifiDump = Shell.su(
+                    "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
+                ).exec().out
+                var ssid : String? = null
+                val pattern = "(?<=networkId=\").*(?=\")".toRegex()
+                wifiDump.forEach { wifiString ->
+                    pattern.find(wifiString)?.let {
+                        ssid = it.value
+                        return@forEach
                     }
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    qsTile.subtitle = wifiSSID
+
+                // Wi-fi signal level through WifiManager
+
+                val wm = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+                val rssi : Int? = try {
+                    wm.connectionInfo.rssi
+                } catch (e: Exception) {
+                    log("Could not get Wi-Fi RSSI: ${e.message}")
+                    null
                 }
+                val signalStrength = rssi?.let {
+                    WifiManager.calculateSignalLevel(it, 5) // 0-4
+                } ?: 0
 
-                // TODO text based on wifi ssid and icon based on signal strength
+                // Update tile properties
 
+                qsTile.state = Tile.STATE_ACTIVE
+                qsTile.icon = Icon.createWithResource(
+                    this,
+                    when (signalStrength) {
+                        4 -> R.drawable.ic_baseline_signal_wifi_4_bar_24
+                        3 -> R.drawable.ic_baseline_signal_wifi_3_bar_24
+                        2 -> R.drawable.ic_baseline_signal_wifi_2_bar_24
+                        1 -> R.drawable.ic_baseline_signal_wifi_1_bar_24
+                        else -> R.drawable.ic_baseline_signal_wifi_0_bar_24
+                    }
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    qsTile.subtitle = ssid
+                }
             }
             dataEnabled -> {
 
+                val info = ArrayList<String>()
+                var signalStrength = 0
+
+                val tm = applicationContext.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+
+                try {
+                    tm.networkOperatorName?.let {
+                        info.add(it)
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        signalStrength = tm.signalStrength?.level?:0
+                    }
+                    log("NETWORKTYPE " + tm.dataNetworkType)
+                    getNetworkClassString(tm.networkType)?.let {
+                        info.add(it)
+                    }
+                } catch (e : Exception) {
+                    e.printStackTrace()
+                }
+
+                // Update tile properties
+
+                qsTile.state = Tile.STATE_ACTIVE
                 qsTile.icon = Icon.createWithResource(
                     this,
-                    R.drawable.ic_baseline_signal_cellular_4_bar_24
+                    when (signalStrength) {
+                        4 -> R.drawable.ic_baseline_signal_cellular_4_bar_24
+                        3 -> R.drawable.ic_baseline_signal_cellular_3_bar_24
+                        2 -> R.drawable.ic_baseline_signal_cellular_2_bar_24
+                        1 -> R.drawable.ic_baseline_signal_cellular_1_bar_24
+                        else -> R.drawable.ic_baseline_signal_cellular_null_24
+                    }
                 )
-                qsTile.state = Tile.STATE_ACTIVE
-
-                // TODO text based on network info and icon based on signal strength
-
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    qsTile.subtitle = info.joinToString(separator = ", ")
+                }
             }
             else -> {
 
+                // Update tile properties
+
+                qsTile.state = Tile.STATE_INACTIVE
                 qsTile.icon = Icon.createWithResource(
                     this,
                     R.drawable.ic_baseline_public_off_24
                 )
-                qsTile.state = Tile.STATE_INACTIVE
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    qsTile.subtitle = null
+                }
             }
         }
 
@@ -180,6 +240,7 @@ class InternetTileService : TileService() {
 
         Shell.getShell()
         log("Root access: " + Shell.rootAccess())
+
         if (!Shell.rootAccess()) {
 
             AlertDialog.Builder(context)
@@ -207,6 +268,7 @@ class InternetTileService : TileService() {
             // get the setting for "mobile data"
             mobileDataEnabled = method.invoke(connectivityManager) as Boolean
         } catch (e: Exception) {
+            // Empty
         }
 
         return mobileDataEnabled
@@ -217,25 +279,42 @@ class InternetTileService : TileService() {
         return (this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager).isWifiEnabled
     }
 
+    private fun getNetworkClassString(networkType: Int): String? {
+
+        // Use hardcoded values since some are inaccessible, see TelephonyManager
+
+        return when (networkType) {
+            1, 16, 2, 4, 7, 11 -> "2G"
+            3, 5, 6, 8, 9, 10, 12, 14, 15, 17 -> "3G"
+            13, 18, 19 -> "4G"
+            20 -> "5G"
+            else -> null
+        }
+    }
+
     private fun setListeners () {
 
         // Network listener
+
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
 
         // Wi-Fi enabled state
+
         registerReceiver(wifiStateReceiver, wifiStateReceiverIntentFilter)
     }
 
     private fun removeListeners () {
 
         // Network
+
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
         connectivityManager.unregisterNetworkCallback(networkCallback)
 
         // Wi-Fi enabled state
+
         unregisterReceiver(wifiStateReceiver)
     }
 
