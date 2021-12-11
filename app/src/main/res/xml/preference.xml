@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:text="@string/about"
+        android:title="@string/about">
+
+        <Preference
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:summary="@string/app_description_l1"/>
+
+        <Preference
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:summary="@string/app_description_l2"/>
+
+        <Preference
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:summary="@string/app_description_l3"/>
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:text="@string/settings"
         android:title="@string/settings">
