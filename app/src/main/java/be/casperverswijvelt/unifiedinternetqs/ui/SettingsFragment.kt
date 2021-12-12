@@ -1,12 +1,17 @@
-package be.casperverswijvelt.unifiedinternetqs
+package be.casperverswijvelt.unifiedinternetqs.ui
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import be.casperverswijvelt.unifiedinternetqs.R
 import com.topjohnwu.superuser.Shell
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -24,14 +29,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 resources.getString(R.string.request_root_access_key) -> {
                     Shell.getShell()
 
-                    Toast.makeText(
-                        context,
-                        if (Shell.rootAccess())
-                            R.string.root_access_granted
-                        else
-                            R.string.root_access_denied,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (Shell.rootAccess()) {
+                        Toast.makeText(
+                            context,
+                            R.string.root_access_granted,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        AlertDialog.Builder(context)
+                            .setTitle(R.string.root_access_denied)
+                            .setMessage(R.string.root_access_denied_description)
+                            .create().show()
+                    }
+
+
                     return true
                 }
                 resources.getString(R.string.request_read_phone_state_key) -> {
@@ -50,7 +61,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     }
                     return true
                 }
-                else -> {}
+                else -> {
+                }
             }
         }
         return super.onPreferenceTreeClick(preference)
@@ -63,16 +75,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
     ) {
 
         context?.let { context ->
-            when (requestCode) {
-                requestReadPhoneStatePermissionId -> {
+            if (requestCode == requestReadPhoneStatePermissionId) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(
                         context,
-                        if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                            R.string.read_phone_state_permission_granted
-                        else
-                            R.string.read_phone_state_permission_denied,
+                        R.string.read_phone_state_permission_granted,
                         Toast.LENGTH_SHORT
                     ).show()
+                } else {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.fromParts("package", context.packageName, null)
+                    AlertDialog.Builder(context)
+                        .setTitle(R.string.read_phone_state_permission_denied)
+                        .setMessage(R.string.read_phone_state_permission_denied_description)
+                        .setPositiveButton(R.string.open_app
+                        ) { _, _ -> startActivity(intent) }
+                        .create().show()
                 }
             }
         }

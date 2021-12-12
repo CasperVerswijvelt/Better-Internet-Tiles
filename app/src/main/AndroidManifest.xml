@@ -15,9 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UnifiedInternetQS"
-        android:exported="true">
+        android:exported="true"
+        android:allowBackup="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,7 @@
         </activity>
 
         <service
-            android:name=".InternetTileService"
+            android:name=".tiles.InternetTileService"
             android:icon="@drawable/ic_baseline_public_24"
             android:label="Internet"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -38,7 +39,7 @@
         </service>
 
         <service
-            android:name=".WifiTileService"
+            android:name=".tiles.WifiTileService"
             android:icon="@drawable/ic_baseline_signal_wifi_3_bar_24"
             android:label="Wi-Fi"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -48,8 +49,19 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".tiles.MobileDataTileService"
+            android:icon="@drawable/ic_baseline_public_24"
+            android:label="Mobile data"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <activity
-            android:name=".LongPressReceiver"
+            android:name=".ui.LongPressReceiverActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />

@@ -22,7 +22,14 @@
     <string name="permissions">Permissions</string>
     <string name="about">About</string>
     <string name="read_phone_state_permission_granted">Successfully granted \'READ_PHONE_STATE\' permission.</string>
-    <string name="read_phone_state_permission_denied">Failed to get \'READ_PHONE_STATE\' permission, grant this permission manually.</string>
+    <string name="read_phone_state_permission_denied">Could not get \'READ_PHONE_STATE\' permission</string>
+    <string name="read_phone_state_permission_denied_description">Go into the application settings and grant this permission manually.</string>
     <string name="root_access_granted">Successfully granted root access.</string>
-    <string name="root_access_denied">Failed to get root access.</string>
+    <string name="root_access_denied">Failed to get root access</string>
+    <string name="root_access_denied_description">Go into your root management application (e.g Magisk Manager) and manually grant root access to the \'Unified Internet QS\' application.</string>
+    <string name="root_access_required">Root access required</string>
+    <string name="root_access_required_description">
+        To use this function, you must grant this application root access. You can do so by going into the \'Unified Internet QS\' application and tapping \'Request root access\'.
+    </string>
+    <string name="open_app">Open app</string>
 </resources>

@@ -1,7 +1,10 @@
 package be.casperverswijvelt.unifiedinternetqs
 
 import android.Manifest
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
@@ -9,6 +12,7 @@ import android.net.wifi.WifiManager
 import android.service.quicksettings.TileService
 import android.telephony.TelephonyManager
 import android.util.Log
+import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
 
@@ -54,10 +58,10 @@ fun getConnectedWifiSSID(): String? {
         }
     }
 
-    return  null
+    return null
 }
 
-fun getWifiIcon(context: Context) : Icon {
+fun getWifiIcon(context: Context): Icon {
 
     val wm = context.getSystemService(TileService.WIFI_SERVICE) as WifiManager
     val rssi: Int? = try {
@@ -102,7 +106,7 @@ fun getCellularNetworkIcon(context: Context): Icon {
     )
 }
 
-fun getCellularNetworkText(context: Context): String? {
+fun getCellularNetworkText(context: Context): String {
 
     val info = ArrayList<String>()
     val tm = context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
@@ -123,17 +127,40 @@ fun getCellularNetworkText(context: Context): String? {
     return info.joinToString(separator = ", ")
 }
 
+fun getRootAccessRequiredDialog(context: Context): Dialog {
 
+    val intent = Intent(context, MainActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    return AlertDialog.Builder(context)
+        .setTitle(R.string.root_access_required)
+        .setMessage(R.string.root_access_required_description)
+        .setPositiveButton(R.string.open_app) { _, _ ->
+            context.startActivity(intent)
+        }
+        .create()
+}
 
 private fun getNetworkClassString(networkType: Int): String? {
 
-    // Use hardcoded values since some are inaccessible, see TelephonyManager
-
     return when (networkType) {
-        1, 16, 2, 4, 7, 11 -> "2G"
-        3, 5, 6, 8, 9, 10, 12, 14, 15, 17 -> "3G"
-        13, 18, 19 -> "4G"
-        20 -> "5G"
+        TelephonyManager.NETWORK_TYPE_GSM,
+        TelephonyManager.NETWORK_TYPE_GPRS,
+        TelephonyManager.NETWORK_TYPE_EDGE,
+        TelephonyManager.NETWORK_TYPE_CDMA,
+        TelephonyManager.NETWORK_TYPE_1xRTT -> "2G"
+        TelephonyManager.NETWORK_TYPE_EVDO_0,
+        TelephonyManager.NETWORK_TYPE_EVDO_A,
+        TelephonyManager.NETWORK_TYPE_EVDO_B,
+        TelephonyManager.NETWORK_TYPE_EHRPD,
+        TelephonyManager.NETWORK_TYPE_HSUPA,
+        TelephonyManager.NETWORK_TYPE_HSDPA,
+        TelephonyManager.NETWORK_TYPE_HSPA,
+        TelephonyManager.NETWORK_TYPE_HSPAP,
+        TelephonyManager.NETWORK_TYPE_UMTS,
+        TelephonyManager.NETWORK_TYPE_TD_SCDMA -> "3G"
+        TelephonyManager.NETWORK_TYPE_LTE,
+        TelephonyManager.NETWORK_TYPE_IWLAN -> "4G"
+        TelephonyManager.NETWORK_TYPE_NR -> "5G"
         else -> null
     }
 }
