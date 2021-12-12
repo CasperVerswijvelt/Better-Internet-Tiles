@@ -1,8 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs
 
-import android.Manifest
 import android.content.*
-import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.Network
@@ -19,12 +17,11 @@ import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
-import java.lang.reflect.Method
 
 class InternetTileService : TileService() {
 
     private companion object {
-        const val TAG = "UnifiedInternet"
+        const val TAG = "InternetTile"
 
         init {
             // Set settings before the main shell can be created
@@ -116,7 +113,6 @@ class InternetTileService : TileService() {
         log("Internet tile service created")
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
     }
 
     override fun onStartListening() {
@@ -156,7 +152,12 @@ class InternetTileService : TileService() {
             return
         }
 
-        if (sharedPreferences?.getBoolean("require_unlock", true) == true) {
+        if (
+            sharedPreferences?.getBoolean(
+                resources.getString(R.string.require_unlock_key),
+                true
+            ) == true
+        ) {
 
             unlockAndRun(runCycleInternet)
 
@@ -174,8 +175,8 @@ class InternetTileService : TileService() {
         //  If mobile data is enabled -> disable mobile data and enable Wi-Fi
         //  Else -> enable Wi-Fi
 
-        val dataEnabled = getDataEnabled()
-        val wifiEnabled = getWifiEnabled()
+        val dataEnabled = getDataEnabled(applicationContext)
+        val wifiEnabled = getWifiEnabled(applicationContext)
 
         when {
             wifiEnabled -> {
@@ -192,8 +193,8 @@ class InternetTileService : TileService() {
 
     private fun syncTile() {
 
-        val dataEnabled = getDataEnabled()
-        val wifiEnabled = getWifiEnabled()
+        val dataEnabled = getDataEnabled(applicationContext)
+        val wifiEnabled = getWifiEnabled(applicationContext)
         when {
             wifiEnabled -> {
 
@@ -202,84 +203,23 @@ class InternetTileService : TileService() {
 
                 var ssid: String? = null
 
-                if (wifiConnected && Shell.rootAccess()) {
-                    val wifiDump = Shell.su(
-                        "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
-                    ).exec().out
-                    val pattern = "(?<=networkId=\").*(?=\")".toRegex()
-                    wifiDump.forEach { wifiString ->
-                        pattern.find(wifiString)?.let {
-                            ssid = it.value
-                            return@forEach
-                        }
-                    }
+                if (wifiConnected) {
+                    ssid = getConnectedWifiSSID()
                 }
-
-                // Wi-fi signal level through WifiManager
-
-                val wm = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-                val rssi: Int? = try {
-                    wm.connectionInfo.rssi
-                } catch (e: Exception) {
-                    log("Could not get Wi-Fi RSSI: ${e.message}")
-                    null
-                }
-                val signalStrength = rssi?.let {
-                    // We use 5 levels for our icon visualisation, so we use this deprecated
-                    //  calculation with 'numLevels' parameter. We don't want to use the system's
-                    //  level system since it might differ.
-                    WifiManager.calculateSignalLevel(it, 5) // 0-4
-                } ?: 0
 
                 // Update tile properties
 
                 qsTile.state = Tile.STATE_ACTIVE
-                qsTile.icon = Icon.createWithResource(
-                    this,
-                    when (signalStrength) {
-                        4 -> R.drawable.ic_baseline_signal_wifi_4_bar_24
-                        3 -> R.drawable.ic_baseline_signal_wifi_3_bar_24
-                        2 -> R.drawable.ic_baseline_signal_wifi_2_bar_24
-                        1 -> R.drawable.ic_baseline_signal_wifi_1_bar_24
-                        else -> R.drawable.ic_baseline_signal_wifi_0_bar_24
-                    }
-                )
+                qsTile.icon = getWifiIcon(applicationContext)
                 qsTile.subtitle = ssid
             }
             dataEnabled -> {
 
-                val info = ArrayList<String>()
-                var signalStrength = 0
-
-                val tm = applicationContext.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
-
-                tm.networkOperatorName?.let {
-                    info.add(it)
-                }
-                signalStrength = tm.signalStrength?.level ?: 0
-                if (
-                    checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-                        == PackageManager.PERMISSION_GRANTED
-                ) {
-                    getNetworkClassString(tm.dataNetworkType)?.let {
-                        info.add(it)
-                    }
-                }
-
                 // Update tile properties
 
                 qsTile.state = Tile.STATE_ACTIVE
-                qsTile.icon = Icon.createWithResource(
-                    this,
-                    when (signalStrength) {
-                        4 -> R.drawable.ic_baseline_signal_cellular_4_bar_24
-                        3 -> R.drawable.ic_baseline_signal_cellular_3_bar_24
-                        2 -> R.drawable.ic_baseline_signal_cellular_2_bar_24
-                        1 -> R.drawable.ic_baseline_signal_cellular_1_bar_24
-                        else -> R.drawable.ic_baseline_signal_cellular_null_24
-                    }
-                )
-                qsTile.subtitle = info.joinToString(separator = ", ")
+                qsTile.icon = getCellularNetworkIcon(applicationContext)
+                qsTile.subtitle = getCellularNetworkText(applicationContext)
             }
             else -> {
 
@@ -295,45 +235,6 @@ class InternetTileService : TileService() {
         }
 
         qsTile.updateTile()
-    }
-
-    private fun getDataEnabled(): Boolean {
-
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
-                as ConnectivityManager
-
-        var mobileDataEnabled = false
-
-        // Get mobile data enabled state
-        try {
-            val cmClass = Class.forName(connectivityManager.javaClass.name)
-            val method: Method = cmClass.getDeclaredMethod("getMobileDataEnabled")
-            method.isAccessible = true // Make the method callable
-            // get the setting for "mobile data"
-            mobileDataEnabled = method.invoke(connectivityManager) as Boolean
-        } catch (e: Exception) {
-            // Empty
-        }
-
-        return mobileDataEnabled
-    }
-
-    private fun getWifiEnabled(): Boolean {
-
-        return (this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager).isWifiEnabled
-    }
-
-    private fun getNetworkClassString(networkType: Int): String? {
-
-        // Use hardcoded values since some are inaccessible, see TelephonyManager
-
-        return when (networkType) {
-            1, 16, 2, 4, 7, 11 -> "2G"
-            3, 5, 6, 8, 9, 10, 12, 14, 15, 17 -> "3G"
-            13, 18, 19 -> "4G"
-            20 -> "5G"
-            else -> null
-        }
     }
 
     private fun setListeners() {
