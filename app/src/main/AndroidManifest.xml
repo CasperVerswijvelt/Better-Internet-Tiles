@@ -37,6 +37,17 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".WifiTileService"
+            android:icon="@drawable/ic_baseline_signal_wifi_3_bar_24"
+            android:label="Wi-Fi"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".LongPressReceiver"
             android:exported="true">
