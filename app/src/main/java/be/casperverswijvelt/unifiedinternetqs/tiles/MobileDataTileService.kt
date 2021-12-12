@@ -20,7 +20,10 @@ class MobileDataTileService : TileService() {
 
     private var sharedPreferences: SharedPreferences? = null
 
-    private val runToggleInternet = Runnable { toggleMobileData() }
+    private val runToggleMobileData = Runnable {
+        toggleMobileData()
+        syncTile()
+    }
     private val networkChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
             syncTile()
@@ -82,14 +85,12 @@ class MobileDataTileService : TileService() {
             ) == true
         ) {
 
-            unlockAndRun(runToggleInternet)
+            unlockAndRun(runToggleMobileData)
 
         } else {
 
-            toggleMobileData()
+            runToggleMobileData.run()
         }
-
-        syncTile()
     }
 
     private fun toggleMobileData() {

@@ -21,7 +21,10 @@ class WifiTileService : TileService() {
     private var wifiConnected = false
     private var sharedPreferences: SharedPreferences? = null
 
-    private val runToggleInternet = Runnable { toggleInternet() }
+    private val runToggleInternet = Runnable {
+        toggleInternet()
+        syncTile()
+    }
     private val networkChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
             when (type) {
@@ -91,10 +94,8 @@ class WifiTileService : TileService() {
 
         } else {
 
-            toggleInternet()
+            runToggleInternet.run()
         }
-
-        syncTile()
     }
 
     private fun toggleInternet() {

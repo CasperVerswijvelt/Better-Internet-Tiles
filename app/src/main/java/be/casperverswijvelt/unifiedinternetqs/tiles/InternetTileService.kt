@@ -32,7 +32,10 @@ class InternetTileService : TileService() {
     private var wifiConnected = false
     private var sharedPreferences: SharedPreferences? = null
 
-    private val runCycleInternet = Runnable { cycleInternet() }
+    private val runCycleInternet = Runnable {
+        cycleInternet()
+        syncTile()
+    }
     private val cellularChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
             syncTile()
@@ -110,10 +113,8 @@ class InternetTileService : TileService() {
 
         } else {
 
-            cycleInternet()
+            runCycleInternet.run()
         }
-
-        syncTile()
     }
 
     private fun cycleInternet() {
