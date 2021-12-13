@@ -11,8 +11,8 @@ android {
         applicationId "be.casperverswijvelt.unifiedinternetqs"
         minSdkVersion 29
         targetSdkVersion 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 1010200
+        versionName "1.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
