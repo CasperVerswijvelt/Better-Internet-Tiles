@@ -4,7 +4,7 @@
         This application aims to create a unified internet quick-settings tile, which is actually useful (I\'m looking at you, Android 12).
     </string>
     <string name="app_description_l2">
-        Tapping the tile will simply toggle between Wi-Fi and mobile data, while long pressing will direct you to the internet settings screen.
+        Tapping the internet tile will simply toggle between Wi-Fi and mobile data. Separate Wi-Fi and mobile data tiles are also available if you just want to go back to how it was before Android 12.
     </string>
     <string name="app_description_l3">
         Unfortunately, root access is required to enable/disable Wi-Fi and mobile data, as well as for reading the SSID of the current Wi-Fi network.
