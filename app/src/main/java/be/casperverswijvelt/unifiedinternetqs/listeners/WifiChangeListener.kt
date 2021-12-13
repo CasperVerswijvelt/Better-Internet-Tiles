@@ -63,7 +63,7 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
             when (intent?.action) {
                 WifiManager.RSSI_CHANGED_ACTION,
                 WifiManager.NETWORK_STATE_CHANGED_ACTION,
-                WifiManager.WIFI_STATE_CHANGED_ACTION -> callback.handleChange(null)
+                WifiManager.WIFI_STATE_CHANGED_ACTION -> callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
             }
         }
     }

@@ -9,7 +9,9 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.service.quicksettings.TileService
+import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
@@ -57,7 +59,6 @@ fun getConnectedWifiSSID(): String? {
             }
         }
     }
-
     return null
 }
 
@@ -106,7 +107,7 @@ fun getCellularNetworkIcon(context: Context): Icon {
     )
 }
 
-fun getCellularNetworkText(context: Context): String {
+fun getCellularNetworkText(context: Context, telephonyDisplayInfo: TelephonyDisplayInfo?): String {
 
     val info = ArrayList<String>()
     val tm = context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
@@ -119,8 +120,33 @@ fun getCellularNetworkText(context: Context): String {
         context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
         == PackageManager.PERMISSION_GRANTED
     ) {
-        getNetworkClassString(tm.dataNetworkType)?.let {
-            info.add(it)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && telephonyDisplayInfo != null) {
+
+            when (telephonyDisplayInfo.overrideNetworkType) {
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> {
+                    info.add("4G+")
+                }
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> {
+                    info.add("5Ge")
+                }
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> {
+                    info.add("5G")
+                }
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> {
+                    info.add("5G+")
+                }
+                else -> {
+                    getNetworkClassString(tm.dataNetworkType)?.let {
+                        info.add(it)
+                    }
+                }
+            }
+
+        } else {
+            getNetworkClassString(tm.dataNetworkType)?.let {
+                info.add(it)
+            }
         }
     }
 

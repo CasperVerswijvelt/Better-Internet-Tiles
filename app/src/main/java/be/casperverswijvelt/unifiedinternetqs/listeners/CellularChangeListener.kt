@@ -6,12 +6,11 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
-import android.telephony.PhoneStateListener
-import android.telephony.SignalStrength
-import android.telephony.TelephonyCallback
-import android.telephony.TelephonyManager
+import android.telephony.*
 
 class CellularChangeListener(private val callback: NetworkChangeCallback)  {
+
+    var currentTelephonyDisplayInfo : TelephonyDisplayInfo? = null
 
     private val mobileNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
@@ -27,15 +26,20 @@ class CellularChangeListener(private val callback: NetworkChangeCallback)  {
 
     private val phoneStateListener = object : PhoneStateListener() {
         override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-            callback.handleChange(null)
+            callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
         }
     }
 
     private val telephonyCallback : TelephonyCallback? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener {
+            object : TelephonyCallback(), TelephonyCallback.SignalStrengthsListener, TelephonyCallback.DisplayInfoListener {
                 override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-                    callback.handleChange(null)
+                    callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
+                }
+
+                override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+                    currentTelephonyDisplayInfo = telephonyDisplayInfo
+                    callback.handleChange(NetworkChangeType.DISPLAY_INFO)
                 }
             }
         } else {
@@ -73,5 +77,7 @@ class CellularChangeListener(private val callback: NetworkChangeCallback)  {
         } else {
             tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
         }
+
+        currentTelephonyDisplayInfo = null
     }
 }

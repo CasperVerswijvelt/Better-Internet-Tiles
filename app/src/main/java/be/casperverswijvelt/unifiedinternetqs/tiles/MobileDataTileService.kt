@@ -114,7 +114,10 @@ class MobileDataTileService : TileService() {
 
             qsTile.state = Tile.STATE_ACTIVE
             qsTile.icon = getCellularNetworkIcon(applicationContext)
-            qsTile.subtitle = getCellularNetworkText(applicationContext)
+            qsTile.subtitle = getCellularNetworkText(
+                applicationContext,
+                cellularChangeListener?.currentTelephonyDisplayInfo
+            )
 
         } else {
 
