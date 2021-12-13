@@ -32,6 +32,9 @@ class InternetTileService : TileService() {
     private var wifiConnected = false
     private var sharedPreferences: SharedPreferences? = null
 
+    private var isTurningOnData = false
+    private var isTurningOnWifi = false
+
     private val runCycleInternet = Runnable {
         cycleInternet()
         syncTile()
@@ -118,6 +121,7 @@ class InternetTileService : TileService() {
     }
 
     private fun cycleInternet() {
+
         // Cycle trough internet connection modes:
         //  If Wi-Fi is enabled -> disable Wi-Fi and enable mobile data
         //  If mobile data is enabled -> disable mobile data and enable Wi-Fi
@@ -126,15 +130,24 @@ class InternetTileService : TileService() {
         val dataEnabled = getDataEnabled(applicationContext)
         val wifiEnabled = getWifiEnabled(applicationContext)
 
+        isTurningOnData = false
+        isTurningOnWifi = false
+
         when {
             wifiEnabled -> {
-                Shell.su("svc wifi disable && svc data enable").exec()
+                if (Shell.su("svc wifi disable && svc data enable").exec().isSuccess) {
+                    isTurningOnData = true
+                }
             }
             dataEnabled -> {
-                Shell.su("svc data disable && svc wifi enable").exec()
+                if (Shell.su("svc data disable && svc wifi enable").exec().isSuccess) {
+                    isTurningOnWifi = true
+                }
             }
             else -> {
-                Shell.su("svc wifi enable").exec()
+                if (Shell.su("svc wifi enable").exec().isSuccess) {
+                    isTurningOnWifi = true
+                }
             }
         }
     }
@@ -143,8 +156,13 @@ class InternetTileService : TileService() {
 
         val dataEnabled = getDataEnabled(applicationContext)
         val wifiEnabled = getWifiEnabled(applicationContext)
+
         when {
-            wifiEnabled -> {
+            isTurningOnWifi || wifiEnabled -> {
+
+                if (wifiEnabled) {
+                    isTurningOnWifi = false
+                }
 
                 // If Wi-Fi is connected, get Wi-Fi SSID through shell command and regex parsing since app needs access
                 //  to fine location to get SSID
@@ -161,7 +179,11 @@ class InternetTileService : TileService() {
                 qsTile.icon = getWifiIcon(applicationContext)
                 qsTile.subtitle = ssid
             }
-            dataEnabled -> {
+            isTurningOnData || dataEnabled -> {
+
+                if (dataEnabled) {
+                    isTurningOnData = false
+                }
 
                 // Update tile properties
 
@@ -193,6 +215,8 @@ class InternetTileService : TileService() {
         log("Setting listeners")
 
         wifiConnected = false
+        isTurningOnWifi = false
+        isTurningOnData = false
 
         wifiChangeListener?.startListening(applicationContext)
         cellularChangeListener?.startListening(applicationContext)
