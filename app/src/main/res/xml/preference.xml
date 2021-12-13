@@ -49,5 +49,10 @@
             android:key="request_read_phone_state"
             android:summary="@string/request_read_phone_state_summary"
             android:title="@string/request_read_phone_state_title" />
+        <Preference
+            android:icon="@drawable/ic_baseline_loop_24"
+            android:key="@string/restart_app_key"
+            android:summary="@string/restart_app_summary"
+            android:title="@string/restart_app_title" />
     </PreferenceCategory>
 </PreferenceScreen>

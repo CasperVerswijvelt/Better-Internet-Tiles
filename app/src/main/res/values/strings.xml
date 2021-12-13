@@ -18,6 +18,9 @@
     <string name="request_read_phone_state_key">request_read_phone_state</string>
     <string name="request_read_phone_state_title">Request phone permission</string>
     <string name="request_read_phone_state_summary">This permission is used to read your mobile data connection type (2G, 3G, 4G, 5G). This is optional.</string>
+    <string name="restart_app_key">restart_tiles</string>
+    <string name="restart_app_title">Restart app</string>
+    <string name="restart_app_summary">If a tile still tells you that it does not have root access, even after granting, you can try force closing the app. This will cause a new process to be created and the root permission to be rechecked.</string>
     <string name="settings">Settings</string>
     <string name="permissions">Permissions</string>
     <string name="about">About</string>

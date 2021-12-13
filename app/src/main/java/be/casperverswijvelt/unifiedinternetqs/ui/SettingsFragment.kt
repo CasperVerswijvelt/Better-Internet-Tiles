@@ -61,6 +61,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     }
                     return true
                 }
+                resources.getString(R.string.restart_app_key) -> {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = Uri.fromParts("package", context.packageName, null)
+                    startActivity(intent)
+                }
                 else -> {
                 }
             }
