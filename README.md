@@ -1,4 +1,5 @@
-# Unified Internet Quicksettings Tile
+# Better Internet Tiles
+
 A better unified internet quicksettings tile for Android
 
 ## About

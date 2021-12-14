@@ -90,8 +90,8 @@ class InternetTileService : TileService() {
 
         if (!ShizukuUtils.hasShizukuPermission()) {
 
-            // Root access is needed to enable/disable mobile data and Wi-Fi. There is currently
-            //  no other way to do this, so this functionality will not work without root access.
+            // Shizuku access is needed to enable/disable mobile data and Wi-Fi. There is currently
+            //  no other way to do this, so this functionality will not work without Shizuku access.
             showDialog(getShizukuAccessRequiredDialog(applicationContext))
             return
         }
