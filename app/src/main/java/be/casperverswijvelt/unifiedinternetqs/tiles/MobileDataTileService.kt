@@ -10,7 +10,8 @@ import be.casperverswijvelt.unifiedinternetqs.*
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
-import com.topjohnwu.superuser.Shell
+import rikka.shizuku.Shizuku
+import be.casperverswijvelt.unifiedinternetqs.ui.ShizukuUtils
 
 class MobileDataTileService : TileService() {
 
@@ -34,7 +35,7 @@ class MobileDataTileService : TileService() {
 
     override fun onCreate() {
         super.onCreate()
-        log("Internet tile service created")
+        log("Mobile data tile service created")
 
         cellularChangeListener = CellularChangeListener(networkChangeCallback)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -70,11 +71,11 @@ class MobileDataTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!Shell.rootAccess()) {
+        if (!ShizukuUtils.hasShizukuPermission()) {
 
             // Root access is needed to enable/disable mobile data and Wi-Fi. There is currently
             //  no other way to do this, so this functionality will not work without root access.
-            showDialog(getRootAccessRequiredDialog(applicationContext))
+            showDialog(getShizukuAccessRequiredDialog(applicationContext))
             return
         }
 
@@ -98,9 +99,9 @@ class MobileDataTileService : TileService() {
         val dataEnabled = getDataEnabled(applicationContext)
 
         if (dataEnabled) {
-            Shell.su("svc data disable").exec()
+            Shizuku.newProcess("svc data disable".split(' ').toTypedArray(), null, null)
         } else {
-            Shell.su("svc data enable").exec()
+            Shizuku.newProcess("svc data enable".split(' ').toTypedArray(), null, null)
         }
     }
 

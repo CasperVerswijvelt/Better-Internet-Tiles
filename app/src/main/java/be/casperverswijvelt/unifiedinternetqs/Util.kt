@@ -15,8 +15,11 @@ import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
-import com.topjohnwu.superuser.Shell
+import rikka.shizuku.Shizuku
+import be.casperverswijvelt.unifiedinternetqs.ui.ShizukuUtils
 import java.lang.reflect.Method
+import android.text.method.LinkMovementMethod
+import android.widget.TextView
 
 const val TAG = "Util"
 
@@ -48,10 +51,11 @@ fun getWifiEnabled(context: Context): Boolean {
 
 fun getConnectedWifiSSID(): String? {
 
-    if (Shell.rootAccess()) {
-        val wifiDump = Shell.su(
-            "dumpsys netstats | grep -E 'iface=wlan.*networkId'"
-        ).exec().out
+    if (ShizukuUtils.hasShizukuPermission()) {
+        val process = Shizuku.newProcess("dumpsys netstats | grep -E 'iface=wlan.*networkId'".split(' ')
+            .toTypedArray(), null, null)
+        process.waitFor()
+        val wifiDump = process.inputStream.bufferedReader().use { it.readText() }.split("\n".toRegex())
         val pattern = "(?<=networkId=\").*(?=\")".toRegex()
         wifiDump.forEach { wifiString ->
             pattern.find(wifiString)?.let {
@@ -64,7 +68,7 @@ fun getConnectedWifiSSID(): String? {
 
 fun getWifiIcon(context: Context): Icon {
 
-    val wm = context.getSystemService(TileService.WIFI_SERVICE) as WifiManager
+    val wm = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
     val rssi: Int? = try {
         wm.connectionInfo.rssi
     } catch (e: Exception) {
@@ -153,16 +157,22 @@ fun getCellularNetworkText(context: Context, telephonyDisplayInfo: TelephonyDisp
     return info.joinToString(separator = ", ")
 }
 
-fun getRootAccessRequiredDialog(context: Context): Dialog {
+fun getShizukuAccessRequiredDialog(context: Context): Dialog {
 
     val intent = Intent(context, MainActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
     return AlertDialog.Builder(context)
-        .setTitle(R.string.root_access_required)
-        .setMessage(R.string.root_access_required_description)
-        .setPositiveButton(R.string.open_app) { _, _ ->
-            context.startActivity(intent)
+        .setTitle(R.string.shizuku_access_required)
+        .setMessage(R.string.shizuku_not_set_up)
+        .setPositiveButton(android.R.string.ok) { _, _ ->
+            if (ShizukuUtils.shizukuAvailable) {
+                ShizukuUtils.requestShizukuPermission {  }
+            } else {
+                context.startActivity(intent)
+            }
         }
+        .setCancelable(false)
         .create()
 }
 

@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import be.casperverswijvelt.unifiedinternetqs.R
-import com.topjohnwu.superuser.Shell
+import be.casperverswijvelt.unifiedinternetqs.getShizukuAccessRequiredDialog
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -26,23 +26,32 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         context?.let { context ->
             when (preference?.key) {
-                resources.getString(R.string.request_root_access_key) -> {
-                    Shell.getShell()
+                resources.getString(R.string.request_shizuku_access_key) -> {
 
-                    if (Shell.rootAccess()) {
-                        Toast.makeText(
-                            context,
-                            R.string.root_access_granted,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    if (ShizukuUtils.shizukuAvailable) {
+
+                        if (ShizukuUtils.hasShizukuPermission()) {
+                            Toast.makeText(
+                                context,
+                                R.string.shizuku_access_granted,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            ShizukuUtils.requestShizukuPermission { granted ->
+                                if (granted) {
+                                    Toast.makeText(
+                                        context,
+                                        R.string.shizuku_access_granted,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    getShizukuAccessRequiredDialog(context).show()
+                                }
+                            }
+                        }
                     } else {
-                        AlertDialog.Builder(context)
-                            .setTitle(R.string.root_access_denied)
-                            .setMessage(R.string.root_access_denied_description)
-                            .create().show()
+                        getShizukuAccessRequiredDialog(context).show()
                     }
-
-
                     return true
                 }
                 resources.getString(R.string.request_read_phone_state_key) -> {

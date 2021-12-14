@@ -10,7 +10,9 @@ import be.casperverswijvelt.unifiedinternetqs.*
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import com.topjohnwu.superuser.Shell
+import rikka.shizuku.Shizuku
+import be.casperverswijvelt.unifiedinternetqs.ui.ShizukuUtils
+
 
 class WifiTileService : TileService() {
 
@@ -22,7 +24,7 @@ class WifiTileService : TileService() {
     private var sharedPreferences: SharedPreferences? = null
 
     private val runToggleInternet = Runnable {
-        toggleInternet()
+        toggleWifi()
         syncTile()
     }
     private val networkChangeCallback = object : NetworkChangeCallback {
@@ -39,7 +41,7 @@ class WifiTileService : TileService() {
 
     override fun onCreate() {
         super.onCreate()
-        log("Internet tile service created")
+        log("Wi-Fi tile service created")
 
         wifiChangeListener = WifiChangeListener(networkChangeCallback)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -75,11 +77,11 @@ class WifiTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!Shell.rootAccess()) {
+        if (!ShizukuUtils.hasShizukuPermission()) {
 
             // Root access is needed to enable/disable mobile data and Wi-Fi. There is currently
             //  no other way to do this, so this functionality will not work without root access.
-            showDialog(getRootAccessRequiredDialog(applicationContext))
+            showDialog(getShizukuAccessRequiredDialog(applicationContext))
             return
         }
 
@@ -98,14 +100,14 @@ class WifiTileService : TileService() {
         }
     }
 
-    private fun toggleInternet() {
+    private fun toggleWifi() {
 
         val wifiEnabled = getWifiEnabled(applicationContext)
 
         if (wifiEnabled) {
-            Shell.su("svc wifi disable").exec()
+            Shizuku.newProcess("svc wifi enable".split(' ').toTypedArray(), null, null)
         } else {
-            Shell.su("svc wifi enable").exec()
+            Shizuku.newProcess("svc wifi disable".split(' ').toTypedArray(), null, null)
         }
     }
 

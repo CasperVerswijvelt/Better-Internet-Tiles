@@ -12,9 +12,9 @@
     <string name="require_unlock_key">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
     <string name="require_unlock_summary">If enabled, you will need to unlock your device first before being able to toggle between internet modes.</string>
-    <string name="request_root_access_key">request_root_access</string>
-    <string name="request_root_access_title">Request root access</string>
-    <string name="request_root_access_summary">Root access is needed to enable/disable Wi-Fi and mobile data, as well as reading your Wi-Fi network name.</string>
+    <string name="request_shizuku_access_key">request_shizuku_access</string>
+    <string name="request_shizuku_access_title">Request Shizuku access</string>
+    <string name="request_shizuku_access_summary">Shizuku access is needed to enable/disable Wi-Fi and mobile data, as well as reading your Wi-Fi network name.</string>
     <string name="request_read_phone_state_key">request_read_phone_state</string>
     <string name="request_read_phone_state_title">Request phone permission</string>
     <string name="request_read_phone_state_summary">This permission is used to read your mobile data connection type (2G, 3G, 4G, 5G). This is optional.</string>
@@ -27,12 +27,8 @@
     <string name="read_phone_state_permission_granted">Successfully granted \'READ_PHONE_STATE\' permission.</string>
     <string name="read_phone_state_permission_denied">Could not get \'READ_PHONE_STATE\' permission</string>
     <string name="read_phone_state_permission_denied_description">Go into the application settings and grant this permission manually.</string>
-    <string name="root_access_granted">Successfully granted root access.</string>
-    <string name="root_access_denied">Failed to get root access</string>
-    <string name="root_access_denied_description">Go into your root management application (e.g Magisk Manager) and manually grant root access to the \'Unified Internet QS\' application.</string>
-    <string name="root_access_required">Root access required</string>
-    <string name="root_access_required_description">
-        To use this function, you must grant this application root access. You can do so by going into the \'Unified Internet QS\' application and tapping \'Request root access\'.
-    </string>
+    <string name="shizuku_access_granted">Successfully granted Shizuku access.</string>
+    <string name="shizuku_access_required">Shizuku access required</string>
     <string name="open_app">Open app</string>
+    <string name="shizuku_not_set_up">You need Shizuku to use this app. Make sure you\'ve installed the Shizuku app and Shizuku is running. If Shizuku is running, make sure you\'ve granted permission to this app to use it. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
 </resources>

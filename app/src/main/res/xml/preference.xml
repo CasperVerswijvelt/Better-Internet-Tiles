@@ -31,7 +31,7 @@
         <SwitchPreference
             android:defaultValue="true"
             android:icon="@drawable/ic_baseline_lock_24"
-            android:key="require_unlock"
+            android:key="@string/require_unlock_key"
             android:summary="@string/require_unlock_summary"
             android:title="@string/require_unlock_title" />
     </PreferenceCategory>
@@ -41,12 +41,12 @@
 
         <Preference
             android:icon="@drawable/magisk_24"
-            android:key="request_root_access"
-            android:summary="@string/request_root_access_summary"
-            android:title="@string/request_root_access_title" />
+            android:key="@string/request_shizuku_access_key"
+            android:summary="@string/request_shizuku_access_summary"
+            android:title="@string/request_shizuku_access_title" />
         <Preference
             android:icon="@drawable/ic_baseline_local_phone_24"
-            android:key="request_read_phone_state"
+            android:key="@string/request_read_phone_state_key"
             android:summary="@string/request_read_phone_state_summary"
             android:title="@string/request_read_phone_state_title" />
         <Preference

@@ -11,22 +11,13 @@ import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import com.topjohnwu.superuser.Shell
+import rikka.shizuku.Shizuku
+import be.casperverswijvelt.unifiedinternetqs.ui.ShizukuUtils
 
 class InternetTileService : TileService() {
 
     private companion object {
         const val TAG = "InternetTile"
-
-        init {
-            // Set settings before the main shell can be created
-            Shell.enableVerboseLogging = BuildConfig.DEBUG
-            Shell.setDefaultBuilder(
-                Shell.Builder.create()
-                    .setFlags(Shell.FLAG_REDIRECT_STDERR)
-                    .setTimeout(10)
-            )
-        }
     }
 
     private var wifiConnected = false
@@ -97,11 +88,11 @@ class InternetTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!Shell.rootAccess()) {
+        if (!ShizukuUtils.hasShizukuPermission()) {
 
             // Root access is needed to enable/disable mobile data and Wi-Fi. There is currently
             //  no other way to do this, so this functionality will not work without root access.
-            showDialog(getRootAccessRequiredDialog(applicationContext))
+            showDialog(getShizukuAccessRequiredDialog(applicationContext))
             return
         }
 
@@ -135,17 +126,24 @@ class InternetTileService : TileService() {
 
         when {
             wifiEnabled -> {
-                if (Shell.su("svc wifi disable && svc data enable").exec().isSuccess) {
+                val process = Shizuku.newProcess("svc wifi disable && svc data enable".split(' ').toTypedArray(), null, null)
+                process.waitFor()
+                if (process.exitValue() == 0) {
                     isTurningOnData = true
                 }
             }
             dataEnabled -> {
-                if (Shell.su("svc data disable && svc wifi enable").exec().isSuccess) {
+                val process = Shizuku.newProcess("svc data disable && svc wifi enable".split(' ').toTypedArray(), null, null)
+                process.waitFor()
+                if (process.exitValue() == 0) {
                     isTurningOnWifi = true
                 }
             }
             else -> {
-                if (Shell.su("svc wifi enable").exec().isSuccess) {
+
+                val process = Shizuku.newProcess("svc wifi enable".split(' ').toTypedArray(), null, null)
+                process.waitFor()
+                if (process.exitValue() == 0) {
                     isTurningOnWifi = true
                 }
             }
