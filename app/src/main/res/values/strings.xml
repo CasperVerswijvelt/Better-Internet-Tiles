@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Unified Internet QS</string>
+    <string name="app_name">Better Internet Tiles</string>
     <string name="app_description_l1">
         This application aims to create a unified internet quick-settings tile, which is actually useful (I\'m looking at you, Android 12).
     </string>
