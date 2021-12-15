@@ -13,6 +13,7 @@ import android.net.wifi.WifiManager
 class WifiChangeListener(private val callback: NetworkChangeCallback) {
 
     private val wifiStateReceiverIntentFilter = IntentFilter()
+    private var isListening = false
 
     init {
         wifiStateReceiverIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
@@ -31,16 +32,23 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
 
         // Wi-Fi enabled state
         context.registerReceiver(wifiStateReceiver, wifiStateReceiverIntentFilter)
+
+        isListening = true
     }
 
     fun  stopListening (context: Context) {
 
-        // Wi-Fi connected network state
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.unregisterNetworkCallback(wifiNetworkCallback)
+        if (isListening) {
 
-        // Wi-Fi enabled state
-        context.unregisterReceiver(wifiStateReceiver)
+            isListening = false
+
+            // Wi-Fi connected network state
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            cm.unregisterNetworkCallback(wifiNetworkCallback)
+
+            // Wi-Fi enabled state
+            context.unregisterReceiver(wifiStateReceiver)
+        }
     }
 
     private val wifiNetworkCallback = object : ConnectivityManager.NetworkCallback() {

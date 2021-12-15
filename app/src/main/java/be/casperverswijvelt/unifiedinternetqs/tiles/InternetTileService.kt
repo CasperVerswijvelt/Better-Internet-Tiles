@@ -123,14 +123,6 @@ class InternetTileService : TileService() {
         isTurningOnData = false
         isTurningOnWifi = false
 
-//        println("GET PRIVILEGED")
-//        PrivilegedAPI.getInstance(baseContext) {
-//            // Empty
-//            println("GOT PRIVILEGED")
-//            PrivilegedAPI.peekInstance()?.setWifiEnabled(!wifiEnabled)
-//        }
-//        return
-
         when {
             wifiEnabled -> {
                 ShizukuUtils.executeCommand("svc wifi disable")

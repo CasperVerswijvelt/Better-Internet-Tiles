@@ -11,6 +11,7 @@ import android.telephony.*
 class CellularChangeListener(private val callback: NetworkChangeCallback)  {
 
     var currentTelephonyDisplayInfo : TelephonyDisplayInfo? = null
+    var isListening = false
 
     private val mobileNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
@@ -62,22 +63,29 @@ class CellularChangeListener(private val callback: NetworkChangeCallback)  {
         } else {
             tm.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS)
         }
+
+        isListening = true
     }
 
     fun stopListening(context: Context) {
 
-        // Cellular network state
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.unregisterNetworkCallback(mobileNetworkCallback)
+        if (isListening) {
 
-        // Mobile signal strength listener
-        val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            tm.unregisterTelephonyCallback(telephonyCallback!!)
-        } else {
-            tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
+            isListening = false
+
+            // Cellular network state
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            cm.unregisterNetworkCallback(mobileNetworkCallback)
+
+            // Mobile signal strength listener
+            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                tm.unregisterTelephonyCallback(telephonyCallback!!)
+            } else {
+                tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
+            }
+
+            currentTelephonyDisplayInfo = null
         }
-
-        currentTelephonyDisplayInfo = null
     }
 }
