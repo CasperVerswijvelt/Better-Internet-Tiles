@@ -13,6 +13,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.getShizukuAccessRequiredDialog
+import com.jakewharton.processphoenix.ProcessPhoenix
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -27,9 +28,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         context?.let { context ->
             when (preference?.key) {
                 resources.getString(R.string.request_shizuku_access_key) -> {
-
                     if (ShizukuUtils.shizukuAvailable) {
-
                         if (ShizukuUtils.hasShizukuPermission()) {
                             Toast.makeText(
                                 context,
@@ -71,8 +70,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     return true
                 }
                 resources.getString(R.string.restart_app_key) -> {
+                    ProcessPhoenix.triggerRebirth(context)
+                }
+                resources.getString(R.string.app_info_key) -> {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     intent.data = Uri.fromParts("package", context.packageName, null)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_NO_HISTORY or
+                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                     startActivity(intent)
                 }
                 else -> {

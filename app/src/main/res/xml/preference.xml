@@ -55,4 +55,8 @@
             android:summary="@string/restart_app_summary"
             android:title="@string/restart_app_title" />
     </PreferenceCategory>
+    <Preference
+        android:icon="@drawable/ic_outline_info_24"
+        android:key="@string/app_info_key"
+        android:title="@string/app_info_title" />
 </PreferenceScreen>

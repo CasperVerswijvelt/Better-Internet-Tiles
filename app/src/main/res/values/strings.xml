@@ -21,6 +21,8 @@
     <string name="restart_app_key">restart_tiles</string>
     <string name="restart_app_title">Restart app</string>
     <string name="restart_app_summary">If a tile still tells you that it does not have root access, even after granting, you can try force closing the app. This will cause a new process to be created and the root permission to be rechecked.</string>
+    <string name="app_info_key">app_info</string>
+    <string name="app_info_title">App info</string>
     <string name="settings">Settings</string>
     <string name="permissions">Permissions</string>
     <string name="about">About</string>
