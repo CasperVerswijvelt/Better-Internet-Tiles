@@ -45,4 +45,14 @@ object ShizukuUtils {
         })
         Shizuku.requestPermission(69101)
     }
+
+    fun executeCommand(command: String): Process {
+        val process = Shizuku.newProcess(
+            command.split(' ').toTypedArray(),
+            null,
+            null
+        )
+        process.waitFor()
+        return process
+    }
 }

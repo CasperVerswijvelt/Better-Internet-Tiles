@@ -104,11 +104,11 @@ class WifiTileService : TileService() {
 
         val wifiEnabled = getWifiEnabled(applicationContext)
 
-        if (wifiEnabled) {
-            Shizuku.newProcess("svc wifi enable".split(' ').toTypedArray(), null, null)
+        ShizukuUtils.executeCommand(if (wifiEnabled) {
+            "svc wifi disable"
         } else {
-            Shizuku.newProcess("svc wifi disable".split(' ').toTypedArray(), null, null)
-        }
+            "svc wifi enable"
+        })
     }
 
     private fun syncTile() {

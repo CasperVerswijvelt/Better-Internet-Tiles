@@ -124,26 +124,29 @@ class InternetTileService : TileService() {
         isTurningOnData = false
         isTurningOnWifi = false
 
+//        println("GET PRIVILEGED")
+//        PrivilegedAPI.getInstance(baseContext) {
+//            // Empty
+//            println("GOT PRIVILEGED")
+//            PrivilegedAPI.peekInstance()?.setWifiEnabled(!wifiEnabled)
+//        }
+//        return
+
         when {
             wifiEnabled -> {
-                val process = Shizuku.newProcess("svc wifi disable && svc data enable".split(' ').toTypedArray(), null, null)
-                process.waitFor()
-                if (process.exitValue() == 0) {
+                ShizukuUtils.executeCommand("svc wifi disable")
+                if (ShizukuUtils.executeCommand("svc data enable").exitValue() == 0) {
                     isTurningOnData = true
                 }
             }
             dataEnabled -> {
-                val process = Shizuku.newProcess("svc data disable && svc wifi enable".split(' ').toTypedArray(), null, null)
-                process.waitFor()
-                if (process.exitValue() == 0) {
+                ShizukuUtils.executeCommand("svc data disable")
+                if (ShizukuUtils.executeCommand("svc wifi enable").exitValue() == 0) {
                     isTurningOnWifi = true
                 }
             }
             else -> {
-
-                val process = Shizuku.newProcess("svc wifi enable".split(' ').toTypedArray(), null, null)
-                process.waitFor()
-                if (process.exitValue() == 0) {
+                if (ShizukuUtils.executeCommand("svc wifi enable").exitValue() == 0) {
                     isTurningOnWifi = true
                 }
             }

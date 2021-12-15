@@ -98,11 +98,11 @@ class MobileDataTileService : TileService() {
 
         val dataEnabled = getDataEnabled(applicationContext)
 
-        if (dataEnabled) {
-            Shizuku.newProcess("svc data disable".split(' ').toTypedArray(), null, null)
+        ShizukuUtils.executeCommand(if (dataEnabled) {
+            "svc data disable"
         } else {
-            Shizuku.newProcess("svc data enable".split(' ').toTypedArray(), null, null)
-        }
+            "svc data enable"
+        })
     }
 
     private fun syncTile() {
