@@ -1,4 +1,4 @@
-package be.casperverswijvelt.unifiedinternetqs
+package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.Manifest
 import android.app.AlertDialog
@@ -14,12 +14,10 @@ import android.service.quicksettings.TileService
 import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import android.util.Log
+import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
-import rikka.shizuku.Shizuku
-import be.casperverswijvelt.unifiedinternetqs.ui.ShizukuUtils
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtils
 import java.lang.reflect.Method
-import android.text.method.LinkMovementMethod
-import android.widget.TextView
 
 const val TAG = "Util"
 
@@ -52,8 +50,7 @@ fun getWifiEnabled(context: Context): Boolean {
 fun getConnectedWifiSSID(): String? {
 
     if (ShizukuUtils.hasShizukuPermission()) {
-        val process = Shizuku.newProcess("dumpsys netstats | grep -E 'iface=wlan.*networkId'".split(' ')
-            .toTypedArray(), null, null)
+        val process = ShizukuUtils.executeCommand("dumpsys netstats | grep -E 'iface=wlan.*networkId'")
         process.waitFor()
         val wifiDump = process.inputStream.bufferedReader().use { it.readText() }.split("\n".toRegex())
         val pattern = "(?<=networkId=\").*(?=\")".toRegex()

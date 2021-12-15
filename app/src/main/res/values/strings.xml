@@ -4,10 +4,10 @@
         This application aims to create a unified internet quick-settings tile, which is actually useful (I\'m looking at you, Android 12).
     </string>
     <string name="app_description_l2">
-        Tapping the internet tile will simply toggle between Wi-Fi and mobile data. Separate Wi-Fi and mobile data tiles are also available if you just want to go back to how it was before Android 12.
+        Tapping the internet tile will toggle between Wi-Fi and mobile data. Separate Wi-Fi and mobile data tiles are also available if you just want to go back to how it was before Android 12.
     </string>
     <string name="app_description_l3">
-        Unfortunately, root access is required to enable/disable Wi-Fi and mobile data, as well as for reading the SSID of the current Wi-Fi network.
+        Shell access is required to enable/disable Wi-Fi and mobile data, as well as for reading the SSID of the current Wi-Fi network. Fortunately Shizuku can take care of this without even requiring root access!
     </string>
     <string name="require_unlock_key">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
@@ -20,7 +20,7 @@
     <string name="request_read_phone_state_summary">This permission is used to read your mobile data connection type (2G, 3G, 4G, 5G). This is optional.</string>
     <string name="restart_app_key">restart_tiles</string>
     <string name="restart_app_title">Restart app</string>
-    <string name="restart_app_summary">If a tile still tells you that it does not have root access, even after granting, you can try force closing the app. This will cause a new process to be created and the root permission to be rechecked.</string>
+    <string name="restart_app_summary">Experiencing weird behavior? Try restarting the app!</string>
     <string name="app_info_key">app_info</string>
     <string name="app_info_title">App info</string>
     <string name="settings">Settings</string>

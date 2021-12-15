@@ -12,7 +12,8 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import be.casperverswijvelt.unifiedinternetqs.R
-import be.casperverswijvelt.unifiedinternetqs.getShizukuAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.tiles.getShizukuAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtils
 import com.jakewharton.processphoenix.ProcessPhoenix
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -104,6 +105,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 } else {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     intent.data = Uri.fromParts("package", context.packageName, null)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_NO_HISTORY or
+                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                     AlertDialog.Builder(context)
                         .setTitle(R.string.read_phone_state_permission_denied)
                         .setMessage(R.string.read_phone_state_permission_denied_description)

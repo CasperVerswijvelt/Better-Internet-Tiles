@@ -10,9 +10,7 @@ import be.casperverswijvelt.unifiedinternetqs.*
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import rikka.shizuku.Shizuku
-import be.casperverswijvelt.unifiedinternetqs.ui.ShizukuUtils
-
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtils
 
 class WifiTileService : TileService() {
 
@@ -29,10 +27,8 @@ class WifiTileService : TileService() {
     }
     private val networkChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
-            when (type) {
-                NetworkChangeType.NETWORK_LOST -> wifiConnected = false
-                NetworkChangeType.NETWORK_AVAILABLE -> wifiConnected = true
-            }
+            if (type == NetworkChangeType.NETWORK_LOST) wifiConnected = false
+            else if (type == NetworkChangeType.NETWORK_AVAILABLE) wifiConnected = true
             syncTile()
         }
     }
