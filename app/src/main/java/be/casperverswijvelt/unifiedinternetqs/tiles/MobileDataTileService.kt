@@ -10,6 +10,7 @@ import be.casperverswijvelt.unifiedinternetqs.*
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
+import be.casperverswijvelt.unifiedinternetqs.util.*
 
 class MobileDataTileService : TileService() {
 

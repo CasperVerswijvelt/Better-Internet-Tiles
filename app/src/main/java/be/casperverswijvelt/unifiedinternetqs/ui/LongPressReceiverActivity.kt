@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.content.ComponentName
-import be.casperverswijvelt.unifiedinternetqs.tiles.getDataEnabled
-import be.casperverswijvelt.unifiedinternetqs.tiles.getWifiEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService

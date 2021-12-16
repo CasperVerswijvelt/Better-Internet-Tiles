@@ -9,15 +9,13 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import android.telephony.*
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import be.casperverswijvelt.unifiedinternetqs.R
-import be.casperverswijvelt.unifiedinternetqs.tiles.grantReadPhoneState
+import be.casperverswijvelt.unifiedinternetqs.util.grantReadPhoneState
 
 class CellularChangeListener(private val callback: NetworkChangeCallback)  {
 
     var currentTelephonyDisplayInfo : TelephonyDisplayInfo? = null
-    var isListening = false
+    private var isListening = false
 
     private val mobileNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {

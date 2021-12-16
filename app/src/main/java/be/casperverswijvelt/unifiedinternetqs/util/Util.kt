@@ -1,4 +1,4 @@
-package be.casperverswijvelt.unifiedinternetqs.tiles
+package be.casperverswijvelt.unifiedinternetqs.util
 
 import android.Manifest
 import android.app.AlertDialog
@@ -17,7 +17,6 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
-import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
 

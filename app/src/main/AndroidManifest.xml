@@ -31,7 +31,7 @@
         <service
             android:name=".ShizukuDetectService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".ui.MainActivity"

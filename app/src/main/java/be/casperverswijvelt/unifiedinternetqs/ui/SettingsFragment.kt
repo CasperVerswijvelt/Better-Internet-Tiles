@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import be.casperverswijvelt.unifiedinternetqs.R
-import be.casperverswijvelt.unifiedinternetqs.tiles.getShellAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.topjohnwu.superuser.Shell
