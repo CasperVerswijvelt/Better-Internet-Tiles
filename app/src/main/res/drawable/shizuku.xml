@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="0dp"
+        android:right="100dp">
+        <bitmap
+            android:src="@mipmap/shizuku_foreground"
+            android:gravity="left" />
+    </item>
+</layer-list>

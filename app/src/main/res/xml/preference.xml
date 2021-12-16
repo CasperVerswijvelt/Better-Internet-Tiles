@@ -9,19 +9,14 @@
             android:key="pref_static_field_key"
             android:selectable="false"
             android:persistent="false"
-            android:summary="@string/app_description_l1"/>
+            android:summary="@string/app_description_about"/>
 
         <Preference
             android:key="pref_static_field_key"
             android:selectable="false"
             android:persistent="false"
-            android:summary="@string/app_description_l2"/>
+            android:summary="@string/app_description_usage"/>
 
-        <Preference
-            android:key="pref_static_field_key"
-            android:selectable="false"
-            android:persistent="false"
-            android:summary="@string/app_description_l3"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -40,23 +35,33 @@
         android:title="@string/permissions">
 
         <Preference
-            android:icon="@drawable/magisk_24"
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:summary="@string/app_description_shell_access"/>
+        <Preference
+            android:icon="@drawable/shizuku"
             android:key="@string/request_shizuku_access_key"
             android:summary="@string/request_shizuku_access_summary"
             android:title="@string/request_shizuku_access_title" />
         <Preference
-            android:icon="@drawable/ic_baseline_local_phone_24"
-            android:key="@string/request_read_phone_state_key"
-            android:summary="@string/request_read_phone_state_summary"
-            android:title="@string/request_read_phone_state_title" />
+            android:icon="@drawable/magisk_24"
+            android:key="@string/request_root_access_key"
+            android:summary="@string/request_root_access_summary"
+            android:title="@string/request_root_access_title" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:text="@string/other"
+        android:title="@string/other">
         <Preference
             android:icon="@drawable/ic_baseline_loop_24"
             android:key="@string/restart_app_key"
             android:summary="@string/restart_app_summary"
             android:title="@string/restart_app_title" />
+        <Preference
+            android:icon="@drawable/ic_outline_info_24"
+            android:key="@string/app_info_key"
+            android:title="@string/app_info_title" />
     </PreferenceCategory>
-    <Preference
-        android:icon="@drawable/ic_outline_info_24"
-        android:key="@string/app_info_key"
-        android:title="@string/app_info_title" />
 </PreferenceScreen>

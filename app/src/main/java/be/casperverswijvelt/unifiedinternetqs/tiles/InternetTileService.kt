@@ -11,7 +11,6 @@ import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtils
 
 class InternetTileService : TileService() {
 
@@ -87,11 +86,12 @@ class InternetTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!ShizukuUtils.hasShizukuPermission()) {
+        if (!hasShellAccess()) {
 
-            // Shizuku access is needed to enable/disable mobile data and Wi-Fi. There is currently
-            //  no other way to do this, so this functionality will not work without Shizuku access.
-            showDialog(getShizukuAccessRequiredDialog(applicationContext))
+            // Either root or Shizuku access is needed to enable/disable mobile data and Wi-Fi.
+            //  There is currently no other way to do this, so this functionality will not work
+            //  without root Shizuku access.
+            showDialog(getShellAccessRequiredDialog(applicationContext))
             return
         }
 
@@ -125,19 +125,19 @@ class InternetTileService : TileService() {
 
         when {
             wifiEnabled -> {
-                ShizukuUtils.executeCommand("svc wifi disable")
-                if (ShizukuUtils.executeCommand("svc data enable").exitValue() == 0) {
+                executeShellCommand("svc wifi disable")
+                if (executeShellCommand("svc data enable")?.code == 0) {
                     isTurningOnData = true
                 }
             }
             dataEnabled -> {
-                ShizukuUtils.executeCommand("svc data disable")
-                if (ShizukuUtils.executeCommand("svc wifi enable").exitValue() == 0) {
+                executeShellCommand("svc data disable")
+                if (executeShellCommand("svc wifi enable")?.code == 0) {
                     isTurningOnWifi = true
                 }
             }
             else -> {
-                if (ShizukuUtils.executeCommand("svc wifi enable").exitValue() == 0) {
+                if (executeShellCommand("svc wifi enable")?.code == 0) {
                     isTurningOnWifi = true
                 }
             }

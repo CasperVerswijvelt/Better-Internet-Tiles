@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Better Internet Tiles</string>
-    <string name="app_description_l1">
+    <string name="app_description_about">
         This application aims to create a unified internet quick-settings tile, which is actually useful (I\'m looking at you, Android 12).
     </string>
-    <string name="app_description_l2">
+    <string name="app_description_usage">
         Tapping the internet tile will toggle between Wi-Fi and mobile data. Separate Wi-Fi and mobile data tiles are also available if you just want to go back to how it was before Android 12.
     </string>
-    <string name="app_description_l3">
+    <string name="app_description_shell_access">
         Shell access is required to enable/disable Wi-Fi and mobile data, as well as for reading the SSID of the current Wi-Fi network. Fortunately Shizuku can take care of this without even requiring root access!
     </string>
     <string name="require_unlock_key">require_unlock</string>
@@ -14,10 +14,10 @@
     <string name="require_unlock_summary">If enabled, you will need to unlock your device first before being able to toggle between internet modes.</string>
     <string name="request_shizuku_access_key">request_shizuku_access</string>
     <string name="request_shizuku_access_title">Request Shizuku access</string>
-    <string name="request_shizuku_access_summary">Shizuku access is needed to enable/disable Wi-Fi and mobile data, as well as reading your Wi-Fi network name.</string>
-    <string name="request_read_phone_state_key">request_read_phone_state</string>
-    <string name="request_read_phone_state_title">Request phone permission</string>
-    <string name="request_read_phone_state_summary">This permission is used to read your mobile data connection type (2G, 3G, 4G, 5G). This is optional.</string>
+    <string name="request_shizuku_access_summary">Use Shizuku to grant Shell access</string>
+    <string name="request_root_access_key">request_root_access</string>
+    <string name="request_root_access_title">Request root access</string>
+    <string name="request_root_access_summary">Use root to grant Shell access</string>
     <string name="restart_app_key">restart_tiles</string>
     <string name="restart_app_title">Restart app</string>
     <string name="restart_app_summary">Experiencing weird behavior? Try restarting the app!</string>
@@ -26,13 +26,13 @@
     <string name="settings">Settings</string>
     <string name="permissions">Permissions</string>
     <string name="about">About</string>
-    <string name="read_phone_state_permission_granted">Successfully granted \'READ_PHONE_STATE\' permission.</string>
-    <string name="read_phone_state_permission_denied">Could not get \'READ_PHONE_STATE\' permission</string>
-    <string name="read_phone_state_permission_denied_description">Go into the application settings and grant this permission manually.</string>
+    <string name="other">other</string>
     <string name="shizuku_access_granted">Successfully granted Shizuku access.</string>
-    <string name="shizuku_access_required">Shizuku access required</string>
+    <string name="root_access_granted">Successfully granted root access.</string>
+    <string name="root_access_denied">Failed to get root access</string>
+    <string name="root_access_denied_description">Go into your root management application (e.g Magisk manager) and manually grant root access to the \'Better Internet Tiles\' application.</string>
     <string name="open_app">Open app</string>
-    <string name="shizuku_not_set_up">You need root or Shizuku version 11 or higher to use this app. Make sure you\'ve installed the Shizuku app and Shizuku is running. If Shizuku is running, make sure you\'ve granted permission to this app to use it. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
-    <string name="hide_service_title">Hide me!</string>
+    <string name="shell_access_not_set_up">You need root or Shizuku version 11 or higher to use this app. Make sure you\'ve installed the Shizuku app and Shizuku is running. If Shizuku is running, make sure you\'ve granted permission to this app to use it. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="shell_access_required">Shell access required</string><string name="hide_service_title">Hide me!</string>
     <string name="hide_service_description">This notification makes sure the tiles work correctly with Shizuku. Feel free to hide it.</string>
 </resources>

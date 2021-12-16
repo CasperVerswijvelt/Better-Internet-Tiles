@@ -10,7 +10,6 @@ import be.casperverswijvelt.unifiedinternetqs.*
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtils
 
 class WifiTileService : TileService() {
 
@@ -73,11 +72,12 @@ class WifiTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!ShizukuUtils.hasShizukuPermission()) {
+        if (!hasShellAccess()) {
 
-            // Shizuku access is needed to enable/disable mobile data and Wi-Fi. There is currently
-            //  no other way to do this, so this functionality will not work without Shizuku access.
-            showDialog(getShizukuAccessRequiredDialog(applicationContext))
+            // Either root or Shizuku access is needed to enable/disable mobile data and Wi-Fi.
+            //  There is currently no other way to do this, so this functionality will not work
+            //  without root Shizuku access.
+            showDialog(getShellAccessRequiredDialog(applicationContext))
             return
         }
 
@@ -100,7 +100,7 @@ class WifiTileService : TileService() {
 
         val wifiEnabled = getWifiEnabled(applicationContext)
 
-        ShizukuUtils.executeCommand(if (wifiEnabled) {
+        executeShellCommand(if (wifiEnabled) {
             "svc wifi disable"
         } else {
             "svc wifi enable"

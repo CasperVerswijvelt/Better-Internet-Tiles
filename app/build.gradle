@@ -44,7 +44,10 @@ dependencies {
 
     // App restarting
     implementation 'com.jakewharton:process-phoenix:2.1.2'
-    
+
+    // SU
+    implementation "com.github.topjohnwu.libsu:core:3.2.1"
+
     // Shizuku
     def shizuku_version = '12.1.0'
     implementation "dev.rikka.shizuku:api:$shizuku_version"

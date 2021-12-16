@@ -6,7 +6,7 @@ import rikka.shizuku.Shizuku
 /**
  * Some convenience functions for handling using Shizuku.
  */
-object ShizukuUtils {
+object ShizukuUtil {
     /**
      * Checks if Shizuku is available. If the Shizuku Manager app
      * is either uninstalled OR isn't running, this will return

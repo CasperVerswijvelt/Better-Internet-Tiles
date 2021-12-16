@@ -14,9 +14,11 @@ import android.service.quicksettings.TileService
 import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import android.util.Log
+import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
-import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtils
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
+import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
 
 const val TAG = "Util"
@@ -49,12 +51,10 @@ fun getWifiEnabled(context: Context): Boolean {
 
 fun getConnectedWifiSSID(): String? {
 
-    if (ShizukuUtils.hasShizukuPermission()) {
-        val process = ShizukuUtils.executeCommand("dumpsys netstats | grep -E 'iface=wlan.*networkId'")
-        process.waitFor()
-        val wifiDump = process.inputStream.bufferedReader().use { it.readText() }.split("\n".toRegex())
+    if (ShizukuUtil.hasShizukuPermission()) {
+        val result = executeShellCommand("dumpsys netstats | grep -E 'iface=wlan.*networkId'")
         val pattern = "(?<=networkId=\").*(?=\")".toRegex()
-        wifiDump.forEach { wifiString ->
+        result?.out?.forEach { wifiString ->
             pattern.find(wifiString)?.let {
                 return it.value
             }
@@ -154,23 +154,63 @@ fun getCellularNetworkText(context: Context, telephonyDisplayInfo: TelephonyDisp
     return info.joinToString(separator = ", ")
 }
 
-fun getShizukuAccessRequiredDialog(context: Context): Dialog {
+fun getShellAccessRequiredDialog(context: Context): Dialog {
 
     val intent = Intent(context, MainActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
     return AlertDialog.Builder(context)
-        .setTitle(R.string.shizuku_access_required)
-        .setMessage(R.string.shizuku_not_set_up)
+        .setTitle(R.string.shell_access_required)
+        .setMessage(R.string.shell_access_not_set_up)
         .setPositiveButton(android.R.string.ok) { _, _ ->
-            if (ShizukuUtils.shizukuAvailable) {
-                ShizukuUtils.requestShizukuPermission {  }
+            if (ShizukuUtil.shizukuAvailable) {
+                ShizukuUtil.requestShizukuPermission {  }
             } else {
                 context.startActivity(intent)
             }
         }
         .setCancelable(true)
         .create()
+}
+
+fun executeShellCommand (command: String): Shell.Result? {
+    if (Shell.rootAccess()) {
+        return Shell.su(command).exec()
+    } else if (ShizukuUtil.hasShizukuPermission()) {
+        val process = ShizukuUtil.executeCommand(command)
+        return object: Shell.Result() {
+            override fun getOut(): MutableList<String> {
+                return process
+                    .inputStream.bufferedReader()
+                    .use { it.readText() }
+                    .split("\n".toRegex())
+                    .toMutableList()
+            }
+
+            override fun getErr(): MutableList<String> {
+                return process
+                    .errorStream.bufferedReader()
+                    .use { it.readText() }
+                    .split("\n".toRegex())
+                    .toMutableList()
+            }
+
+            override fun getCode(): Int {
+                return process.exitValue()
+            }
+        }
+    }
+    return null
+}
+
+fun hasShellAccess(): Boolean {
+    return Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
+}
+
+fun grantReadPhoneState(): Shell.Result? {
+    return executeShellCommand(
+        "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}"
+    )
 }
 
 private fun getNetworkClassString(networkType: Int): String? {
