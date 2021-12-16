@@ -169,7 +169,7 @@ fun getShizukuAccessRequiredDialog(context: Context): Dialog {
                 context.startActivity(intent)
             }
         }
-        .setCancelable(false)
+        .setCancelable(true)
         .create()
 }
 
