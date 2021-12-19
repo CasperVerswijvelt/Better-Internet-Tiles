@@ -9,6 +9,10 @@
     <string name="app_description_shell_access">
         Shell access is required to enable/disable Wi-Fi and mobile data, as well as for reading the SSID of the current Wi-Fi network. Fortunately Shizuku can take care of this without even requiring root access!
     </string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="mobile_data">Mobile data</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
     <string name="require_unlock_key">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
     <string name="require_unlock_summary">If enabled, you will need to unlock your device first before being able to toggle between internet modes.</string>

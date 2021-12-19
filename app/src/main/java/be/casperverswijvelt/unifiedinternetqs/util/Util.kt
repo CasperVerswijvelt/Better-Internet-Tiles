@@ -102,7 +102,7 @@ fun getCellularNetworkIcon(context: Context): Icon {
             3 -> R.drawable.ic_baseline_signal_cellular_3_bar_24
             2 -> R.drawable.ic_baseline_signal_cellular_2_bar_24
             1 -> R.drawable.ic_baseline_signal_cellular_1_bar_24
-            else -> R.drawable.ic_baseline_signal_cellular_null_24
+            else -> R.drawable.ic_baseline_signal_cellular_0_bar
         }
     )
 }

@@ -125,18 +125,20 @@ class WifiTileService : TileService() {
 
             // Update tile properties
 
+            qsTile.label = ssid ?: resources.getString(R.string.wifi)
             qsTile.state = Tile.STATE_ACTIVE
             qsTile.icon = getWifiIcon(applicationContext)
-            qsTile.subtitle = ssid
+            qsTile.subtitle = resources.getString(R.string.on)
 
         } else {
 
+            qsTile.label = resources.getString(R.string.wifi)
             qsTile.state = Tile.STATE_INACTIVE
             qsTile.icon = Icon.createWithResource(
                 this,
-                R.drawable.ic_baseline_signal_wifi_off_24
+                R.drawable.ic_baseline_signal_wifi_0_bar_24
             )
-            qsTile.subtitle = null
+            qsTile.subtitle = resources.getString(R.string.off)
         }
 
         qsTile.updateTile()

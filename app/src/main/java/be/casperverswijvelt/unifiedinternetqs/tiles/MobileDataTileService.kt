@@ -125,9 +125,9 @@ class MobileDataTileService : TileService() {
             qsTile.state = Tile.STATE_INACTIVE
             qsTile.icon = Icon.createWithResource(
                 this,
-                R.drawable.ic_baseline_mobiledata_off_24
+                R.drawable.ic_baseline_mobile_data_24
             )
-            qsTile.subtitle = null
+            qsTile.subtitle = resources.getString(R.string.off)
         }
 
         qsTile.updateTile()

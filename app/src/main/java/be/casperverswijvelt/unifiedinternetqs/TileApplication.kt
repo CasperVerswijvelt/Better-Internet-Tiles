@@ -12,7 +12,7 @@ class TileApplication: Application() {
 
     companion object {
         const val CHANNEL_ID = "autoStartServiceChannel"
-        const val CHANNEL_NAME = "Shuzuku Detection"
+        const val CHANNEL_NAME = "Shizuku Detection"
         const val TAG = "TileApplication"
     }
 
