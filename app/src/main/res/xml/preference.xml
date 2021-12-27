@@ -63,5 +63,21 @@
             android:icon="@drawable/ic_outline_info_24"
             android:key="@string/app_info_key"
             android:title="@string/app_info_title" />
+        <Preference
+            android:icon="@drawable/github_24"
+            android:key="@string/github_key"
+            android:title="@string/github_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/CasperVerswijvelt/Better-Internet-Tiles" />
+        </Preference>
+        <Preference
+            android:icon="@drawable/xda"
+            android:key="@string/xda_key"
+            android:title="@string/xda_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://forum.xda-developers.com/t/better-internet-tiles-bring-back-wi-fi-and-mobile-data-toggles-non-root.4373925/" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
