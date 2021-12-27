@@ -98,11 +98,15 @@ class MobileDataTileService : TileService() {
 
         val dataEnabled = getDataEnabled(applicationContext)
 
-        executeShellCommand(if (dataEnabled) {
-            "svc data disable"
+        if (dataEnabled) {
+            executeShellCommandAsync("svc data disable") {
+                syncTile()
+            }
         } else {
-            "svc data enable"
-        })
+            executeShellCommandAsync("svc data enable") {
+                syncTile()
+            }
+        }
     }
 
     private fun syncTile() {

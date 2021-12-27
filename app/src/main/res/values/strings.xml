@@ -13,6 +13,8 @@
     <string name="mobile_data">Mobile data</string>
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="turning_on">Turning on</string>
+    <string name="wifi_on">Wi-Fi on</string>
     <string name="require_unlock_key">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
     <string name="require_unlock_summary">If enabled, you will need to unlock your device first before being able to toggle between internet modes.</string>

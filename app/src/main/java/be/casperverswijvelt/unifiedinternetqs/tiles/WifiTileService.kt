@@ -21,6 +21,9 @@ class WifiTileService : TileService() {
     private var wifiConnected = false
     private var sharedPreferences: SharedPreferences? = null
 
+    private var isTurningOnWifi = false
+    private var isTurningOffWifi = false
+
     private val runToggleInternet = Runnable {
         toggleWifi()
         syncTile()
@@ -101,18 +104,34 @@ class WifiTileService : TileService() {
 
         val wifiEnabled = getWifiEnabled(applicationContext)
 
-        executeShellCommand(if (wifiEnabled) {
-            "svc wifi disable"
+        if (wifiEnabled || isTurningOnWifi) {
+            isTurningOnWifi = false
+            isTurningOffWifi = true
+            executeShellCommandAsync("svc wifi disable") {
+                if (it?.isSuccess != true) {
+                    isTurningOffWifi = false
+                }
+                syncTile()
+            }
         } else {
-            "svc wifi enable"
-        })
+            isTurningOnWifi = true
+            isTurningOffWifi = false
+            executeShellCommandAsync("svc wifi enable") {
+                if (it?.isSuccess != true) {
+                    isTurningOnWifi = false
+                }
+                syncTile()
+            }
+        }
     }
 
     private fun syncTile() {
 
         val wifiEnabled = getWifiEnabled(applicationContext)
 
-        if (wifiEnabled) {
+        if ((wifiEnabled && !isTurningOffWifi) || isTurningOnWifi) {
+
+            if (wifiEnabled) isTurningOnWifi = false
 
             // If Wi-Fi is connected, get Wi-Fi SSID through shell command and regex parsing since app needs access
             //  to fine location to get SSID
@@ -128,9 +147,11 @@ class WifiTileService : TileService() {
             qsTile.label = ssid ?: resources.getString(R.string.wifi)
             qsTile.state = Tile.STATE_ACTIVE
             qsTile.icon = getWifiIcon(applicationContext)
-            qsTile.subtitle = resources.getString(R.string.on)
+            qsTile.subtitle = if (isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(R.string.on)
 
         } else {
+
+            if (!wifiEnabled) isTurningOffWifi = false
 
             qsTile.label = resources.getString(R.string.wifi)
             qsTile.state = Tile.STATE_INACTIVE

@@ -202,6 +202,13 @@ fun executeShellCommand (command: String): Shell.Result? {
     return null
 }
 
+fun executeShellCommandAsync(command: String, callback: ((Shell.Result?) -> Unit)?) {
+    ExecutorServiceSingleton.getInstance().execute {
+        val result = executeShellCommand(command)
+        callback?.let { it(result) }
+    }
+}
+
 fun hasShellAccess(): Boolean {
     return Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
 }

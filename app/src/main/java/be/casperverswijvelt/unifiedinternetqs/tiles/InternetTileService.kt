@@ -126,20 +126,33 @@ class InternetTileService : TileService() {
 
         when {
             wifiEnabled -> {
-                executeShellCommand("svc wifi disable")
-                if (executeShellCommand("svc data enable")?.code == 0) {
-                    isTurningOnData = true
+                executeShellCommandAsync("svc wifi disable", null)
+
+                isTurningOnData = true
+                executeShellCommandAsync("svc data enable") {
+                    if (it?.isSuccess != true) {
+                        isTurningOnData = false
+                    }
+                    syncTile()
                 }
             }
             dataEnabled -> {
-                executeShellCommand("svc data disable")
-                if (executeShellCommand("svc wifi enable")?.code == 0) {
-                    isTurningOnWifi = true
+                executeShellCommandAsync("svc data disable", null)
+
+                isTurningOnWifi = true
+                executeShellCommandAsync("svc wifi enable") {
+                    if (it?.isSuccess != true) {
+                        isTurningOnWifi = false
+                    }
+                    syncTile()
                 }
             }
             else -> {
-                if (executeShellCommand("svc wifi enable")?.code == 0) {
-                    isTurningOnWifi = true
+                isTurningOnWifi = true
+                executeShellCommandAsync("svc wifi enable") {
+                    if (it?.isSuccess != true) {
+                        isTurningOnWifi = false
+                    }
                 }
             }
         }
@@ -151,7 +164,7 @@ class InternetTileService : TileService() {
         val wifiEnabled = getWifiEnabled(applicationContext)
 
         when {
-            isTurningOnWifi || wifiEnabled -> {
+            (isTurningOnWifi || wifiEnabled) && !isTurningOnData -> {
 
                 if (wifiEnabled) {
                     isTurningOnWifi = false
@@ -170,7 +183,10 @@ class InternetTileService : TileService() {
 
                 qsTile.state = Tile.STATE_ACTIVE
                 qsTile.icon = getWifiIcon(applicationContext)
-                qsTile.subtitle = ssid
+                qsTile.subtitle = if (isTurningOnWifi)
+                    resources.getString(R.string.turning_on)
+                else
+                    ssid?: resources.getString(R.string.wifi_on)
             }
             isTurningOnData || dataEnabled -> {
 

@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Intent
 import android.util.Log
+import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
 import com.topjohnwu.superuser.Shell
 
 class TileApplication: Application() {
@@ -20,6 +21,8 @@ class TileApplication: Application() {
         super.onCreate()
 
         Log.d(TAG, "Created Tile Application")
+
+        ExecutorServiceSingleton.getInstance()
 
         // If no root access is detected, assume that Shizuku is used and start foreground service
         if (!Shell.rootAccess()) {
