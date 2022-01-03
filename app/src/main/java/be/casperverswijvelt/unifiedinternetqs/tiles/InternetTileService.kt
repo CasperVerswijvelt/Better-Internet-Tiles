@@ -41,11 +41,13 @@ class InternetTileService : TileService() {
                 NetworkChangeType.NETWORK_LOST -> {
                     wifiConnected = false
                     wifiSSID = null
+                    setLastConnectedWifi(applicationContext, wifiSSID)
                 }
                 NetworkChangeType.NETWORK_AVAILABLE -> {
                     wifiConnected = true
                     getConnectedWifiSSID {
                         wifiSSID = it
+                        setLastConnectedWifi(applicationContext, wifiSSID)
                         syncTile()
                     }
                 }
@@ -65,6 +67,12 @@ class InternetTileService : TileService() {
         cellularChangeListener = CellularChangeListener(cellularChangeCallback)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+        if (getWifiEnabled(this)) {
+            wifiSSID = sharedPreferences
+                ?.getString(resources.getString(R.string.last_connected_wifi_key), null)
+        }
+
     }
 
     override fun onStartListening() {
@@ -211,7 +219,7 @@ class InternetTileService : TileService() {
 
                 qsTile.state = Tile.STATE_INACTIVE
                 qsTile.icon = Icon.createWithResource(
-                    this,
+                    applicationContext,
                     R.drawable.ic_baseline_public_off_24
                 )
                 qsTile.subtitle = null

@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
@@ -14,6 +15,7 @@ import android.service.quicksettings.TileService
 import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
@@ -221,6 +223,13 @@ fun grantReadPhoneState(): Shell.Result? {
     return executeShellCommand(
         "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}"
     )
+}
+
+fun setLastConnectedWifi(context: Context, ssid: String?) {
+    val pm = PreferenceManager.getDefaultSharedPreferences(context)
+    val editor = pm.edit()
+    editor.putString(context.resources.getString(R.string.last_connected_wifi_key), ssid)
+    editor.apply()
 }
 
 private fun getNetworkClassString(networkType: Int): String? {
