@@ -48,18 +48,22 @@ fun getWifiEnabled(context: Context): Boolean {
     return (context.getSystemService(TileService.WIFI_SERVICE) as WifiManager).isWifiEnabled
 }
 
-fun getConnectedWifiSSID(): String? {
+fun getConnectedWifiSSID(callback: ((String?) -> Unit)) {
 
     if (hasShellAccess()) {
-        val result = executeShellCommand("dumpsys netstats | grep -E 'iface=wlan.*networkId'")
-        val pattern = "(?<=networkId=\").*(?=\")".toRegex()
-        result?.out?.forEach { wifiString ->
-            pattern.find(wifiString)?.let {
-                return it.value
+        executeShellCommandAsync("dumpsys netstats | grep -E 'iface=wlan.*networkId'") {
+            val pattern = "(?<=networkId=\").*(?=\")".toRegex()
+            it?.out?.forEach { wifiString ->
+                pattern.find(wifiString)?.let { matchResult ->
+                    callback(matchResult.value)
+                    return@executeShellCommandAsync
+                }
             }
+            callback(null)
         }
+    } else {
+        callback(null)
     }
-    return null
 }
 
 fun getWifiIcon(context: Context): Icon {

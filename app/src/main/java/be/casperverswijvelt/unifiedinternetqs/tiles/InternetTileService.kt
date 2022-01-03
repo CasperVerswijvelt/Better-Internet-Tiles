@@ -20,6 +20,7 @@ class InternetTileService : TileService() {
     }
 
     private var wifiConnected = false
+    private var wifiSSID: String? = null
     private var sharedPreferences: SharedPreferences? = null
 
     private var isTurningOnData = false
@@ -37,8 +38,17 @@ class InternetTileService : TileService() {
     private val wifiChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
             when (type) {
-                NetworkChangeType.NETWORK_LOST -> wifiConnected = false
-                NetworkChangeType.NETWORK_AVAILABLE -> wifiConnected = true
+                NetworkChangeType.NETWORK_LOST -> {
+                    wifiConnected = false
+                    wifiSSID = null
+                }
+                NetworkChangeType.NETWORK_AVAILABLE -> {
+                    wifiConnected = true
+                    getConnectedWifiSSID {
+                        wifiSSID = it
+                        syncTile()
+                    }
+                }
             }
             syncTile()
         }
@@ -170,15 +180,6 @@ class InternetTileService : TileService() {
                     isTurningOnWifi = false
                 }
 
-                // If Wi-Fi is connected, get Wi-Fi SSID through shell command and regex parsing since app needs access
-                //  to fine location to get SSID
-
-                var ssid: String? = null
-
-                if (wifiConnected) {
-                    ssid = getConnectedWifiSSID()
-                }
-
                 // Update tile properties
 
                 qsTile.state = Tile.STATE_ACTIVE
@@ -186,7 +187,8 @@ class InternetTileService : TileService() {
                 qsTile.subtitle = if (isTurningOnWifi)
                     resources.getString(R.string.turning_on)
                 else
-                    ssid?: resources.getString(R.string.wifi_on)
+                    (if (wifiConnected) wifiSSID else null)
+                        ?: resources.getString(R.string.wifi_on)
             }
             isTurningOnData || dataEnabled -> {
 

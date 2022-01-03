@@ -19,6 +19,7 @@ class WifiTileService : TileService() {
     }
 
     private var wifiConnected = false
+    private var wifiSSID: String? = null
     private var sharedPreferences: SharedPreferences? = null
 
     private var isTurningOnWifi = false
@@ -30,8 +31,17 @@ class WifiTileService : TileService() {
     }
     private val networkChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
-            if (type == NetworkChangeType.NETWORK_LOST) wifiConnected = false
-            else if (type == NetworkChangeType.NETWORK_AVAILABLE) wifiConnected = true
+            if (type == NetworkChangeType.NETWORK_LOST) {
+                wifiConnected = false
+                wifiSSID = null
+            }
+            else if (type == NetworkChangeType.NETWORK_AVAILABLE) {
+                wifiConnected = true
+                getConnectedWifiSSID {
+                    wifiSSID = it
+                    syncTile()
+                }
+            }
             syncTile()
         }
     }
@@ -133,18 +143,10 @@ class WifiTileService : TileService() {
 
             if (wifiEnabled) isTurningOnWifi = false
 
-            // If Wi-Fi is connected, get Wi-Fi SSID through shell command and regex parsing since app needs access
-            //  to fine location to get SSID
-
-            var ssid: String? = null
-
-            if (wifiConnected) {
-                ssid = getConnectedWifiSSID()
-            }
-
             // Update tile properties
 
-            qsTile.label = ssid ?: resources.getString(R.string.wifi)
+            qsTile.label = (if (wifiConnected) wifiSSID else null)
+                ?: resources.getString(R.string.wifi)
             qsTile.state = Tile.STATE_ACTIVE
             qsTile.icon = getWifiIcon(applicationContext)
             qsTile.subtitle = if (isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(R.string.on)
