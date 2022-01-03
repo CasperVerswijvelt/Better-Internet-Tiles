@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
@@ -18,6 +19,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preference, rootKey)
+
+        findPreference<Preference>(resources.getString(R.string.app_info_key))?.summary =
+            "${resources.getString(R.string.app_name)} version ${BuildConfig.VERSION_NAME}"
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {

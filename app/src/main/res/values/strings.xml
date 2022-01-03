@@ -29,6 +29,8 @@
     <string name="restart_app_summary">Experiencing weird behavior? Try restarting the app!</string>
     <string name="app_info_key">app_info</string>
     <string name="app_info_title">App info</string>
+    <string name="feedback_key">feedback</string>
+    <string name="feedback_title">Feedback / Report a bug</string>
     <string name="github_key">github</string>
     <string name="github_title">GitHub Repository</string>
     <string name="xda_key">xda</string>

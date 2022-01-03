@@ -55,14 +55,13 @@
         android:text="@string/other"
         android:title="@string/other">
         <Preference
-            android:icon="@drawable/ic_baseline_loop_24"
-            android:key="@string/restart_app_key"
-            android:summary="@string/restart_app_summary"
-            android:title="@string/restart_app_title" />
-        <Preference
-            android:icon="@drawable/ic_outline_info_24"
-            android:key="@string/app_info_key"
-            android:title="@string/app_info_title" />
+            android:icon="@drawable/ic_baseline_feedback_24"
+            android:key="@string/feedback_key"
+            android:title="@string/feedback_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://forms.gle/mU7oiPbQvro5owWf9\" />
+        </Preference>
         <Preference
             android:icon="@drawable/github_24"
             android:key="@string/github_key"
@@ -79,5 +78,14 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://forum.xda-developers.com/t/better-internet-tiles-bring-back-wi-fi-and-mobile-data-toggles-non-root.4373925/" />
         </Preference>
+        <Preference
+            android:icon="@drawable/ic_baseline_loop_24"
+            android:key="@string/restart_app_key"
+            android:summary="@string/restart_app_summary"
+            android:title="@string/restart_app_title" />
+        <Preference
+            android:icon="@drawable/ic_outline_info_24"
+            android:key="@string/app_info_key"
+            android:title="@string/app_info_title" />
     </PreferenceCategory>
 </PreferenceScreen>
