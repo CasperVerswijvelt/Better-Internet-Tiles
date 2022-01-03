@@ -50,7 +50,7 @@ fun getWifiEnabled(context: Context): Boolean {
 
 fun getConnectedWifiSSID(): String? {
 
-    if (ShizukuUtil.hasShizukuPermission()) {
+    if (hasShellAccess()) {
         val result = executeShellCommand("dumpsys netstats | grep -E 'iface=wlan.*networkId'")
         val pattern = "(?<=networkId=\").*(?=\")".toRegex()
         result?.out?.forEach { wifiString ->
