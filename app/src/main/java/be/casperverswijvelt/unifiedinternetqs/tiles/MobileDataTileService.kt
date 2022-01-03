@@ -2,6 +2,7 @@ package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.content.SharedPreferences
 import android.graphics.drawable.Icon
+import android.os.Handler
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
@@ -31,10 +32,13 @@ class MobileDataTileService : TileService() {
     }
 
     private var cellularChangeListener: CellularChangeListener? = null
+    private var mainHandler: Handler? = null
 
     override fun onCreate() {
         super.onCreate()
         log("Mobile data tile service created")
+
+        mainHandler = Handler(mainLooper)
 
         cellularChangeListener = CellularChangeListener(networkChangeCallback)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -90,7 +94,7 @@ class MobileDataTileService : TileService() {
 
         } else {
 
-            runToggleMobileData.run()
+            mainHandler?.post(runToggleMobileData)
         }
     }
 

@@ -2,6 +2,7 @@ package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.content.*
 import android.graphics.drawable.Icon
+import android.os.Handler
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
@@ -58,10 +59,13 @@ class InternetTileService : TileService() {
 
     private var wifiChangeListener: WifiChangeListener? = null
     private var cellularChangeListener: CellularChangeListener? = null
+    private var mainHandler: Handler? = null
 
     override fun onCreate() {
         super.onCreate()
         log("Internet tile service created")
+
+        mainHandler = Handler(mainLooper)
 
         wifiChangeListener = WifiChangeListener(wifiChangeCallback)
         cellularChangeListener = CellularChangeListener(cellularChangeCallback)
@@ -125,7 +129,7 @@ class InternetTileService : TileService() {
 
         } else {
 
-            runCycleInternet.run()
+            mainHandler?.post(runCycleInternet)
         }
     }
 

@@ -2,6 +2,7 @@ package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.content.SharedPreferences
 import android.graphics.drawable.Icon
+import android.os.Handler
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
@@ -49,10 +50,13 @@ class WifiTileService : TileService() {
     }
 
     private var wifiChangeListener: WifiChangeListener? = null
+    private var mainHandler: Handler? = null
 
     override fun onCreate() {
         super.onCreate()
         log("Wi-Fi tile service created")
+
+        mainHandler = Handler(mainLooper)
 
         wifiChangeListener = WifiChangeListener(networkChangeCallback)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -112,7 +116,7 @@ class WifiTileService : TileService() {
 
         } else {
 
-            runToggleInternet.run()
+            mainHandler?.post(runToggleInternet)
         }
     }
 
