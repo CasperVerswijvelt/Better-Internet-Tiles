@@ -21,6 +21,9 @@ class MobileDataTileService : TileService() {
 
     private var sharedPreferences: SharedPreferences? = null
 
+    private var isTurningOnData = false
+    private var isTurningOffData = false
+
     private val runToggleMobileData = Runnable {
         toggleMobileData()
         syncTile()
@@ -102,11 +105,15 @@ class MobileDataTileService : TileService() {
 
         val dataEnabled = getDataEnabled(applicationContext)
 
-        if (dataEnabled) {
+        if (dataEnabled || isTurningOnData) {
+            isTurningOnData = false
+            isTurningOffData = true
             executeShellCommandAsync("svc data disable") {
                 syncTile()
             }
         } else {
+            isTurningOnData = true
+            isTurningOffData = false
             executeShellCommandAsync("svc data enable") {
                 syncTile()
             }
@@ -117,7 +124,9 @@ class MobileDataTileService : TileService() {
 
         val dataEnabled = getDataEnabled(applicationContext)
 
-        if (dataEnabled) {
+        if ((dataEnabled && !isTurningOffData) || isTurningOnData) {
+
+            if (dataEnabled) isTurningOnData = false
 
             // Update tile properties
 
@@ -129,6 +138,8 @@ class MobileDataTileService : TileService() {
             )
 
         } else {
+
+            if (!dataEnabled) isTurningOffData = false
 
             qsTile.state = Tile.STATE_INACTIVE
             qsTile.icon = Icon.createWithResource(
