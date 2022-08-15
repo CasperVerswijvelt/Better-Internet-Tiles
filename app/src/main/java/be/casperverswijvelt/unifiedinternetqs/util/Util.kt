@@ -52,8 +52,8 @@ fun getWifiEnabled(context: Context): Boolean {
 fun getConnectedWifiSSID(callback: ((String?) -> Unit)) {
 
     if (hasShellAccess()) {
-        executeShellCommandAsync("dumpsys netstats | grep -E 'iface=wlan.*networkId'") {
-            val pattern = "(?<=networkId=\").*(?=\")".toRegex()
+        executeShellCommandAsync("dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'") {
+            val pattern = "(?<=(networkId|wifiNetworkKey)=\").*(?=\")".toRegex()
             it?.out?.forEach { wifiString ->
                 pattern.find(wifiString)?.let { matchResult ->
                     callback(matchResult.value)
