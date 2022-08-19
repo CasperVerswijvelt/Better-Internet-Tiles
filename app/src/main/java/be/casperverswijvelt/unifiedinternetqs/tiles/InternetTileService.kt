@@ -182,55 +182,58 @@ class InternetTileService : TileService() {
 
     private fun syncTile() {
 
-        val dataEnabled = getDataEnabled(applicationContext)
-        val wifiEnabled = getWifiEnabled(applicationContext)
+        qsTile?.let {
 
-        when {
-            (isTurningOnWifi || wifiEnabled) && !isTurningOnData -> {
+            val dataEnabled = getDataEnabled(applicationContext)
+            val wifiEnabled = getWifiEnabled(applicationContext)
 
-                if (wifiEnabled) {
-                    isTurningOnWifi = false
+            when {
+                (isTurningOnWifi || wifiEnabled) && !isTurningOnData -> {
+
+                    if (wifiEnabled) {
+                        isTurningOnWifi = false
+                    }
+
+                    // Update tile properties
+
+                    it.state = Tile.STATE_ACTIVE
+                    it.icon = getWifiIcon(applicationContext)
+                    it.subtitle = if (isTurningOnWifi)
+                        resources.getString(R.string.turning_on)
+                    else
+                        (if (wifiConnected) wifiSSID else null)
+                            ?: resources.getString(R.string.wifi_on)
                 }
+                isTurningOnData || dataEnabled -> {
 
-                // Update tile properties
+                    if (dataEnabled) {
+                        isTurningOnData = false
+                    }
 
-                qsTile.state = Tile.STATE_ACTIVE
-                qsTile.icon = getWifiIcon(applicationContext)
-                qsTile.subtitle = if (isTurningOnWifi)
-                    resources.getString(R.string.turning_on)
-                else
-                    (if (wifiConnected) wifiSSID else null)
-                        ?: resources.getString(R.string.wifi_on)
-            }
-            isTurningOnData || dataEnabled -> {
+                    // Update tile properties
 
-                if (dataEnabled) {
-                    isTurningOnData = false
+                    it.state = Tile.STATE_ACTIVE
+                    it.icon = getCellularNetworkIcon(applicationContext)
+                    it.subtitle = getCellularNetworkText(
+                        applicationContext,
+                        cellularChangeListener?.currentTelephonyDisplayInfo
+                    )
                 }
+                else -> {
 
-                // Update tile properties
+                    // Update tile properties
 
-                qsTile.state = Tile.STATE_ACTIVE
-                qsTile.icon = getCellularNetworkIcon(applicationContext)
-                qsTile.subtitle = getCellularNetworkText(
-                    applicationContext,
-                    cellularChangeListener?.currentTelephonyDisplayInfo
-                )
+                    it.state = Tile.STATE_INACTIVE
+                    it.icon = Icon.createWithResource(
+                        applicationContext,
+                        R.drawable.ic_baseline_public_off_24
+                    )
+                    it.subtitle = null
+                }
             }
-            else -> {
 
-                // Update tile properties
-
-                qsTile.state = Tile.STATE_INACTIVE
-                qsTile.icon = Icon.createWithResource(
-                    applicationContext,
-                    R.drawable.ic_baseline_public_off_24
-                )
-                qsTile.subtitle = null
-            }
+            it.updateTile()
         }
-
-        qsTile.updateTile()
     }
 
     private fun setListeners() {

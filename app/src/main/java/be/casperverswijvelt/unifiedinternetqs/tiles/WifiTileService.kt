@@ -147,34 +147,37 @@ class WifiTileService : TileService() {
 
     private fun syncTile() {
 
-        val wifiEnabled = getWifiEnabled(applicationContext)
+        qsTile?.let {
 
-        if ((wifiEnabled && !isTurningOffWifi) || isTurningOnWifi) {
+            val wifiEnabled = getWifiEnabled(applicationContext)
 
-            if (wifiEnabled) isTurningOnWifi = false
+            if ((wifiEnabled && !isTurningOffWifi) || isTurningOnWifi) {
 
-            // Update tile properties
+                if (wifiEnabled) isTurningOnWifi = false
 
-            qsTile.label = (if (wifiConnected) wifiSSID else null)
-                ?: resources.getString(R.string.wifi)
-            qsTile.state = Tile.STATE_ACTIVE
-            qsTile.icon = getWifiIcon(applicationContext)
-            qsTile.subtitle = if (isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(R.string.on)
+                // Update tile properties
 
-        } else {
+                it.label = (if (wifiConnected) wifiSSID else null)
+                    ?: resources.getString(R.string.wifi)
+                it.state = Tile.STATE_ACTIVE
+                it.icon = getWifiIcon(applicationContext)
+                it.subtitle = if (isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(R.string.on)
 
-            if (!wifiEnabled) isTurningOffWifi = false
+            } else {
 
-            qsTile.label = resources.getString(R.string.wifi)
-            qsTile.state = Tile.STATE_INACTIVE
-            qsTile.icon = Icon.createWithResource(
-                applicationContext,
-                R.drawable.ic_baseline_signal_wifi_0_bar_24
-            )
-            qsTile.subtitle = resources.getString(R.string.off)
+                if (!wifiEnabled) isTurningOffWifi = false
+
+                it.label = resources.getString(R.string.wifi)
+                it.state = Tile.STATE_INACTIVE
+                it.icon = Icon.createWithResource(
+                    applicationContext,
+                    R.drawable.ic_baseline_signal_wifi_0_bar_24
+                )
+                it.subtitle = resources.getString(R.string.off)
+            }
+
+            it.updateTile()
         }
-
-        qsTile.updateTile()
     }
 
     private fun setListeners() {

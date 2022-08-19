@@ -122,34 +122,37 @@ class MobileDataTileService : TileService() {
 
     private fun syncTile() {
 
-        val dataEnabled = getDataEnabled(applicationContext)
+        qsTile?.let {
 
-        if ((dataEnabled && !isTurningOffData) || isTurningOnData) {
+            val dataEnabled = getDataEnabled(applicationContext)
 
-            if (dataEnabled) isTurningOnData = false
+            if ((dataEnabled && !isTurningOffData) || isTurningOnData) {
 
-            // Update tile properties
+                if (dataEnabled) isTurningOnData = false
 
-            qsTile.state = Tile.STATE_ACTIVE
-            qsTile.icon = getCellularNetworkIcon(applicationContext)
-            qsTile.subtitle = getCellularNetworkText(
-                applicationContext,
-                cellularChangeListener?.currentTelephonyDisplayInfo
-            )
+                // Update tile properties
 
-        } else {
+                it.state = Tile.STATE_ACTIVE
+                it.icon = getCellularNetworkIcon(applicationContext)
+                it.subtitle = getCellularNetworkText(
+                    applicationContext,
+                    cellularChangeListener?.currentTelephonyDisplayInfo
+                )
 
-            if (!dataEnabled) isTurningOffData = false
+            } else {
 
-            qsTile.state = Tile.STATE_INACTIVE
-            qsTile.icon = Icon.createWithResource(
-                this,
-                R.drawable.ic_baseline_mobile_data_24
-            )
-            qsTile.subtitle = resources.getString(R.string.off)
+                if (!dataEnabled) isTurningOffData = false
+
+                it.state = Tile.STATE_INACTIVE
+                it.icon = Icon.createWithResource(
+                    this,
+                    R.drawable.ic_baseline_mobile_data_24
+                )
+                it.subtitle = resources.getString(R.string.off)
+            }
+
+            it.updateTile()
         }
-
-        qsTile.updateTile()
     }
 
     private fun setListeners() {
