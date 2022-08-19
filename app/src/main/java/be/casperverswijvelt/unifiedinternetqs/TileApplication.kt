@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.topjohnwu.superuser.Shell
@@ -38,6 +39,11 @@ class TileApplication: Application() {
 
                 // Not sure what the cause of the 'ForegroundServiceStartNotAllowedException' is
                 //  or how to solve it.
+                Toast.makeText(
+                    applicationContext,
+                    R.string.toast_foreground_service_error,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
