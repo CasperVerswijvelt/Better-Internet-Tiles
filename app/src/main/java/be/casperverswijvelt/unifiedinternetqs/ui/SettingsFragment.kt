@@ -33,10 +33,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             "${resources.getString(R.string.app_name)} version ${BuildConfig.VERSION_NAME}"
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
 
         context?.let { context ->
-            when (preference?.key) {
+            when (preference.key) {
                 resources.getString(R.string.request_shizuku_access_key) -> {
                     if (ShizukuUtil.shizukuAvailable) {
                         if (ShizukuUtil.hasShizukuPermission()) {
