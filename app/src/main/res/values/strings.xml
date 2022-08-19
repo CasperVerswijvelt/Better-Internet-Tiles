@@ -48,4 +48,15 @@
     <string name="shell_access_required">Shell access required</string><string name="hide_service_title">Hide me!</string>
     <string name="hide_service_description">This notification makes sure the tiles work correctly with Shizuku. Feel free to hide it.</string>
     <string name="toast_foreground_service_error">"Could not start foreground service, please contact the developer."</string>
+    <string name="add_wifi_tile">Add Wi-Fi tile</string>
+    <string name="add_wifi_tile_key">add_wifi_tile</string>
+    <string name="add_mobile_data_tile">Add mobile data tile</string>
+    <string name="add_mobile_data_tile_key">add_mobile_data_tile</string>
+    <string name="add_internet_tile">Add internet tile</string>
+    <string name="add_internet_tile_key">add_internet_tile_key</string>
+    <string name="tile_added_confirmation">Successfully added tile!</string>
+    <string name="tile_added_error">Could not add tile</string>
+    <string name="require_android_13">This feature requires Android 13</string>
+    <string name="require_android_13_description">Please add the tile manually by opening your quick settings menu</string>
+    <string name="internet">Internet</string>
 </resources>

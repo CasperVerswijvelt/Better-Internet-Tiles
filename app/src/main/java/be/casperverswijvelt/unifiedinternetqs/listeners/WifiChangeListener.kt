@@ -63,8 +63,6 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
         }
     }
 
-
-
     private val wifiStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
 

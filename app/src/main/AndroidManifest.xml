@@ -47,7 +47,7 @@
         <service
             android:name=".tiles.InternetTileService"
             android:icon="@drawable/ic_baseline_public_24"
-            android:label="Internet"
+            android:label="@string/internet"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
             <intent-filter>
@@ -58,7 +58,7 @@
         <service
             android:name=".tiles.WifiTileService"
             android:icon="@drawable/ic_baseline_signal_wifi_3_bar_24"
-            android:label="Wi-Fi"
+            android:label="@string/wifi"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
             <intent-filter>
@@ -69,7 +69,7 @@
         <service
             android:name=".tiles.MobileDataTileService"
             android:icon="@drawable/ic_baseline_mobile_data_24"
-            android:label="Mobile data"
+            android:label="@string/mobile_data"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
             <intent-filter>

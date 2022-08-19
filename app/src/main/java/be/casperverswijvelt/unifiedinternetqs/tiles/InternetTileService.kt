@@ -52,6 +52,7 @@ class InternetTileService : TileService() {
                         syncTile()
                     }
                 }
+                else -> {}
             }
             syncTile()
         }

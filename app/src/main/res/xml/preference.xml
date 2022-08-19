@@ -29,6 +29,18 @@
             android:key="@string/require_unlock_key"
             android:summary="@string/require_unlock_summary"
             android:title="@string/require_unlock_title" />
+        <Preference
+            android:title="@string/add_wifi_tile"
+            android:key="@string/add_wifi_tile_key"
+            android:persistent="false"/>
+        <Preference
+            android:title="@string/add_mobile_data_tile"
+            android:key="@string/add_mobile_data_tile_key"
+            android:persistent="false"/>
+        <Preference
+            android:title="@string/add_internet_tile"
+            android:key="@string/add_internet_tile_key"
+            android:persistent="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:text="@string/permissions"
