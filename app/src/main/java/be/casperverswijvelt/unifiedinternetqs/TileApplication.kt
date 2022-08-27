@@ -29,9 +29,8 @@ class TileApplication: Application() {
         // If no root access is detected, assume that Shizuku is used and start foreground service
         if (!Shell.rootAccess()) {
 
-            createNotificationChannel()
-
             try {
+                createNotificationChannel()
                 startForegroundService(Intent(this, ShizukuDetectService::class.java))
             } catch (e: Throwable) {
                 Log.d(TAG, "Failed to start foreground service due to an ${e.message}")
