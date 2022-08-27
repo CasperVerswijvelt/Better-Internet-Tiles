@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.util
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -12,6 +13,8 @@ import android.net.wifi.WifiManager
 import android.nfc.NfcManager
 import android.os.Build
 import android.service.quicksettings.TileService
+import android.telephony.SubscriptionInfo
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyDisplayInfo
 import android.telephony.TelephonyManager
 import android.util.Log
@@ -110,6 +113,10 @@ fun getCellularNetworkIcon(context: Context): Icon {
     val tm = context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
     val signalStrength = tm.signalStrength?.level ?: 0
 
+    // TODO: We should try to get the signal strength of the data sim here.
+    //  Only solution I found to do this requires fine location access, which I don't really want
+    //  to add.
+
     return Icon.createWithResource(
         context,
         when (signalStrength) {
@@ -122,50 +129,79 @@ fun getCellularNetworkIcon(context: Context): Icon {
     )
 }
 
+@SuppressLint("MissingPermission")
 fun getCellularNetworkText(context: Context, telephonyDisplayInfo: TelephonyDisplayInfo?): String {
 
     val info = ArrayList<String>()
     val tm = context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
 
-    tm.networkOperatorName?.let {
-        info.add(it)
+    val subscriptionInfo = getDataSubscriptionInfo(context)
+        // No data sim set or no read phone state permission
+        ?: return context.getString(R.string.network_not_available)
+
+    info.add(subscriptionInfo.displayName.toString())
+
+    // TODO: Use signal strength of data SIM
+    if (tm.signalStrength?.level == 0) {
+
+        // No service
+        return context.getString(R.string.no_service)
     }
+
+    if (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+        telephonyDisplayInfo != null
+    ) {
+
+        when (telephonyDisplayInfo.overrideNetworkType) {
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> {
+                info.add("4G+")
+            }
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> {
+                info.add("5Ge")
+            }
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> {
+                info.add("5G")
+            }
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> {
+                info.add("5G+")
+            }
+            else -> {
+                getNetworkClassString(tm.dataNetworkType)?.let {
+                    info.add(it)
+                }
+            }
+        }
+
+    } else {
+        getNetworkClassString(tm.dataNetworkType)?.let {
+            info.add(it)
+        }
+    }
+
+    return info.joinToString(separator = ", ")
+}
+
+fun getDataSubscriptionInfo(context: Context): SubscriptionInfo? {
 
     if (
         context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
         == PackageManager.PERMISSION_GRANTED
     ) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && telephonyDisplayInfo != null) {
-
-            when (telephonyDisplayInfo.overrideNetworkType) {
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> {
-                    info.add("4G+")
-                }
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> {
-                    info.add("5Ge")
-                }
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> {
-                    info.add("5G")
-                }
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> {
-                    info.add("5G+")
-                }
-                else -> {
-                    getNetworkClassString(tm.dataNetworkType)?.let {
-                        info.add(it)
-                    }
-                }
-            }
-
+        val sm = context.getSystemService(TileService.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+        val subId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            SubscriptionManager.getActiveDataSubscriptionId()
         } else {
-            getNetworkClassString(tm.dataNetworkType)?.let {
-                info.add(it)
-            }
+            SubscriptionManager.getDefaultSubscriptionId()
+        };
+
+        if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+
+            return sm.getActiveSubscriptionInfo(subId)
         }
     }
-
-    return info.joinToString(separator = ", ")
+    // No data sim set or no read phone state permission
+    return null
 }
 
 fun getShellAccessRequiredDialog(context: Context): Dialog {
