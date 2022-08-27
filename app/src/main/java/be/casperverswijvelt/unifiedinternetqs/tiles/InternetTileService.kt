@@ -199,7 +199,7 @@ class InternetTileService : TileService() {
 
                     it.state = Tile.STATE_ACTIVE
                     it.icon = getWifiIcon(applicationContext)
-                    it.subtitle = if (isTurningOnWifi)
+                    it.label = if (isTurningOnWifi)
                         resources.getString(R.string.turning_on)
                     else
                         (if (wifiConnected) wifiSSID else null)
@@ -215,7 +215,7 @@ class InternetTileService : TileService() {
 
                     it.state = Tile.STATE_ACTIVE
                     it.icon = getCellularNetworkIcon(applicationContext)
-                    it.subtitle = getCellularNetworkText(
+                    it.label = getCellularNetworkText(
                         applicationContext,
                         cellularChangeListener?.currentTelephonyDisplayInfo
                     )
@@ -229,7 +229,7 @@ class InternetTileService : TileService() {
                         applicationContext,
                         R.drawable.ic_baseline_public_off_24
                     )
-                    it.subtitle = null
+                    it.label = resources.getString(R.string.internet)
                 }
             }
 
