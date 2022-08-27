@@ -9,6 +9,7 @@ import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 
 
@@ -27,6 +28,9 @@ class LongPressReceiverActivity : Activity() {
             }
             WifiTileService::class.java.name -> {
                 Settings.ACTION_WIFI_SETTINGS
+            }
+            NFCTileService::class.java.name -> {
+                Settings.ACTION_NFC_SETTINGS
             }
             else -> Settings.ACTION_WIRELESS_SETTINGS
         })
