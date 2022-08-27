@@ -77,7 +77,7 @@ class MobileDataTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!hasShellAccess()) {
+        if (!hasShellAccess(applicationContext)) {
 
             // Either root or Shizuku access is needed to enable/disable mobile data and Wi-Fi.
             //  There is currently no other way to do this, so this functionality will not work
@@ -108,13 +108,13 @@ class MobileDataTileService : TileService() {
         if (dataEnabled || isTurningOnData) {
             isTurningOnData = false
             isTurningOffData = true
-            executeShellCommandAsync("svc data disable", applicationContext) {
+            executeShellCommandAsync("svc data disable") {
                 syncTile()
             }
         } else {
             isTurningOnData = true
             isTurningOffData = false
-            executeShellCommandAsync("svc data enable", applicationContext) {
+            executeShellCommandAsync("svc data enable") {
                 syncTile()
             }
         }

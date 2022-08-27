@@ -77,7 +77,7 @@ class NFCTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!hasShellAccess()) {
+        if (!hasShellAccess(applicationContext)) {
 
             // Either root or Shizuku access is needed to enable/disable NFC.
             //  There is currently no other way to do this, so this functionality will not work
@@ -108,13 +108,13 @@ class NFCTileService : TileService() {
         if (nfcEnabled || isTurningOnNFC) {
             isTurningOnNFC = false
             isTurningOffNFC = true
-            executeShellCommandAsync("svc nfc disable", applicationContext) {
+            executeShellCommandAsync("svc nfc disable") {
                 syncTile()
             }
         } else {
             isTurningOnNFC = true
             isTurningOffNFC = false
-            executeShellCommandAsync("svc nfc enable", applicationContext) {
+            executeShellCommandAsync("svc nfc enable") {
                 syncTile()
             }
         }

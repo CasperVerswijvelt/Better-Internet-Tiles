@@ -110,7 +110,7 @@ class InternetTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
-        if (!hasShellAccess()) {
+        if (!hasShellAccess(applicationContext)) {
 
             // Either root or Shizuku access is needed to enable/disable mobile data and Wi-Fi.
             //  There is currently no other way to do this, so this functionality will not work
@@ -149,10 +149,10 @@ class InternetTileService : TileService() {
 
         when {
             wifiEnabled -> {
-                executeShellCommandAsync("svc wifi disable", applicationContext)
+                executeShellCommandAsync("svc wifi disable")
 
                 isTurningOnData = true
-                executeShellCommandAsync("svc data enable", applicationContext) {
+                executeShellCommandAsync("svc data enable") {
                     if (it?.isSuccess != true) {
                         isTurningOnData = false
                     }
@@ -160,10 +160,10 @@ class InternetTileService : TileService() {
                 }
             }
             dataEnabled -> {
-                executeShellCommandAsync("svc data disable", applicationContext)
+                executeShellCommandAsync("svc data disable")
 
                 isTurningOnWifi = true
-                executeShellCommandAsync("svc wifi enable", applicationContext) {
+                executeShellCommandAsync("svc wifi enable") {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }
@@ -172,7 +172,7 @@ class InternetTileService : TileService() {
             }
             else -> {
                 isTurningOnWifi = true
-                executeShellCommandAsync("svc wifi enable", applicationContext) {
+                executeShellCommandAsync("svc wifi enable") {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }

@@ -18,6 +18,7 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
@@ -58,10 +59,9 @@ fun getNFCEnabled(context: Context): Boolean {
 
 fun getConnectedWifiSSID(context: Context? = null, callback: ((String?) -> Unit)) {
 
-    if (hasShellAccess()) {
+    if (hasShellAccess(context)) {
         executeShellCommandAsync(
-            "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'",
-            context
+            "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'"
         ) {
             val pattern = "(?<=(networkId|wifiNetworkKey)=\").*(?=\")".toRegex()
             it?.out?.forEach { wifiString ->
@@ -187,10 +187,10 @@ fun getShellAccessRequiredDialog(context: Context): Dialog {
         .create()
 }
 
-fun executeShellCommand (command: String, context: Context? = null): Shell.Result? {
+fun executeShellCommand (command: String): Shell.Result? {
     if (Shell.rootAccess()) {
         return Shell.su(command).exec()
-    } else if (ShizukuUtil.hasShizukuPermission(context)) {
+    } else if (ShizukuUtil.hasShizukuPermission()) {
         val process = ShizukuUtil.executeCommand(command)
         return object: Shell.Result() {
             override fun getOut(): MutableList<String> {
@@ -217,21 +217,32 @@ fun executeShellCommand (command: String, context: Context? = null): Shell.Resul
     return null
 }
 
-fun executeShellCommandAsync(command: String, context: Context? = null, callback: ((Shell.Result?) -> Unit)? = {}) {
+fun executeShellCommandAsync(command: String, callback: ((Shell.Result?) -> Unit)? = {}) {
     ExecutorServiceSingleton.getInstance().execute {
-        val result = executeShellCommand(command, context)
+        val result = executeShellCommand(command)
         callback?.let { it(result) }
     }
 }
 
+/**
+ * Check if app has shell access (either root or shizuku).
+ * If shell access is detected, the shizuku detection service is automatically stopped
+ */
 fun hasShellAccess(context: Context? = null): Boolean {
-    return Shell.rootAccess() || ShizukuUtil.hasShizukuPermission(context)
+
+    val hasShellAccess = Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
+
+    if (hasShellAccess) {
+        context?.stopService(Intent(context, ShizukuDetectService::class.java))
+    }
+
+    return hasShellAccess
 }
 
-fun grantReadPhoneState(context: Context? = null): Shell.Result? {
-    return executeShellCommand(
+fun grantReadPhoneState(callback: ((Shell.Result?) -> Unit)? = {}) {
+    return executeShellCommandAsync(
         "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}",
-        context
+        callback
     )
 }
 
