@@ -46,7 +46,7 @@ class InternetTileService : TileService() {
                 }
                 NetworkChangeType.NETWORK_AVAILABLE -> {
                     wifiConnected = true
-                    getConnectedWifiSSID {
+                    getConnectedWifiSSID(applicationContext) {
                         wifiSSID = it
                         setLastConnectedWifi(applicationContext, wifiSSID)
                         syncTile()
@@ -149,10 +149,10 @@ class InternetTileService : TileService() {
 
         when {
             wifiEnabled -> {
-                executeShellCommandAsync("svc wifi disable", null)
+                executeShellCommandAsync("svc wifi disable", applicationContext)
 
                 isTurningOnData = true
-                executeShellCommandAsync("svc data enable") {
+                executeShellCommandAsync("svc data enable", applicationContext) {
                     if (it?.isSuccess != true) {
                         isTurningOnData = false
                     }
@@ -160,10 +160,10 @@ class InternetTileService : TileService() {
                 }
             }
             dataEnabled -> {
-                executeShellCommandAsync("svc data disable", null)
+                executeShellCommandAsync("svc data disable", applicationContext)
 
                 isTurningOnWifi = true
-                executeShellCommandAsync("svc wifi enable") {
+                executeShellCommandAsync("svc wifi enable", applicationContext) {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }
@@ -172,7 +172,7 @@ class InternetTileService : TileService() {
             }
             else -> {
                 isTurningOnWifi = true
-                executeShellCommandAsync("svc wifi enable") {
+                executeShellCommandAsync("svc wifi enable", applicationContext) {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }

@@ -56,10 +56,13 @@ fun getNFCEnabled(context: Context): Boolean {
         .defaultAdapter?.isEnabled?:false
 }
 
-fun getConnectedWifiSSID(callback: ((String?) -> Unit)) {
+fun getConnectedWifiSSID(context: Context? = null, callback: ((String?) -> Unit)) {
 
     if (hasShellAccess()) {
-        executeShellCommandAsync("dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'") {
+        executeShellCommandAsync(
+            "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'",
+            context
+        ) {
             val pattern = "(?<=(networkId|wifiNetworkKey)=\").*(?=\")".toRegex()
             it?.out?.forEach { wifiString ->
                 pattern.find(wifiString)?.let { matchResult ->
@@ -184,10 +187,10 @@ fun getShellAccessRequiredDialog(context: Context): Dialog {
         .create()
 }
 
-fun executeShellCommand (command: String): Shell.Result? {
+fun executeShellCommand (command: String, context: Context? = null): Shell.Result? {
     if (Shell.rootAccess()) {
         return Shell.su(command).exec()
-    } else if (ShizukuUtil.hasShizukuPermission()) {
+    } else if (ShizukuUtil.hasShizukuPermission(context)) {
         val process = ShizukuUtil.executeCommand(command)
         return object: Shell.Result() {
             override fun getOut(): MutableList<String> {
@@ -214,20 +217,21 @@ fun executeShellCommand (command: String): Shell.Result? {
     return null
 }
 
-fun executeShellCommandAsync(command: String, callback: ((Shell.Result?) -> Unit)?) {
+fun executeShellCommandAsync(command: String, context: Context? = null, callback: ((Shell.Result?) -> Unit)? = {}) {
     ExecutorServiceSingleton.getInstance().execute {
-        val result = executeShellCommand(command)
+        val result = executeShellCommand(command, context)
         callback?.let { it(result) }
     }
 }
 
-fun hasShellAccess(): Boolean {
-    return Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
+fun hasShellAccess(context: Context? = null): Boolean {
+    return Shell.rootAccess() || ShizukuUtil.hasShizukuPermission(context)
 }
 
-fun grantReadPhoneState(): Shell.Result? {
+fun grantReadPhoneState(context: Context? = null): Shell.Result? {
     return executeShellCommand(
-        "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}"
+        "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}",
+        context
     )
 }
 

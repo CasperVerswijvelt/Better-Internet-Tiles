@@ -40,7 +40,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             when (preference.key) {
                 resources.getString(R.string.request_shizuku_access_key) -> {
                     if (ShizukuUtil.shizukuAvailable) {
-                        if (ShizukuUtil.hasShizukuPermission()) {
+                        if (ShizukuUtil.hasShizukuPermission(context)) {
                             Toast.makeText(
                                 context,
                                 R.string.shizuku_access_granted,

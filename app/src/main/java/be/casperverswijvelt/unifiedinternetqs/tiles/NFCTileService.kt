@@ -108,13 +108,13 @@ class NFCTileService : TileService() {
         if (nfcEnabled || isTurningOnNFC) {
             isTurningOnNFC = false
             isTurningOffNFC = true
-            executeShellCommandAsync("svc nfc disable") {
+            executeShellCommandAsync("svc nfc disable", applicationContext) {
                 syncTile()
             }
         } else {
             isTurningOnNFC = true
             isTurningOffNFC = false
-            executeShellCommandAsync("svc nfc enable") {
+            executeShellCommandAsync("svc nfc enable", applicationContext) {
                 syncTile()
             }
         }

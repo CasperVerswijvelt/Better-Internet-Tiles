@@ -1,6 +1,9 @@
 package be.casperverswijvelt.unifiedinternetqs.util
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
 import rikka.shizuku.Shizuku
 
 /**
@@ -18,7 +21,7 @@ object ShizukuUtil {
     /**
      * Checks if the current app has permission to use Shizuku.
      */
-    fun hasShizukuPermission(): Boolean {
+    private fun hasShizukuPermission(): Boolean {
         if (!shizukuAvailable) {
             return false
         }
@@ -28,6 +31,22 @@ object ShizukuUtil {
             !Shizuku.isPreV11() &&
             Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
         )
+    }
+
+    /**
+     * Checks if the current app has permission to use Shizuku. If context is
+     * given and shizuku permission is detected, it automatically stops the
+     * Shizuku detection foreground service.
+     */
+    fun hasShizukuPermission(context: Context? = null): Boolean {
+
+        val hasShizukuPermission = hasShizukuPermission()
+
+        if (hasShizukuPermission) {
+            context?.stopService(Intent(context, ShizukuDetectService::class.java))
+        }
+
+        return hasShizukuPermission
     }
 
     /**
