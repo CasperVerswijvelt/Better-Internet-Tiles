@@ -20,17 +20,7 @@ class LongPressReceiverActivity : Activity() {
 
         val intent = Intent(when(qsTile?.className) {
             InternetTileService::class.java.name -> {
-                when {
-                    getDataEnabled(applicationContext) -> {
-                        Settings.ACTION_NETWORK_OPERATOR_SETTINGS
-                    }
-                    getWifiEnabled(applicationContext) -> {
-                        Settings.ACTION_WIFI_SETTINGS
-                    }
-                    else -> {
-                        Settings.ACTION_WIRELESS_SETTINGS
-                    }
-                }
+                Settings.ACTION_WIRELESS_SETTINGS
             }
             MobileDataTileService::class.java.name -> {
                 Settings.ACTION_NETWORK_OPERATOR_SETTINGS
