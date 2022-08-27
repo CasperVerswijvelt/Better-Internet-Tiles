@@ -11,6 +11,7 @@
     </string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobile data</string>
+    <string name="nfc">NFC</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="turning_on">Turning on</string>
@@ -54,6 +55,8 @@
     <string name="add_mobile_data_tile_key">add_mobile_data_tile</string>
     <string name="add_internet_tile">Add internet tile</string>
     <string name="add_internet_tile_key">add_internet_tile_key</string>
+    <string name="add_nfc_tile">Add NFC tile</string>
+    <string name="add_nfc_tile_key">add_nfc_tile_key</string>
     <string name="add_tiles_title">Add tiles</string>
     <string name="add_tiles_description">Easily add these tiles by using the shortcut buttons below! These shortcuts will not work on Android versions lower than 13. In that case, please manually go into the quick-settings to add these tiles.</string>
     <string name="tile_added_confirmation">Successfully added tile!</string>

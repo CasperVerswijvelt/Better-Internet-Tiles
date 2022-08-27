@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.nfc.NfcManager
 import android.os.Build
 import android.service.quicksettings.TileService
 import android.telephony.TelephonyDisplayInfo
@@ -47,6 +48,12 @@ fun getDataEnabled(context: Context): Boolean {
 fun getWifiEnabled(context: Context): Boolean {
 
     return (context.getSystemService(TileService.WIFI_SERVICE) as WifiManager).isWifiEnabled
+}
+
+fun getNFCEnabled(context: Context): Boolean {
+
+    return (context.getSystemService(TileService.NFC_SERVICE) as NfcManager)
+        .defaultAdapter?.isEnabled?:false
 }
 
 fun getConnectedWifiSSID(callback: ((String?) -> Unit)) {

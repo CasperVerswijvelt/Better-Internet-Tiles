@@ -77,6 +77,17 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".tiles.NFCTileService"
+            android:icon="@drawable/nfc_24"
+            android:label="@string/nfc"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ui.LongPressReceiverActivity"
             android:excludeFromRecents="true"

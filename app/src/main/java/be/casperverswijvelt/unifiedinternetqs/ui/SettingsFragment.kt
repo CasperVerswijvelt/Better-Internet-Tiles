@@ -18,6 +18,7 @@ import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
@@ -115,6 +116,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         InternetTileService::class.java,
                         R.string.internet,
                         R.drawable.ic_baseline_public_24
+                    )
+                }
+                resources.getString(R.string.add_nfc_tile_key) -> {
+                    addTile(
+                        context,
+                        NFCTileService::class.java,
+                        R.string.nfc,
+                        R.drawable.nfc_24
                     )
                 }
                 else -> {

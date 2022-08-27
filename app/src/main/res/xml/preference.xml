@@ -70,6 +70,10 @@
             android:title="@string/add_internet_tile"
             android:key="@string/add_internet_tile_key"
             android:persistent="false"/>
+        <Preference
+            android:title="@string/add_nfc_tile"
+            android:key="@string/add_nfc_tile_key"
+            android:persistent="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:text="@string/other"
