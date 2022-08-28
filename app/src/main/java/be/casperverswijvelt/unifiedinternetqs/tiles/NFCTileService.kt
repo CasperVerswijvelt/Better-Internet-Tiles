@@ -29,7 +29,7 @@ class NFCTileService : TileService() {
         toggleNFC()
         syncTile()
     }
-    private val nfcReceiver = object: BroadcastReceiver() {
+    private val nfcReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             if (p1?.action == NfcAdapter.ACTION_ADAPTER_STATE_CHANGED) {
                 syncTile()
@@ -44,7 +44,8 @@ class NFCTileService : TileService() {
         log("NFC tile service created")
 
         mainHandler = Handler(mainLooper)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
     }
 
     override fun onStartListening() {
@@ -133,7 +134,10 @@ class NFCTileService : TileService() {
                 // Update tile properties
 
                 it.state = Tile.STATE_ACTIVE
-                it.subtitle = if (isTurningOnNFC) resources.getString(R.string.turning_on) else resources.getString(R.string.on)
+                it.subtitle =
+                    if (isTurningOnNFC) resources.getString(R.string.turning_on) else resources.getString(
+                        R.string.on
+                    )
 
             } else {
 
@@ -151,7 +155,10 @@ class NFCTileService : TileService() {
 
         log("Setting listeners")
 
-        registerReceiver(nfcReceiver, IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED))
+        registerReceiver(
+            nfcReceiver,
+            IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
+        )
         receiverRegistered = true
     }
 
@@ -159,7 +166,7 @@ class NFCTileService : TileService() {
 
         log("Removing listeners")
 
-        if (receiverRegistered){
+        if (receiverRegistered) {
             unregisterReceiver(nfcReceiver)
             receiverRegistered = false
         }

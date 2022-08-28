@@ -30,8 +30,9 @@ const val TAG = "Util"
 
 fun getDataEnabled(context: Context): Boolean {
 
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
-            as ConnectivityManager
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE)
+                as ConnectivityManager
 
     var mobileDataEnabled = false
 
@@ -57,10 +58,13 @@ fun getWifiEnabled(context: Context): Boolean {
 fun getNFCEnabled(context: Context): Boolean {
 
     return (context.getSystemService(TileService.NFC_SERVICE) as NfcManager)
-        .defaultAdapter?.isEnabled?:false
+        .defaultAdapter?.isEnabled ?: false
 }
 
-fun getConnectedWifiSSID(context: Context? = null, callback: ((String?) -> Unit)) {
+fun getConnectedWifiSSID(
+    context: Context? = null,
+    callback: ((String?) -> Unit)
+) {
 
     if (hasShellAccess(context)) {
         executeShellCommandAsync(
@@ -110,7 +114,8 @@ fun getWifiIcon(context: Context): Icon {
 
 fun getCellularNetworkIcon(context: Context): Icon {
 
-    val tm = context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
+    val tm =
+        context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
     val signalStrength = tm.signalStrength?.level ?: 0
 
     // TODO: We should try to get the signal strength of the data sim here.
@@ -130,13 +135,17 @@ fun getCellularNetworkIcon(context: Context): Icon {
 }
 
 @SuppressLint("MissingPermission")
-fun getCellularNetworkText(context: Context, telephonyDisplayInfo: TelephonyDisplayInfo?): String {
+fun getCellularNetworkText(
+    context: Context,
+    telephonyDisplayInfo: TelephonyDisplayInfo?
+): String {
 
     val info = ArrayList<String>()
-    val tm = context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
+    val tm =
+        context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
 
     val subscriptionInfo = getDataSubscriptionInfo(context)
-        // No data sim set or no read phone state permission
+    // No data sim set or no read phone state permission
         ?: return context.getString(R.string.network_not_available)
 
     info.add(subscriptionInfo.displayName.toString())
@@ -188,12 +197,13 @@ fun getDataSubscriptionInfo(context: Context): SubscriptionInfo? {
         context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
         == PackageManager.PERMISSION_GRANTED
     ) {
-        val sm = context.getSystemService(TileService.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+        val sm =
+            context.getSystemService(TileService.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
         val subId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             SubscriptionManager.getActiveDataSubscriptionId()
         } else {
             SubscriptionManager.getDefaultSubscriptionId()
-        };
+        }
 
         if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
 
@@ -214,7 +224,7 @@ fun getShellAccessRequiredDialog(context: Context): Dialog {
         .setMessage(R.string.shell_access_not_set_up)
         .setPositiveButton(android.R.string.ok) { _, _ ->
             if (ShizukuUtil.shizukuAvailable) {
-                ShizukuUtil.requestShizukuPermission {  }
+                ShizukuUtil.requestShizukuPermission { }
             } else {
                 context.startActivity(intent)
             }
@@ -223,12 +233,12 @@ fun getShellAccessRequiredDialog(context: Context): Dialog {
         .create()
 }
 
-fun executeShellCommand (command: String): Shell.Result? {
+fun executeShellCommand(command: String): Shell.Result? {
     if (Shell.rootAccess()) {
         return Shell.su(command).exec()
     } else if (ShizukuUtil.hasShizukuPermission()) {
         val process = ShizukuUtil.executeCommand(command)
-        return object: Shell.Result() {
+        return object : Shell.Result() {
             override fun getOut(): MutableList<String> {
                 return process
                     .inputStream.bufferedReader()
@@ -253,7 +263,10 @@ fun executeShellCommand (command: String): Shell.Result? {
     return null
 }
 
-fun executeShellCommandAsync(command: String, callback: ((Shell.Result?) -> Unit)? = {}) {
+fun executeShellCommandAsync(
+    command: String,
+    callback: ((Shell.Result?) -> Unit)? = {}
+) {
     ExecutorServiceSingleton.getInstance().execute {
         val result = executeShellCommand(command)
         callback?.let { it(result) }
@@ -266,7 +279,8 @@ fun executeShellCommandAsync(command: String, callback: ((Shell.Result?) -> Unit
  */
 fun hasShellAccess(context: Context? = null): Boolean {
 
-    val hasShellAccess = Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
+    val hasShellAccess =
+        Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
 
     if (hasShellAccess) {
         context?.stopService(Intent(context, ShizukuDetectService::class.java))
@@ -285,7 +299,10 @@ fun grantReadPhoneState(callback: ((Shell.Result?) -> Unit)? = {}) {
 fun setLastConnectedWifi(context: Context, ssid: String?) {
     val pm = PreferenceManager.getDefaultSharedPreferences(context)
     val editor = pm.edit()
-    editor.putString(context.resources.getString(R.string.last_connected_wifi_key), ssid)
+    editor.putString(
+        context.resources.getString(R.string.last_connected_wifi_key),
+        ssid
+    )
     editor.apply()
 }
 

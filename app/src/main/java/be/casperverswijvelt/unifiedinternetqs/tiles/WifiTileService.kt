@@ -7,7 +7,7 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.preference.PreferenceManager
-import be.casperverswijvelt.unifiedinternetqs.*
+import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
@@ -36,8 +36,7 @@ class WifiTileService : TileService() {
                 wifiConnected = false
                 wifiSSID = null
                 setLastConnectedWifi(applicationContext, wifiSSID)
-            }
-            else if (type == NetworkChangeType.NETWORK_AVAILABLE) {
+            } else if (type == NetworkChangeType.NETWORK_AVAILABLE) {
                 wifiConnected = true
                 getConnectedWifiSSID(applicationContext) {
                     wifiSSID = it
@@ -59,13 +58,18 @@ class WifiTileService : TileService() {
         mainHandler = Handler(mainLooper)
 
         wifiChangeListener = WifiChangeListener(networkChangeCallback)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         if (getWifiEnabled(this)) {
             wifiSSID = sharedPreferences
-                ?.getString(resources.getString(R.string.last_connected_wifi_key), null)
+                ?.getString(
+                    resources.getString(R.string.last_connected_wifi_key),
+                    null
+                )
         }
     }
+
     override fun onStartListening() {
         super.onStartListening()
 
@@ -161,7 +165,10 @@ class WifiTileService : TileService() {
                     ?: resources.getString(R.string.wifi)
                 it.state = Tile.STATE_ACTIVE
                 it.icon = getWifiIcon(applicationContext)
-                it.subtitle = if (isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(R.string.on)
+                it.subtitle =
+                    if (isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(
+                        R.string.on
+                    )
 
             } else {
 

@@ -1,9 +1,8 @@
 package be.casperverswijvelt.unifiedinternetqs
 
 import android.app.Application
-import android.app.NotificationManager
-
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast

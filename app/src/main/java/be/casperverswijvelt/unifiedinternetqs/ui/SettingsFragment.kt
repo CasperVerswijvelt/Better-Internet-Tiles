@@ -20,14 +20,17 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
-import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
+import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.topjohnwu.superuser.Shell
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?
+    ) {
         setPreferencesFromResource(R.xml.preference, rootKey)
 
         findPreference<Preference>(resources.getString(R.string.app_info_key))?.summary =
@@ -87,11 +90,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     ProcessPhoenix.triggerRebirth(context)
                 }
                 resources.getString(R.string.app_info_key) -> {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    intent.data = Uri.fromParts("package", context.packageName, null)
+                    val intent =
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data =
+                        Uri.fromParts("package", context.packageName, null)
                     intent.flags =
                         Intent.FLAG_ACTIVITY_NO_HISTORY or
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                     startActivity(intent)
                 }
                 resources.getString(R.string.add_wifi_tile_key) -> {
@@ -133,9 +138,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return super.onPreferenceTreeClick(preference)
     }
 
-    private fun <T> addTile(context: Context, serviceClass: Class<T>, titleResourceId: Int, iconResourceId: Int) {
+    private fun <T> addTile(
+        context: Context,
+        serviceClass: Class<T>,
+        titleResourceId: Int,
+        iconResourceId: Int
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSystemService(context, StatusBarManager::class.java)?.requestAddTileService(
+            getSystemService(
+                context,
+                StatusBarManager::class.java
+            )?.requestAddTileService(
                 ComponentName(
                     context,
                     serviceClass,

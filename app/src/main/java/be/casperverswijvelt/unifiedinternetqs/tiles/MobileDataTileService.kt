@@ -7,7 +7,7 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.preference.PreferenceManager
-import be.casperverswijvelt.unifiedinternetqs.*
+import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
@@ -44,7 +44,8 @@ class MobileDataTileService : TileService() {
         mainHandler = Handler(mainLooper)
 
         cellularChangeListener = CellularChangeListener(networkChangeCallback)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
     }
 
     override fun onStartListening() {

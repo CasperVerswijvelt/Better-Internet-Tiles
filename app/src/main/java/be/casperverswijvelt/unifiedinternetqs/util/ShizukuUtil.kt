@@ -1,9 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.util
 
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
 import rikka.shizuku.Shizuku
 
 /**
@@ -27,10 +24,10 @@ object ShizukuUtil {
         }
 
         return (
-            Shizuku.getVersion() >= 11 &&
-            !Shizuku.isPreV11() &&
-            Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
-        )
+                Shizuku.getVersion() >= 11 &&
+                        !Shizuku.isPreV11() &&
+                        Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+                )
     }
 
     /**
@@ -40,8 +37,12 @@ object ShizukuUtil {
      * @param callback invoked when the permission grant result is received.
      */
     fun requestShizukuPermission(callback: (granted: Boolean) -> Unit) {
-        Shizuku.addRequestPermissionResultListener(object : Shizuku.OnRequestPermissionResultListener {
-            override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
+        Shizuku.addRequestPermissionResultListener(object :
+            Shizuku.OnRequestPermissionResultListener {
+            override fun onRequestPermissionResult(
+                requestCode: Int,
+                grantResult: Int
+            ) {
                 Shizuku.removeRequestPermissionResultListener(this)
                 callback(grantResult == PackageManager.PERMISSION_GRANTED)
             }

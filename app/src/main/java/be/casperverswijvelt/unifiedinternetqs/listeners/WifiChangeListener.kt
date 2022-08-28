@@ -21,29 +21,34 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
         wifiStateReceiverIntentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION)
     }
 
-    fun startListening (context: Context) {
+    fun startListening(context: Context) {
 
         // Wi-Fi connected network state
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkRequest = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .build()
         cm.registerNetworkCallback(networkRequest, wifiNetworkCallback)
 
         // Wi-Fi enabled state
-        context.registerReceiver(wifiStateReceiver, wifiStateReceiverIntentFilter)
+        context.registerReceiver(
+            wifiStateReceiver,
+            wifiStateReceiverIntentFilter
+        )
 
         isListening = true
     }
 
-    fun  stopListening (context: Context) {
+    fun stopListening(context: Context) {
 
         if (isListening) {
 
             isListening = false
 
             // Wi-Fi connected network state
-            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             cm.unregisterNetworkCallback(wifiNetworkCallback)
 
             // Wi-Fi enabled state
@@ -51,17 +56,18 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
         }
     }
 
-    private val wifiNetworkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            super.onAvailable(network)
-            callback.handleChange(NetworkChangeType.NETWORK_AVAILABLE)
-        }
+    private val wifiNetworkCallback =
+        object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                callback.handleChange(NetworkChangeType.NETWORK_AVAILABLE)
+            }
 
-        override fun onLost(network: Network) {
-            super.onLost(network)
-            callback.handleChange(NetworkChangeType.NETWORK_LOST)
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                callback.handleChange(NetworkChangeType.NETWORK_LOST)
+            }
         }
-    }
 
     private val wifiStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -69,7 +75,9 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
             when (intent?.action) {
                 WifiManager.RSSI_CHANGED_ACTION,
                 WifiManager.NETWORK_STATE_CHANGED_ACTION,
-                WifiManager.WIFI_STATE_CHANGED_ACTION -> callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
+                WifiManager.WIFI_STATE_CHANGED_ACTION -> callback.handleChange(
+                    NetworkChangeType.SIGNAL_STRENGTH
+                )
             }
         }
     }

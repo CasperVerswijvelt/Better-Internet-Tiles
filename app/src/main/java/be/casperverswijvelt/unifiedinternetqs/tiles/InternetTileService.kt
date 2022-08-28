@@ -1,13 +1,13 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.*
+import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.preference.PreferenceManager
-import be.casperverswijvelt.unifiedinternetqs.*
+import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
@@ -71,11 +71,15 @@ class InternetTileService : TileService() {
         wifiChangeListener = WifiChangeListener(wifiChangeCallback)
         cellularChangeListener = CellularChangeListener(cellularChangeCallback)
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         if (getWifiEnabled(this)) {
             wifiSSID = sharedPreferences
-                ?.getString(resources.getString(R.string.last_connected_wifi_key), null)
+                ?.getString(
+                    resources.getString(R.string.last_connected_wifi_key),
+                    null
+                )
         }
 
     }
