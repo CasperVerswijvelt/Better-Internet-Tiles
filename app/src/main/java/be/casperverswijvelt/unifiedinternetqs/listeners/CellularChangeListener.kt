@@ -31,6 +31,7 @@ class CellularChangeListener(private val callback: NetworkChangeCallback) {
         }
 
     private val phoneStateListener = object : PhoneStateListener() {
+        @Deprecated("Deprecated in Java")
         override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
             callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
         }
