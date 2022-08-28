@@ -8,10 +8,11 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.topjohnwu.superuser.Shell
 
-class TileApplication: Application() {
+class TileApplication : Application() {
 
     companion object {
         const val CHANNEL_ID = "autoStartServiceChannel"
@@ -26,24 +27,40 @@ class TileApplication: Application() {
 
         ExecutorServiceSingleton.getInstance()
 
-        // If no root access is detected, assume that Shizuku is used and start foreground service
-        if (!Shell.rootAccess()) {
+        // If neither root access or Shizuku access is detected, assume that
+        //  Shizuku is used but not bound yet: start Shizuku detection
+        //  foreground service.
+        // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
+        //  needed
+        if (!Shell.rootAccess() && !ShizukuUtil.hasShizukuPermission()) {
 
-            try {
-                createNotificationChannel()
-                startForegroundService(Intent(this, ShizukuDetectService::class.java))
-            } catch (e: Throwable) {
-                Log.d(TAG, "Failed to start foreground service due to an ${e.message}")
-                FirebaseCrashlytics.getInstance().recordException(e)
+            startShizukuDetectionService()
+        }
+    }
 
-                // Not sure what the cause of the 'ForegroundServiceStartNotAllowedException' is
-                //  or how to solve it.
-                Toast.makeText(
-                    applicationContext,
-                    R.string.toast_foreground_service_error,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+    private fun startShizukuDetectionService() {
+        try {
+            createNotificationChannel()
+            startForegroundService(
+                Intent(
+                    this,
+                    ShizukuDetectService::class.java
+                )
+            )
+        } catch (e: Throwable) {
+            Log.d(
+                TAG,
+                "Failed to start foreground service due to an ${e.message}"
+            )
+            FirebaseCrashlytics.getInstance().recordException(e)
+
+            // Not sure what the cause of the 'ForegroundServiceStartNotAllowedException'
+            //  is or how to solve it.
+            Toast.makeText(
+                applicationContext,
+                R.string.toast_foreground_service_error,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
