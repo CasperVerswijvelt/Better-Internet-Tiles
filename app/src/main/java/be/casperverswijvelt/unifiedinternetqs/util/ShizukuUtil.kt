@@ -51,7 +51,7 @@ object ShizukuUtil {
     }
 
     fun executeCommand(command: String): Process {
-        // I tried working with a Shizuku user bound process and using hidden API's, but did not
+        // I tried working with a Shizuku user bound process and using hidden APIs, but did not
         //  fully get it to work, so I just use the same commands as I did when using SU.
         val process = Shizuku.newProcess(
             command.split(' ').toTypedArray(),
