@@ -26,14 +26,21 @@ class TileApplication : Application() {
 
         ExecutorServiceSingleton.getInstance()
 
-        // If neither root access or Shizuku access is detected, assume that
-        //  Shizuku is used but not bound yet: start Shizuku detection
-        //  foreground service.
-        // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
-        //  needed
-        if (!Shell.rootAccess() && !ShizukuUtil.hasShizukuPermission()) {
+        // Check if main shell has root access
+        Shell.getShell {
 
-            startShizukuDetectionService()
+            // If neither root access or Shizuku access is detected, assume that
+            //  Shizuku is used but not bound yet: start Shizuku detection
+            //  foreground service.
+            // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
+            //  needed
+            if (
+                Shell.isAppGrantedRoot() != true &&
+                !ShizukuUtil.hasShizukuPermission()
+            ) {
+
+                startShizukuDetectionService()
+            }
         }
     }
 

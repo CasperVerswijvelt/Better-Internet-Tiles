@@ -68,9 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     return true
                 }
                 resources.getString(R.string.request_root_access_key) -> {
-                    Shell.getShell()
-
-                    if (Shell.rootAccess()) {
+                    if (Shell.isAppGrantedRoot() == true) {
                         Toast.makeText(
                             context,
                             R.string.root_access_granted,

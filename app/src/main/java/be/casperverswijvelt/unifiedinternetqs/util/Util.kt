@@ -234,8 +234,8 @@ fun getShellAccessRequiredDialog(context: Context): Dialog {
 }
 
 fun executeShellCommand(command: String): Shell.Result? {
-    if (Shell.rootAccess()) {
-        return Shell.su(command).exec()
+    if (Shell.isAppGrantedRoot() == true) {
+        return Shell.cmd(command).exec()
     } else if (ShizukuUtil.hasShizukuPermission()) {
         val process = ShizukuUtil.executeCommand(command)
         return object : Shell.Result() {
@@ -280,7 +280,7 @@ fun executeShellCommandAsync(
 fun hasShellAccess(context: Context? = null): Boolean {
 
     val hasShellAccess =
-        Shell.rootAccess() || ShizukuUtil.hasShizukuPermission()
+        Shell.isAppGrantedRoot() == true || ShizukuUtil.hasShizukuPermission()
 
     if (hasShellAccess) {
         context?.stopService(Intent(context, ShizukuDetectService::class.java))
