@@ -24,7 +24,6 @@
     <string name="request_shizuku_access_key">request_shizuku_access</string>
     <string name="request_root_access_key">request_root_access</string>
     <string name="restart_app_key">restart_tiles</string>
-    <string name="xda_key">xda</string>
     <string name="last_connected_wifi_key">last_connected_wifi</string>
     <string name="add_wifi_tile_key">add_wifi_tile</string>
     <string name="mobile_data">Mobildata</string>
