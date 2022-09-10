@@ -56,4 +56,6 @@
     <string name="request_root_access_key" translatable="false"></string>
     <string name="add_wifi_tile_key" translatable="false"></string>
     <string name="last_connected_wifi_key" translatable="false"></string>
+    <string name="not_connected"></string>
+    <string name="airplane_mode"></string>
 </resources>
