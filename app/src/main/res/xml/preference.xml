@@ -6,13 +6,11 @@
         android:title="@string/about">
 
         <Preference
-            android:key="pref_static_field_key"
             android:selectable="false"
             android:persistent="false"
             android:summary="@string/app_description_about"/>
 
         <Preference
-            android:key="pref_static_field_key"
             android:selectable="false"
             android:persistent="false"
             android:summary="@string/app_description_usage"/>
@@ -35,7 +33,6 @@
         android:title="@string/permissions">
 
         <Preference
-            android:key="pref_static_field_key"
             android:selectable="false"
             android:persistent="false"
             android:summary="@string/app_description_shell_access"/>
@@ -54,7 +51,6 @@
         android:text="@string/add_tiles_title"
         android:title="@string/add_tiles_title">
         <Preference
-            android:key="pref_static_field_key"
             android:selectable="false"
             android:persistent="false"
             android:summary="@string/add_tiles_description"/>
@@ -80,7 +76,6 @@
         android:title="@string/other">
         <Preference
             android:icon="@drawable/ic_baseline_feedback_24"
-            android:key="@string/feedback_key"
             android:title="@string/feedback_title">
             <intent
                 android:action="android.intent.action.VIEW"
@@ -88,7 +83,6 @@
         </Preference>
         <Preference
             android:icon="@drawable/github_24"
-            android:key="@string/github_key"
             android:title="@string/github_title">
             <intent
                 android:action="android.intent.action.VIEW"
@@ -96,7 +90,6 @@
         </Preference>
         <Preference
             android:icon="@drawable/xda"
-            android:key="@string/xda_key"
             android:title="@string/xda_title">
             <intent
                 android:action="android.intent.action.VIEW"

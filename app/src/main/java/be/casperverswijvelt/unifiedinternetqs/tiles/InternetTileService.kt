@@ -207,7 +207,7 @@ class InternetTileService : TileService() {
                         resources.getString(R.string.turning_on)
                     else
                         (if (wifiConnected) wifiSSID else null)
-                            ?: resources.getString(R.string.wifi_on)
+                            ?: resources.getString(R.string.not_connected)
                 }
                 isTurningOnData || dataEnabled -> {
 
