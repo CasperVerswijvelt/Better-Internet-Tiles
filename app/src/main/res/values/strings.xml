@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Better Internet Tiles</string>
     <string name="app_description_about">
-        This application aims to create a unified internet quick-settings tile, which is actually useful (I\'m looking at you, Android 12).
+        A unified and actually useful Internet quick-settings tile (Unlike Android 12).
     </string>
     <string name="app_description_usage">
-        Tapping the internet tile will toggle between Wi-Fi and mobile data. Separate Wi-Fi and mobile data tiles are also available if you just want to go back to how it was before Android 12.
+        Tap the new Internet tile to toggle between Wi-Fi and mobile data. Respective tiles are also available, like it was before Android 12.
     </string>
     <string name="app_description_shell_access">
-        Shell access is required to enable/disable Wi-Fi and mobile data, as well as for reading the SSID of the current Wi-Fi network. Fortunately Shizuku can take care of this without even requiring root access!
+        Turning Wi-Fi and mobile data on/off and reading the current Wi-Fi network name requires shell access. Shizuku can take care of this without also requiring root access.
     </string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobile data</string>
@@ -16,53 +16,53 @@
     <string name="off">Off</string>
     <string name="turning_on">Turning on</string>
     <string name="wifi_on">Wi-Fi on</string>
-    <string name="require_unlock_key">require_unlock</string>
+    <string name="require_unlock_key" translatable="false">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
-    <string name="require_unlock_summary">If enabled, you will need to unlock your device first before being able to toggle between internet modes.</string>
-    <string name="request_shizuku_access_key">request_shizuku_access</string>
+    <string name="require_unlock_summary">Prevent toggling network modes when the lockscreen is on.</string>
+    <string name="request_shizuku_access_key" translatable="false">request_shizuku_access</string>
     <string name="request_shizuku_access_title">Request Shizuku access</string>
     <string name="request_shizuku_access_summary">Use Shizuku to grant Shell access</string>
-    <string name="request_root_access_key">request_root_access</string>
+    <string name="request_root_access_key" translatable="false">request_root_access</string>
     <string name="request_root_access_title">Request root access</string>
-    <string name="request_root_access_summary">Use root to grant Shell access</string>
-    <string name="restart_app_key">restart_tiles</string>
+    <string name="request_root_access_summary">Use root to grant shell access</string>
+    <string name="restart_app_key" translatable="false">restart_tiles</string>
     <string name="restart_app_title">Restart app</string>
-    <string name="restart_app_summary">Experiencing weird behavior? Try restarting the app!</string>
-    <string name="app_info_key">app_info</string>
-    <string name="app_info_title">App info</string>
-    <string name="feedback_key">feedback</string>
-    <string name="feedback_title">Feedback / Report a bug</string>
-    <string name="github_key">github</string>
-    <string name="github_title">GitHub Repository</string>
-    <string name="xda_key">xda</string>
-    <string name="xda_title">XDA Developers Thread</string>
-    <string name="last_connected_wifi_key">last_connected_wifi</string>
+    <string name="restart_app_summary">Try restarting the app if something seems wrong.</string>
+    <string name="app_info_key" translatable="false">app_info</string>
+    <string name="app_info_title">About</string>
+    <string name="feedback_key" translatable="false">feedback</string>
+    <string name="feedback_title">Feedback/report a bug</string>
+    <string name="github_key" translatable="false">github</string>
+    <string name="github_title">GitHub repository</string>
+    <string name="xda_key" translatable="false">xda</string>
+    <string name="xda_title">XDA Developers thread</string>
+    <string name="last_connected_wifi_key" translatable="false">last_connected_wifi</string>
     <string name="settings">Settings</string>
     <string name="permissions">Permissions</string>
     <string name="about">About</string>
     <string name="other">Other</string>
-    <string name="shizuku_access_granted">Successfully granted Shizuku access.</string>
-    <string name="root_access_granted">Successfully granted root access.</string>
-    <string name="root_access_denied">Failed to get root access</string>
-    <string name="root_access_denied_description">Go into your root management application (e.g Magisk manager) and manually grant root access to the \'Better Internet Tiles\' application.</string>
-    <string name="shell_access_not_set_up">You need root or Shizuku version 11 or higher to use this app. Make sure you\'ve installed the Shizuku app and Shizuku is running. If Shizuku is running, make sure you\'ve granted permission to this app to use it. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="shizuku_access_granted">Shizuku access granted.</string>
+    <string name="root_access_granted">Root access granted.</string>
+    <string name="root_access_denied">Could not grant root access</string>
+    <string name="root_access_denied_description">Manually grant root access to \'Better Internet Tiles\' from your root management app (e.g Magisk manager).</string>
+    <string name="shell_access_not_set_up">You need either root access, or Shizuku 11+ installed and running with a granted permission for this app. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="shell_access_required">Shell access required</string><string name="hide_service_title">Hide me!</string>
-    <string name="hide_service_description">This notification makes sure the tiles work correctly with Shizuku. Feel free to hide it.</string>
-    <string name="toast_foreground_service_error">"Could not start foreground service, please contact the developer."</string>
+    <string name="hide_service_description">This notification ensures the tiles work correctly with Shizuku. Feel free to hide it.</string>
+    <string name="toast_foreground_service_error">"Could not start foreground service. Please contact the developer."</string>
     <string name="add_wifi_tile">Add Wi-Fi tile</string>
-    <string name="add_wifi_tile_key">add_wifi_tile</string>
+    <string name="add_wifi_tile_key" translatable="false">add_wifi_tile</string>
     <string name="add_mobile_data_tile">Add mobile data tile</string>
-    <string name="add_mobile_data_tile_key">add_mobile_data_tile</string>
-    <string name="add_internet_tile">Add internet tile</string>
-    <string name="add_internet_tile_key">add_internet_tile_key</string>
+    <string name="add_mobile_data_tile_key" translatable="false">add_mobile_data_tile</string>
+    <string name="add_internet_tile">Add Internet tile</string>
+    <string name="add_internet_tile_key" translatable="false">add_internet_tile_key</string>
     <string name="add_nfc_tile">Add NFC tile</string>
-    <string name="add_nfc_tile_key">add_nfc_tile_key</string>
+    <string name="add_nfc_tile_key" translatable="false">add_nfc_tile_key</string>
     <string name="add_tiles_title">Add tiles</string>
-    <string name="add_tiles_description">Easily add these tiles by using the shortcut buttons below! These shortcuts will not work on Android versions lower than 13. In that case, please manually go into the quick-settings to add these tiles.</string>
-    <string name="tile_added_error">Could not add tile</string>
-    <string name="require_android_13">This feature requires Android 13</string>
-    <string name="require_android_13_description">Please add the tile manually by opening your quick settings menu</string>
+    <string name="add_tiles_description">Add these tiles by using the shortcut buttons below! On Android 12 and below you have to do so manually from the quick-settings.</string>
+    <string name="tile_added_error">Could not add the tile</string>
+    <string name="require_android_13">Requires Android 13+</string>
+    <string name="require_android_13_description">Manually add the tile by opening the quick-settings menu</string>
     <string name="internet">Internet</string>
-    <string name="network_not_available">Network not available</string>
+    <string name="network_not_available">No available network</string>
     <string name="no_service">No service</string>
 </resources>
