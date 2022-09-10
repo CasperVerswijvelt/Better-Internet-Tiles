@@ -18,7 +18,7 @@
     <string name="not_connected">Not connected</string>
     <string name="require_unlock_key" translatable="false">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
-    <string name="require_unlock_summary">Prevent toggling network modes when the lockscreen is on.</string>
+    <string name="require_unlock_summary">Prevent toggling network modes when the on the lockscreen.</string>
     <string name="request_shizuku_access_key" translatable="false">request_shizuku_access</string>
     <string name="request_shizuku_access_title">Request Shizuku access</string>
     <string name="request_shizuku_access_summary">Use Shizuku to grant Shell access</string>
@@ -29,7 +29,6 @@
     <string name="restart_app_title">Restart app</string>
     <string name="restart_app_summary">Try restarting the app if something seems wrong.</string>
     <string name="app_info_key" translatable="false">app_info</string>
-    <string name="app_info_title">About</string>
     <string name="feedback_title">Feedback/report a bug</string>
     <string name="github_title">GitHub repository</string>
     <string name="xda_title">XDA Developers thread</string>
