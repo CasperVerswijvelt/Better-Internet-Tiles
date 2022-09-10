@@ -1,2 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="nfc">NFC</string>
+    <string name="off">Uit</string>
+    <string name="app_name">Better Internet Tiles</string>
+    <string name="app_description_usage">Klik op de nieuwe internet tile om te schakelen tussen Wi-Fi en mobile data. Respectievelijke tiles zijn ook apart beschikbaar zoals ze waren voor Android 12.</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="mobile_data">Mobiele data</string>
+    <string name="turning_on">Aanzetten</string>
+    <string name="not_connected">Niet verbonden</string>
+    <string name="require_unlock_title">Vereis schermontgrendeling</string>
+    <string name="require_unlock_summary">Zorg dat je telefoon eerst ontgrendeld moet worden voor de tiles te kunnen gebruiken.</string>
+    <string name="request_shizuku_access_title">Vraag Shizuku toegang aan</string>
+    <string name="request_shizuku_access_summary">Gebruik Shizuku om toegang tot de shell te verkrijgen</string>
+    <string name="request_root_access_title">Vraag root-toegang aan</string>
+    <string name="request_root_access_summary">Gebruik root om toegang tot de shell te verkrijgen</string>
+    <string name="restart_app_title">Herstart app</string>
+    <string name="restart_app_summary">Als er iets fout lijkt, probeer de app te herstarten.</string>
+    <string name="app_info_title">Over</string>
+    <string name="feedback_title">Feedback/bug rapporteren</string>
+    <string name="github_title">GitHub repository</string>
+    <string name="xda_title">XDA Developers thread</string>
+    <string name="settings">Instellingen</string>
+    <string name="permissions">Machtigingen</string>
+    <string name="about">Over</string>
+    <string name="other">Overige</string>
+    <string name="shizuku_access_granted">Shizuku toegang verkregen.</string>
+    <string name="root_access_granted">Root-toegang verkregen.</string>
+    <string name="root_access_denied">Kon geen root-toegang vekrijgen</string>
+    <string name="root_access_denied_description">Geef de \'Better Internet Tiles\' app manueel root-toegang via je root-beheer applicatie (e.g. Magisk manager).</string>
+    <string name="shell_access_required">Shell toegang vereist</string>
+    <string name="hide_service_title">Verberg mij!</string>
+    <string name="hide_service_description">Deze melding zorgt dat de tiles correct werken wanneer Shizuku wordt gebruikt. Voel je vrij om deze te verbergen.</string>
+    <string name="add_tiles_title">Voeg tiles toe</string>
+    <string name="add_tiles_description">Voeg deze tiles toe door middel van de knoppen hieronder! Op Android 12 en lager zal je dit manueel moeten doen via het quick-settings paneel.</string>
+    <string name="tile_added_error">Kon tile niet toevoegen</string>
+    <string name="require_android_13">Vereist Android 13+</string>
+    <string name="require_android_13_description">Voeg de tile manueel toe in het quick-settings paneel</string>
+    <string name="toast_foreground_service_error">Kon voorgrond service niet starten. Contacteer aub de ontwikkelaar.</string>
+    <string name="add_wifi_tile">Voeg Wi-Fi tile toe</string>
+    <string name="add_mobile_data_tile">Voeg mobiele data tile toe</string>
+    <string name="add_internet_tile">Voeg Internet tile toe</string>
+    <string name="add_nfc_tile">Voeg NFC tile toe</string>
+    <string name="internet">Internet</string>
+    <string name="network_not_available">Netwerk niet beschikbaar</string>
+    <string name="no_service">Geen service</string>
+    <string name="app_description_shell_access">Het aan- en uitzetten van Wi-Fi en mobiele data, zowel als het uitlezen van het huidige Wi-Fi netwerk, vereist toegang tot de shell. Shizuku kan dit regelen zonder root-toegang.</string>
+    <string name="app_description_about">Een betere versie van de \'Internet\' quick-settings tile die in Android 12 geïntroduceerd werd.</string>
+    <string name="on">Aan</string>
+    <string name="shell_access_not_set_up">Je hebt ofwel root-toegang ndogi, of Shizuku 11+ werkende hebben om deze app te gebruiken. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+</resources>
