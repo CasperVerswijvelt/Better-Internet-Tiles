@@ -61,6 +61,6 @@
     <string name="require_android_13">Requires Android 13+</string>
     <string name="require_android_13_description">Manually add the tile by opening the quick-settings menu</string>
     <string name="internet">Internet</string>
-    <string name="network_not_available">No available network</string>
+    <string name="network_not_available">Network not available</string>
     <string name="no_service">No service</string>
 </resources>
