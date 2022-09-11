@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".TileApplication"
@@ -17,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UnifiedInternetQS"
         android:exported="true"
-        android:allowBackup="true">
+        android:allowBackup="true"
+        android:usesCleartextTraffic="true">
 
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
