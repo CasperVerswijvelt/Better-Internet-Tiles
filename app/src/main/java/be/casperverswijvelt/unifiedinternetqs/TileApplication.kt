@@ -89,31 +89,32 @@ class TileApplication : Application() {
 
     private fun reportToAnalytics() {
         Thread {
-            Log.d(TAG, "Sending request")
-            val url = URL("http://192.168.69.14:3000/report")
-            with(url.openConnection() as HttpURLConnection) {
-                requestMethod = "POST"
-                setRequestProperty("Content-Type", "application/json")
-                setRequestProperty("Accept", "application/json")
-                doOutput = true
+            try {
+                Log.d(TAG, "Sending request")
+                val url = URL("https://bitanalytics.casperverswijvelt.be/report")
+                with(url.openConnection() as HttpURLConnection) {
+                    requestMethod = "POST"
+                    setRequestProperty("Content-Type", "application/json")
+                    setRequestProperty("Accept", "application/json")
+                    doOutput = true
 
-                val data = ("{" +
-                        "\"sdkLevel\": ${Build.VERSION.SDK_INT}," +
-                        "\"android\": \"${Build.VERSION.RELEASE}\"," +
-                        "\"language\": \"${Locale.getDefault().language}\"," +
-                        "\"distribution\": \"${BuildConfig.FLAVOR}\"," +
-                        "\"manufacturer\": \"${Build.MANUFACTURER}\"," +
-                        "\"brand\": \"${Build.BRAND}\"," +
-                        "\"device\": \"${Build.DEVICE}\"," +
-                        "\"model\": \"${Build.MODEL}\"," +
-                        "\"installId\": \"${getInstallId()}\"" +
-                        "}").toByteArray(Charsets.UTF_8)
-                outputStream.write(data, 0, data.size)
+                    val data = ("{" +
+                            "\"sdkLevel\": ${Build.VERSION.SDK_INT}," +
+                            "\"language\": \"${Locale.getDefault().language}\"," +
+                            "\"distribution\": \"${BuildConfig.FLAVOR}\"," +
+                            "\"brand\": \"${Build.BRAND}\"," +
+                            "\"model\": \"${Build.MODEL}\"," +
+                            "\"uuid\": \"${getInstallId()}\"" +
+                            "}").toByteArray(Charsets.UTF_8)
+                    outputStream.write(data, 0, data.size)
 
-                Log.d(TAG,
-                    "\nSent 'POST' request to URL : $url; Response Code : " +
-                            "$responseCode"
-                )
+                    Log.d(TAG,
+                        "\nSent 'POST' request to URL : $url; Response Code : " +
+                                "$responseCode"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error sending analytics data: $e")
             }
         }.start()
     }
