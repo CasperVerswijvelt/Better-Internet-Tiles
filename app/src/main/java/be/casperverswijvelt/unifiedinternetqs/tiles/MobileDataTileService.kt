@@ -62,13 +62,6 @@ class MobileDataTileService : TileService() {
         removeListeners()
     }
 
-    override fun onTileAdded() {
-        super.onTileAdded()
-
-        setListeners()
-        syncTile()
-    }
-
     override fun onTileRemoved() {
         super.onTileRemoved()
 

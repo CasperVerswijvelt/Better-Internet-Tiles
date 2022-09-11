@@ -98,19 +98,6 @@ class InternetTileService : TileService() {
         removeListeners()
     }
 
-    override fun onTileAdded() {
-        super.onTileAdded()
-
-        setListeners()
-        syncTile()
-    }
-
-    override fun onTileRemoved() {
-        super.onTileRemoved()
-
-        removeListeners()
-    }
-
     override fun onClick() {
         super.onClick()
 
