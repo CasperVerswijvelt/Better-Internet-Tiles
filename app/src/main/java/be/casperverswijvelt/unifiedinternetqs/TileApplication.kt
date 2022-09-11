@@ -10,7 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
-import com.google.firebase.crashlytics.FirebaseCrashlytics
+import be.casperverswijvelt.unifiedinternetqs.util.reportException
 import com.topjohnwu.superuser.Shell
 import java.net.HttpURLConnection
 import java.net.URL
@@ -65,7 +65,7 @@ class TileApplication : Application() {
                 TAG,
                 "Failed to start foreground service due to an ${e.message}"
             )
-            FirebaseCrashlytics.getInstance().recordException(e)
+            reportException(e)
 
             // Not sure what the cause of the 'ForegroundServiceStartNotAllowedException'
             //  is or how to solve it.

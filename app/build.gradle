@@ -74,8 +74,10 @@ dependencies {
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 
     // Firebase Analytics
-    implementation platform('com.google.firebase:firebase-bom:29.0.3')
-    implementation 'com.google.firebase:firebase-crashlytics'
+    githubImplementation platform('com.google.firebase:firebase-bom:29.0.3')
+    githubImplementation 'com.google.firebase:firebase-crashlytics'
+    playstoreImplementation platform('com.google.firebase:firebase-bom:29.0.3')
+    playstoreImplementation 'com.google.firebase:firebase-crashlytics'
 }
 
 configurations {
