@@ -91,7 +91,8 @@ class TileApplication : Application() {
         Thread {
             try {
                 Log.d(TAG, "Sending request")
-                val url = URL("https://bitanalytics.casperverswijvelt.be/report")
+                val url =
+                    URL("https://bitanalytics.casperverswijvelt.be/api/report")
                 with(url.openConnection() as HttpURLConnection) {
                     requestMethod = "POST"
                     setRequestProperty("Content-Type", "application/json")
@@ -108,7 +109,8 @@ class TileApplication : Application() {
                             "}").toByteArray(Charsets.UTF_8)
                     outputStream.write(data, 0, data.size)
 
-                    Log.d(TAG,
+                    Log.d(
+                        TAG,
                         "\nSent 'POST' request to URL : $url; Response Code : " +
                                 "$responseCode"
                     )
@@ -128,8 +130,10 @@ class TileApplication : Application() {
         val installationIdKey = "INSTALLATION_ID"
         return sharedPref.getString(installationIdKey, null) ?: run {
             val uuid = UUID.randomUUID().toString()
-            sharedPref.edit().putString(installationIdKey, UUID.randomUUID()
-                .toString()).apply()
+            sharedPref.edit().putString(
+                installationIdKey, UUID.randomUUID()
+                    .toString()
+            ).apply()
             uuid
         }
     }
