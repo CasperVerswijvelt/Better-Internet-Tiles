@@ -76,7 +76,6 @@ dependencies {
     // Firebase Analytics
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
     implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
 }
 
 configurations {
