@@ -1,6 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.SharedPreferences
+import android.content.*
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
@@ -23,14 +23,23 @@ class MobileDataTileService : TileService() {
 
     private var isTurningOnData = false
     private var isTurningOffData = false
+    private var receiverRegistered = false
 
     private val runToggleMobileData = Runnable {
         toggleMobileData()
         syncTile()
     }
+
     private val networkChangeCallback = object : NetworkChangeCallback {
         override fun handleChange(type: NetworkChangeType?) {
             syncTile()
+        }
+    }
+    private val airplaneModeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED) {
+                syncTile()
+            }
         }
     }
 
@@ -118,9 +127,15 @@ class MobileDataTileService : TileService() {
 
         qsTile?.let {
 
+            val airplaneModeEnabled = getAirplaneModeEnabled(applicationContext)
             val dataEnabled = getDataEnabled(applicationContext)
 
-            if ((dataEnabled && !isTurningOffData) || isTurningOnData) {
+            if (airplaneModeEnabled) {
+
+                it.state = Tile.STATE_UNAVAILABLE
+                it.subtitle = getText(R.string.airplane_mode)
+
+            } else if ((dataEnabled && !isTurningOffData) || isTurningOnData) {
 
                 if (dataEnabled) isTurningOnData = false
 
@@ -154,6 +169,12 @@ class MobileDataTileService : TileService() {
         log("Setting listeners")
 
         cellularChangeListener?.startListening(applicationContext)
+
+        registerReceiver(
+            airplaneModeReceiver,
+            IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        )
+        receiverRegistered = true
     }
 
     private fun removeListeners() {
@@ -161,6 +182,11 @@ class MobileDataTileService : TileService() {
         log("Removing listeners")
 
         cellularChangeListener?.stopListening(applicationContext)
+
+        if (receiverRegistered) {
+            unregisterReceiver(airplaneModeReceiver)
+            receiverRegistered = false
+        }
     }
 
     private fun log(text: String) {

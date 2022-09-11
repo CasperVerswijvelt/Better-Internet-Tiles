@@ -12,6 +12,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.nfc.NfcManager
 import android.os.Build
+import android.provider.Settings
 import android.service.quicksettings.TileService
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
@@ -59,6 +60,14 @@ fun getNFCEnabled(context: Context): Boolean {
 
     return (context.getSystemService(TileService.NFC_SERVICE) as NfcManager)
         .defaultAdapter?.isEnabled ?: false
+}
+fun getAirplaneModeEnabled(context: Context): Boolean {
+
+    return Settings.System.getInt(
+        context.contentResolver,
+        Settings.Global.AIRPLANE_MODE_ON,
+        0
+    ) != 0;
 }
 
 fun getConnectedWifiSSID(
