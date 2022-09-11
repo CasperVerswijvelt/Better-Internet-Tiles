@@ -28,6 +28,21 @@ android {
             ext.enableCrashlytics = false
         }
     }
+    flavorDimensions "distribution"
+    productFlavors {
+        github {
+            dimension "distribution"
+            versionNameSuffix "-github"
+        }
+        fdroid {
+            dimension "distribution"
+            versionNameSuffix "-fdroid"
+        }
+        playstore {
+            dimension "distribution"
+            versionNameSuffix "-playstore"
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
