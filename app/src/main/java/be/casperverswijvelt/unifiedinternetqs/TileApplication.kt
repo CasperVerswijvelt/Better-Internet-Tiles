@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -89,31 +90,67 @@ class TileApplication : Application() {
 
     private fun reportToAnalytics() {
         Thread {
+
             try {
-                Log.d(TAG, "Sending request")
-                val url =
-                    URL("https://bitanalytics.casperverswijvelt.be/api/report")
-                with(url.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty("Accept", "application/json")
-                    doOutput = true
+                val sharedPref = getSharedPreferences(
+                    "shared",
+                    Context.MODE_PRIVATE
+                )
+                val lastReportTimestampKey = "LAST_REPORT_TIMESTAMP"
 
-                    val data = ("{" +
-                            "\"sdkLevel\": ${Build.VERSION.SDK_INT}," +
-                            "\"language\": \"${Locale.getDefault().language}\"," +
-                            "\"distribution\": \"${BuildConfig.FLAVOR}\"," +
-                            "\"brand\": \"${Build.BRAND}\"," +
-                            "\"model\": \"${Build.MODEL}\"," +
-                            "\"uuid\": \"${getInstallId()}\"" +
-                            "}").toByteArray(Charsets.UTF_8)
-                    outputStream.write(data, 0, data.size)
+                val lastReportTimestamp = sharedPref.getLong(
+                    lastReportTimestampKey,
+                    0
+                )
+                val currentMillis = System.currentTimeMillis()
+                val diff = (currentMillis - lastReportTimestamp) / (60 * 60
+                        * 1000)
 
-                    Log.d(
-                        TAG,
-                        "\nSent 'POST' request to URL : $url; Response Code : " +
-                                "$responseCode"
-                    )
+                // Only send analytics data if last sent out report was more
+                //  than 4 hours ago
+                if (diff >= 4) {
+
+                    Log.d(TAG, "Sending Analytics data")
+                    val url = URL("https://bitanalytics.casperverswijvelt.be/api/report")
+                    with(url.openConnection() as HttpURLConnection) {
+                        requestMethod = "POST"
+                        doOutput = true
+
+                        // JSON Format
+                        setRequestProperty("Content-Type", "application/json")
+                        setRequestProperty("Accept", "application/json")
+
+                        // Small JSON message containing some basic information
+                        //  to report to analytics. This data is used for
+                        //  informational purpose only.
+                        val data = ("{" +
+                                "\"dynamic\": {" +
+                                "\"sdkLevel\": ${Build.VERSION.SDK_INT}," +
+                                "\"language\": \"${Locale.getDefault().language}\"" +
+                                "}, \"static\": {" +
+                                "\"distribution\": \"${BuildConfig.FLAVOR}\"," +
+                                "\"brand\": \"${Build.BRAND}\"," +
+                                "\"model\": \"${Build.MODEL}\"," +
+                                "\"uuid\": \"${getInstallId(sharedPref)}\"" +
+                                "}" +
+                                "}").toByteArray(Charsets.UTF_8)
+                        outputStream.write(data, 0, data.size)
+
+                        Log.d(
+                            TAG,
+                            "\nSuccessfully sent 'POST' request to URL : $url;" +
+                                    " Response Code: " +
+                                    "$responseCode"
+                        )
+                    }
+
+                    // Save timestamp in shared preferences
+                    sharedPref.edit().putLong(
+                        lastReportTimestampKey,
+                        currentMillis
+                    ).apply()
+                } else {
+                    Log.e(TAG, "Already sent analytics report $diff hours ago")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending analytics data: $e")
@@ -121,16 +158,11 @@ class TileApplication : Application() {
         }.start()
     }
 
-    private fun getInstallId(): String {
-
-        val sharedPref = getSharedPreferences(
-            "shared",
-            Context.MODE_PRIVATE
-        )
+    private fun getInstallId(sharedPreferences: SharedPreferences): String {
         val installationIdKey = "INSTALLATION_ID"
-        return sharedPref.getString(installationIdKey, null) ?: run {
+        return sharedPreferences.getString(installationIdKey, null) ?: run {
             val uuid = UUID.randomUUID().toString()
-            sharedPref.edit().putString(
+            sharedPreferences.edit().putString(
                 installationIdKey, UUID.randomUUID()
                     .toString()
             ).apply()
