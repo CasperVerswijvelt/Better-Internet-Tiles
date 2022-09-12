@@ -16,7 +16,6 @@
     <string name="request_root_access_summary">Gebruik root om toegang tot de shell te verkrijgen</string>
     <string name="restart_app_title">Herstart app</string>
     <string name="restart_app_summary">Als er iets fout lijkt, probeer de app te herstarten.</string>
-    <string name="app_info_title">Over</string>
     <string name="feedback_title">Feedback/bug rapporteren</string>
     <string name="github_title">GitHub repository</string>
     <string name="xda_title">XDA Developers thread</string>

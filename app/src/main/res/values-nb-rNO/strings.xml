@@ -8,7 +8,6 @@
     <string name="request_root_access_title">Forespør rot-tilgang</string>
     <string name="request_root_access_summary">Bruk rot-tilgang til å innvilge skall-tilgang</string>
     <string name="restart_app_title">Start programmet på ny</string>
-    <string name="app_info_title">Programinfo</string>
     <string name="github_title">GitHub-kodelager</string>
     <string name="shizuku_access_granted">Shizuku-tilgang innvilget.</string>
     <string name="hide_service_title">Skjul meg.</string>
