@@ -31,7 +31,7 @@ class TileApplication : Application() {
 
         ExecutorServiceSingleton.getInstance()
 
-        reportToAnalytics()
+        if (!BuildConfig.DEBUG) reportToAnalytics()
 
         // Check if main shell has root access
         Shell.getShell {
