@@ -126,7 +126,9 @@ class TileApplication : Application() {
                         val data = ("{" +
                                 "\"dynamic\": {" +
                                 "\"sdkLevel\": ${Build.VERSION.SDK_INT}," +
-                                "\"language\": \"${Locale.getDefault().language}\"" +
+                                "\"language\": \"${Locale.getDefault()
+                                    .language}\"," +
+                                "\"version\": ${BuildConfig.VERSION_CODE}" +
                                 "}, \"static\": {" +
                                 "\"distribution\": \"${BuildConfig.FLAVOR}\"," +
                                 "\"brand\": \"${Build.BRAND}\"," +
