@@ -107,8 +107,8 @@ class TileApplication : Application() {
                         * 1000)
 
                 // Only send analytics data if last sent out report was more
-                //  than 4 hours ago
-                if (diff >= 4) {
+                //  than 8 hours ago
+                if (diff >= 8) {
 
                     Log.d(TAG, "Sending Analytics data")
                     val url = URL("https://bitanalytics.casperverswijvelt.be/api/report")
