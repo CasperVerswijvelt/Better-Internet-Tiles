@@ -5,6 +5,9 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+**'
 
+env:
+  BUILD_TOOLS_VERSION: 33.0.0
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,10 +29,6 @@ jobs:
         id: createGoogleServicesJson
         run: echo '${{ secrets.GOOGLE_SERVICES }}' > app/google-services.json
 
-#      - name: Build with Gradle
-#        id: build
-#        run: ./gradlew build
-
       - name: Build Release AAB
         id: buildRelease
         run: ./gradlew bundlePlaystoreRelease
@@ -38,9 +37,9 @@ jobs:
         id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/bundle/prodRelease
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
+          releaseDirectory: app/build/outputs/bundle/playstoreRelease
+          signingKeyBase64: ${{ secrets.KEY_STORE }}
+          alias: ${{ secrets.KEY_STORE_ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
@@ -54,5 +53,5 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: be.casperverswijvelt.unifiedinternetqs
-          releaseFile: app/build/outputs/bundle/prodRelease/app-prod-release.aab
+          releaseFile: app/build/outputs/bundle/playstoreRelease/app-playstore-release.aab
           track: beta
