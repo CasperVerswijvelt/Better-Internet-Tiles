@@ -53,7 +53,7 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: be.casperverswijvelt.unifiedinternetqs
-          releaseFile: ${{ signedReleaseFile }}
+          releaseFile: ${{ env.SIGNED_RELEASE_FILE }}
           track: beta
 
   build-github:
@@ -93,7 +93,7 @@ jobs:
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
-          file: ${{ signedReleaseFile }}
+          file: ${{ env.SIGNED_RELEASE_FILE }}
           asset_name: echo 'app-release-github.apk'
           tag: ${{ github.ref }}
           overwrite: true
