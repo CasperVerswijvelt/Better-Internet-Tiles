@@ -1,4 +1,4 @@
-name: Deploy PlayStore
+name: Build and deploy to PlayStore and GitHub
 
 on:
   push:
@@ -76,9 +76,9 @@ jobs:
         id: createGoogleServicesJson
         run: echo '${{ secrets.GOOGLE_SERVICES }}' > app/google-services.json
 
-      - name: Build Release AAB
+      - name: Build Release APK
         id: buildRelease
-        run: ./gradlew bundlePlaystoreRelease
+        run: ./gradlew assembleGithubRelease
 
       - name: Sign Release APK
         id: sign_app
@@ -94,7 +94,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           file: ${{ env.SIGNED_RELEASE_FILE }}
-          asset_name: echo 'app-release-github.apk'
+          asset_name: app-release-github.apk
           tag: ${{ github.ref }}
           overwrite: true
           body: "Automatically released using GitHub actions. Release-notes will follow later."
