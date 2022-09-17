@@ -125,12 +125,12 @@ class TileApplication : Application() {
                         //  informational purpose only.
                         val data = ("{" +
                                 "\"dynamic\": {" +
-                                "\"sdkLevel\": ${Build.VERSION.SDK_INT}," +
-                                "\"language\": \"${Locale.getDefault()
+                                "\"sdk\": ${Build.VERSION.SDK_INT}," +
+                                "\"lang\": \"${Locale.getDefault()
                                     .language}\"," +
                                 "\"version\": ${BuildConfig.VERSION_CODE}" +
                                 "}, \"static\": {" +
-                                "\"distribution\": \"${BuildConfig.FLAVOR}\"," +
+                                "\"dist\": \"${BuildConfig.FLAVOR}\"," +
                                 "\"brand\": \"${Build.BRAND}\"," +
                                 "\"model\": \"${Build.MODEL}\"," +
                                 "\"uuid\": \"${getInstallId(sharedPref)}\"" +
