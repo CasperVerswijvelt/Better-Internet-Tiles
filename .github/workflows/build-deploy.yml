@@ -9,7 +9,7 @@ env:
   BUILD_TOOLS_VERSION: 33.0.0
 
 jobs:
-  build:
+  build-playstore:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,5 +53,48 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: be.casperverswijvelt.unifiedinternetqs
-          releaseFile: app/build/outputs/bundle/playstoreRelease/app-playstore-release.aab
+          releaseFile: ${{ signedReleaseFile }}
           track: beta
+
+  build-github:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create google_services.json
+        id: createGoogleServicesJson
+        run: echo '${{ secrets.GOOGLE_SERVICES }}' > app/google-services.json
+
+      - name: Build Release AAB
+        id: buildRelease
+        run: ./gradlew bundlePlaystoreRelease
+
+      - name: Sign Release APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/apk/github/release
+          signingKeyBase64: ${{ secrets.KEY_STORE }}
+          alias: ${{ secrets.KEY_STORE_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: ${{ signedReleaseFile }}
+          asset_name: echo 'app-release-github.apk'
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Automatically released using GitHub actions. Release-notes will follow later."
