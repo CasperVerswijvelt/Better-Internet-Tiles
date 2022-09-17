@@ -31,6 +31,7 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import com.topjohnwu.superuser.Shell
+import org.json.JSONObject
 import java.lang.reflect.Method
 import java.net.HttpURLConnection
 import java.net.URL
@@ -395,33 +396,60 @@ fun reportToAnalytics(context: Context) {
                     // Small JSON message containing some basic information
                     //  to report to analytics. This data is used for
                     //  informational purpose only.
-                    val data = ("{" +
-                            "\"dynamic\": {" +
-                            "\"sdk\": ${Build.VERSION.SDK_INT}," +
-                            "\"lang\": \"${Locale.getDefault().language}\"," +
-                            "\"version\": ${BuildConfig.VERSION_CODE}," +
-                            "\"internet\": ${wasTileUsedInLastXHours
-                                (InternetTileService::class.java, sharedPref)
-                            }," +
-                            "\"wifi\": ${wasTileUsedInLastXHours
-                                (WifiTileService::class.java, sharedPref)}," +
-                            "\"data\": ${wasTileUsedInLastXHours
-                                (MobileDataTileService::class.java,
-                                sharedPref)}," +
-                            "\"nfc\": ${wasTileUsedInLastXHours
-                                (NFCTileService::class.java, sharedPref)}" +
-                            "}, \"static\": {" +
-                            "\"dist\": \"${BuildConfig.FLAVOR}\"," +
-                            "\"brand\": \"${Build.BRAND}\"," +
-                            "\"model\": \"${Build.MODEL}\"," +
-                            "\"uuid\": \"${getInstallId(sharedPref)}\"" +
-                            "}" +
-                            "}").toByteArray(Charsets.UTF_8)
-                    outputStream.write(data, 0, data.size)
+                    val data = JSONObject()
+                    val dynamic = JSONObject()
+                    val static = JSONObject()
+                    val tiles = JSONObject()
+
+                    static.put("uuid", getInstallId(sharedPref))
+                    static.put("brand", Build.BRAND)
+                    static.put("model", Build.MODEL)
+                    static.put("dist", BuildConfig.FLAVOR)
+
+                    dynamic.put("sdk", Build.VERSION.SDK_INT)
+                    dynamic.put("version", BuildConfig.VERSION_CODE)
+                    dynamic.put("lang", Locale.getDefault().language)
+
+                    tiles.put(
+                        "internet",
+                        wasTileUsedInLastXHours(
+                            InternetTileService::class.java,
+                            sharedPref
+                        )
+                    )
+                    tiles.put(
+                        "data",
+                        wasTileUsedInLastXHours(
+                            MobileDataTileService::class.java,
+                            sharedPref
+                        )
+                    )
+                    tiles.put(
+                        "wifi",
+                        wasTileUsedInLastXHours(
+                            WifiTileService::class.java,
+                            sharedPref
+                        )
+                    )
+                    tiles.put(
+                        "nfc",
+                        wasTileUsedInLastXHours(
+                            NFCTileService::class.java,
+                            sharedPref
+                        )
+                    )
+
+                    dynamic.put("tiles", tiles)
+                    data.put("static", static)
+                    data.put("dynamic", dynamic)
+
+                    val dataString = data.toString().toByteArray(Charsets.UTF_8)
+                    outputStream.write(dataString, 0, dataString.size)
 
                     Log.d(
                         TileApplication.TAG,
-                        "\nSuccessfully sent 'POST' request to URL : $url;" +
+                        "\nSuccessfully sent 'POST' request to URL : $url " +
+                                "with data ${dataString};" +
                                 " Response Code: " +
                                 "$responseCode"
                     )
