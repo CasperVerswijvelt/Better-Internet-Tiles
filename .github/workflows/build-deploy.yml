@@ -49,7 +49,7 @@ jobs:
 
       - name: Publish to Play Store BETA
         id: publish
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@v1.0.18
         with:
           serviceAccountJson: service_account.json
           packageName: be.casperverswijvelt.unifiedinternetqs
