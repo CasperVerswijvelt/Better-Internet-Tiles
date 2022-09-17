@@ -4,16 +4,12 @@ import android.content.*
 import android.nfc.NfcAdapter
 import android.os.Handler
 import android.service.quicksettings.Tile
-import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
-import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
-import be.casperverswijvelt.unifiedinternetqs.util.getNFCEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
-import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
+import be.casperverswijvelt.unifiedinternetqs.util.*
 
-class NFCTileService : TileService() {
+class NFCTileService : ReportingTileService() {
 
     private companion object {
         const val TAG = "NFCTile"
@@ -42,6 +38,8 @@ class NFCTileService : TileService() {
     override fun onCreate() {
         super.onCreate()
         log("NFC tile service created")
+
+        reportToAnalytics(this)
 
         mainHandler = Handler(mainLooper)
         sharedPreferences =

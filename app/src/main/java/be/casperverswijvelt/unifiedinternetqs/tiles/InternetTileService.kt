@@ -14,7 +14,7 @@ import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
 import be.casperverswijvelt.unifiedinternetqs.util.*
 
-class InternetTileService : TileService() {
+class InternetTileService : ReportingTileService() {
 
     private companion object {
         const val TAG = "InternetTile"
@@ -65,6 +65,8 @@ class InternetTileService : TileService() {
     override fun onCreate() {
         super.onCreate()
         log("Internet tile service created")
+
+        reportToAnalytics(this)
 
         mainHandler = Handler(mainLooper)
 

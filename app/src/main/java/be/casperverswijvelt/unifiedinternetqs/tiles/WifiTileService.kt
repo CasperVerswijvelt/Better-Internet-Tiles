@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
-import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -13,7 +12,7 @@ import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
 import be.casperverswijvelt.unifiedinternetqs.util.*
 
-class WifiTileService : TileService() {
+class WifiTileService : ReportingTileService() {
 
     private companion object {
         const val TAG = "WifiTile"
@@ -54,6 +53,8 @@ class WifiTileService : TileService() {
     override fun onCreate() {
         super.onCreate()
         log("Wi-Fi tile service created")
+
+        reportToAnalytics(this)
 
         mainHandler = Handler(mainLooper)
 

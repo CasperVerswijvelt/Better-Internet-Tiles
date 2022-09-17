@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
@@ -23,9 +24,17 @@ import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
+import be.casperverswijvelt.unifiedinternetqs.TileApplication
+import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import com.topjohnwu.superuser.Shell
 import java.lang.reflect.Method
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.*
 
 const val TAG = "Util"
 
@@ -61,6 +70,7 @@ fun getNFCEnabled(context: Context): Boolean {
     return (context.getSystemService(TileService.NFC_SERVICE) as NfcManager)
         .defaultAdapter?.isEnabled ?: false
 }
+
 fun getAirplaneModeEnabled(context: Context): Boolean {
 
     return Settings.System.getInt(
@@ -342,4 +352,126 @@ private fun getNetworkClassString(networkType: Int): String? {
 
 private fun log(text: String) {
     Log.d(TAG, text)
+}
+
+fun saveTileUsed(instance: TileService) {
+    PreferenceManager.getDefaultSharedPreferences(instance)
+        ?.edit()
+        ?.putLong(instance.javaClass.name, System.currentTimeMillis())
+        ?.apply()
+}
+
+fun reportToAnalytics(context: Context) {
+    if (BuildConfig.DEBUG) return
+    Thread {
+        try {
+            val sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(context)
+            val lastReportTimestampKey = "LAST_REPORT_TIMESTAMP"
+
+            val lastReportTimestamp = sharedPref.getLong(
+                lastReportTimestampKey,
+                0
+            )
+            val current = System.currentTimeMillis()
+            val minDiff = hoursToMs(12)
+            val diff = current - lastReportTimestamp
+
+            // Only send analytics data if last sent out report was more
+            //  than 12 hours ago
+            if (diff >= minDiff) {
+
+                Log.d(TileApplication.TAG, "Sending Analytics data")
+                val url =
+                    URL("https://bitanalytics.casperverswijvelt.be/api/report")
+                with(url.openConnection() as HttpURLConnection) {
+                    requestMethod = "POST"
+                    doOutput = true
+
+                    // JSON Format
+                    setRequestProperty("Content-Type", "application/json")
+                    setRequestProperty("Accept", "application/json")
+
+                    // Small JSON message containing some basic information
+                    //  to report to analytics. This data is used for
+                    //  informational purpose only.
+                    val data = ("{" +
+                            "\"dynamic\": {" +
+                            "\"sdk\": ${Build.VERSION.SDK_INT}," +
+                            "\"lang\": \"${Locale.getDefault().language}\"," +
+                            "\"version\": ${BuildConfig.VERSION_CODE}," +
+                            "\"internet\": ${wasTileUsedInLastXHours
+                                (InternetTileService::class.java, sharedPref)
+                            }," +
+                            "\"wifi\": ${wasTileUsedInLastXHours
+                                (WifiTileService::class.java, sharedPref)}," +
+                            "\"data\": ${wasTileUsedInLastXHours
+                                (MobileDataTileService::class.java,
+                                sharedPref)}," +
+                            "\"nfc\": ${wasTileUsedInLastXHours
+                                (NFCTileService::class.java, sharedPref)}" +
+                            "}, \"static\": {" +
+                            "\"dist\": \"${BuildConfig.FLAVOR}\"," +
+                            "\"brand\": \"${Build.BRAND}\"," +
+                            "\"model\": \"${Build.MODEL}\"," +
+                            "\"uuid\": \"${getInstallId(sharedPref)}\"" +
+                            "}" +
+                            "}").toByteArray(Charsets.UTF_8)
+                    outputStream.write(data, 0, data.size)
+
+                    Log.d(
+                        TileApplication.TAG,
+                        "\nSuccessfully sent 'POST' request to URL : $url;" +
+                                " Response Code: " +
+                                "$responseCode"
+                    )
+                }
+
+                // Save timestamp in shared preferences
+                sharedPref.edit().putLong(
+                    lastReportTimestampKey,
+                    current
+                ).apply()
+            } else {
+                Log.e(
+                    TileApplication.TAG,
+                    "Already sent analytics report $diff hours ago"
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TileApplication.TAG, "Error sending analytics data: $e")
+        }
+    }.start()
+}
+
+private fun getInstallId(sharedPreferences: SharedPreferences): String {
+    val installationIdKey = "INSTALLATION_ID"
+    return sharedPreferences.getString(installationIdKey, null) ?: run {
+        val uuid = UUID.randomUUID().toString()
+        sharedPreferences.edit().putString(
+            installationIdKey, UUID.randomUUID()
+                .toString()
+        ).apply()
+        uuid
+    }
+}
+
+private fun <T> wasTileUsedInLastXHours(
+    javaClass: Class<T>,
+    sharedPref: SharedPreferences,
+    hours: Int = 12
+): Boolean {
+    val timestamp: Long = try {
+        sharedPref.getLong(javaClass.name, 0)
+    } catch (e: java.lang.Exception) {
+        0
+    }
+    val current = System.currentTimeMillis()
+    val diff = current - timestamp
+    val maxDiff = hoursToMs(hours.toLong())
+    return diff <= maxDiff
+}
+
+private fun hoursToMs(hours: Long): Long {
+    return hours * 60 * 60 * 1000
 }
