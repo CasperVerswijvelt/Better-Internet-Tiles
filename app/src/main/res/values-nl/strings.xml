@@ -46,10 +46,7 @@
     <string name="app_description_about">Een betere versie van de \'Internet\' quick-settings tile die in Android 12 geïntroduceerd werd.</string>
     <string name="on">Aan</string>
     <string name="shell_access_not_set_up">Je hebt ofwel root-toegang ndogi, of Shizuku 11+ werkende hebben om deze app te gebruiken. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
-    <string name="app_name" translatable="false"/>
     <string name="request_shizuku_access_key" translatable="false"/>
-    <string name="restart_app_key" translatable="false"/>
     <string name="last_connected_wifi_key" translatable="false"/>
-    <string name="add_mobile_data_tile_key" translatable="false"/>
     <string name="add_nfc_tile_key" translatable="false"/>
 </resources>
