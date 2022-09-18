@@ -14,7 +14,7 @@
     <string name="nfc">NFC</string>
     <string name="on">On</string>
     <string name="off">Off</string>
-    <string name="turning_on">Turning on</string>
+    <string name="turning_on">Turning on...</string>
     <string name="not_connected">Not connected</string>
     <string name="require_unlock_key" translatable="false">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>

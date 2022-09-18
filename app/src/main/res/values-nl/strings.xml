@@ -5,7 +5,7 @@
     <string name="app_description_usage">Klik op de nieuwe internet tile om te schakelen tussen Wi-Fi en mobile data. Respectievelijke tiles zijn ook apart beschikbaar zoals ze waren voor Android 12.</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobiele data</string>
-    <string name="turning_on">Aanzetten</string>
+    <string name="turning_on">Aanzetten...</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="require_unlock_title">Vereis schermontgrendeling</string>
     <string name="require_unlock_summary">Zorg dat je telefoon eerst ontgrendeld moet worden voor de tiles te kunnen gebruiken.</string>

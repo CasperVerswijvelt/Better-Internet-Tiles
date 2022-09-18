@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="wifi">Wi-Fi</string>
-    <string name="turning_on">Skrur på</string>
+    <string name="turning_on">Skrur på...</string>
     <string name="require_unlock_title">Krev opplåsing</string>
     <string name="request_shizuku_access_title">Forespør Shizuku-tilgang</string>
     <string name="request_shizuku_access_summary">Bruk Shizuku til å innvilge skall-tilgang</string>
