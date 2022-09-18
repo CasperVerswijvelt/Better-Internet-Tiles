@@ -90,7 +90,6 @@ configurations {
 
 android.productFlavors.each { flavor ->
     {
-
         if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains(flavor.name) && flavor.ext.useGoogleGcm) {
             println("Building flavor with Google GCM [${flavor.name}] - applying plugin")
             apply plugin: "com.google.gms.google-services"

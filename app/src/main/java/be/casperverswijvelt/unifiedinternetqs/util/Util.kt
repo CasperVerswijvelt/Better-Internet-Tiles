@@ -369,6 +369,9 @@ fun saveTileUsed(instance: TileService) {
 fun reportToAnalytics(context: Context) {
     if (BuildConfig.DEBUG) return
     Thread {
+        // TODO: Use MUTEX of some kind to make sure this doesn't run multiple
+        //  times concurrently on app start due to multiple tile services
+        //  initiating this.
         try {
             val sharedPref = PreferenceManager
                 .getDefaultSharedPreferences(context)
