@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+    id "com.android.application"
+    id "kotlin-android"
 }
 
 ext {
@@ -9,7 +9,7 @@ ext {
 
 android {
     compileSdkVersion 33
-    buildToolsVersion '33.0.0'
+    buildToolsVersion "33.0.0"
 
     defaultConfig {
         applicationId "be.casperverswijvelt.unifiedinternetqs"
@@ -24,7 +24,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
         debug {
             ext.enableCrashlytics = false
@@ -53,49 +53,47 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = "11"
     }
 }
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven { url "https://jitpack.io" }
 }
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "com.google.android.material:material:1.6.1"
+    implementation "androidx.preference:preference-ktx:1.2.0"
 
     // App restarting
-    implementation 'com.jakewharton:process-phoenix:2.1.2'
+    implementation "com.jakewharton:process-phoenix:2.1.2"
 
     // SU
-    implementation "com.github.topjohnwu.libsu:core:5.0.2"
+    implementation "com.github.topjohnwu.libsu:core:5.0.3"
 
     // Shizuku
-    def shizuku_version = '12.1.0'
+    def shizuku_version = "12.1.0"
     implementation "dev.rikka.shizuku:api:$shizuku_version"
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 
     // Firebase Analytics
-    githubImplementation platform('com.google.firebase:firebase-bom:29.0.3')
-    githubImplementation 'com.google.firebase:firebase-crashlytics'
-    playstoreImplementation platform('com.google.firebase:firebase-bom:29.0.3')
-    playstoreImplementation 'com.google.firebase:firebase-crashlytics'
+    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.2.13"
+    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.2.13"
 }
 
 configurations {
     all {
-        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+        exclude group: "androidx.lifecycle", module: "lifecycle-viewmodel-ktx"
     }
 }
 
-android.productFlavors.each { flavor -> {
+android.productFlavors.each { flavor ->
+    {
 
-    if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains(flavor.name) && flavor.ext.useGoogleGcm) {
-        println("Building flavor with Google GCM [${flavor.name}] - applying plugin")
-        apply plugin: 'com.google.gms.google-services'
-        apply plugin: 'com.google.firebase.crashlytics'
+        if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains(flavor.name) && flavor.ext.useGoogleGcm) {
+            println("Building flavor with Google GCM [${flavor.name}] - applying plugin")
+            apply plugin: "com.google.gms.google-services"
+            apply plugin: "com.google.firebase.crashlytics"
+        }
     }
-}}
+}
