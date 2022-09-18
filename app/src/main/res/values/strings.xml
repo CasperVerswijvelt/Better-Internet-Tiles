@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Better Internet Tiles</string>
+    <string name="app_name" translatable="false">Better Internet Tiles</string>
     <string name="app_description_about">
         A unified and actually useful Internet quick-settings tile (Unlike Android 12).
     </string>

@@ -55,6 +55,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    namespace 'be.casperverswijvelt.unifiedinternetqs'
 }
 repositories {
     maven { url "https://jitpack.io" }

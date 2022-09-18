@@ -2,7 +2,6 @@
 <resources>
     <string name="nfc">NFC</string>
     <string name="off">Uit</string>
-    <string name="app_name">Better Internet Tiles</string>
     <string name="app_description_usage">Klik op de nieuwe internet tile om te schakelen tussen Wi-Fi en mobile data. Respectievelijke tiles zijn ook apart beschikbaar zoals ze waren voor Android 12.</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobiele data</string>
