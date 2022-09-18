@@ -3,10 +3,7 @@ package be.casperverswijvelt.unifiedinternetqs
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
@@ -14,9 +11,6 @@ import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
 import be.casperverswijvelt.unifiedinternetqs.util.reportException
 import be.casperverswijvelt.unifiedinternetqs.util.reportToAnalytics
 import com.topjohnwu.superuser.Shell
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.*
 
 class TileApplication : Application() {
 

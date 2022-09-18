@@ -22,7 +22,6 @@ class MobileDataTileService : ReportingTileService() {
 
     private var isTurningOnData = false
     private var isTurningOffData = false
-    private var receiverRegistered = false
 
     private val runToggleMobileData = Runnable {
         toggleMobileData()
@@ -49,8 +48,6 @@ class MobileDataTileService : ReportingTileService() {
         super.onCreate()
         log("Mobile data tile service created")
 
-        reportToAnalytics(this)
-
         mainHandler = Handler(mainLooper)
 
         cellularChangeListener = CellularChangeListener(networkChangeCallback)
@@ -61,8 +58,8 @@ class MobileDataTileService : ReportingTileService() {
     override fun onStartListening() {
         super.onStartListening()
 
-        setListeners()
         syncTile()
+        setListeners()
     }
 
 
@@ -140,8 +137,6 @@ class MobileDataTileService : ReportingTileService() {
 
                 if (dataEnabled) isTurningOnData = false
 
-                // Update tile properties
-
                 it.state = Tile.STATE_ACTIVE
                 it.icon = getCellularNetworkIcon(applicationContext)
                 it.subtitle = getCellularNetworkText(
@@ -175,7 +170,6 @@ class MobileDataTileService : ReportingTileService() {
             airplaneModeReceiver,
             IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
         )
-        receiverRegistered = true
     }
 
     private fun removeListeners() {
@@ -183,11 +177,7 @@ class MobileDataTileService : ReportingTileService() {
         log("Removing listeners")
 
         cellularChangeListener?.stopListening(applicationContext)
-
-        if (receiverRegistered) {
-            unregisterReceiver(airplaneModeReceiver)
-            receiverRegistered = false
-        }
+        unregisterReceiver(airplaneModeReceiver)
     }
 
     private fun log(text: String) {

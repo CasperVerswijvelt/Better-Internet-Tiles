@@ -54,8 +54,6 @@ class WifiTileService : ReportingTileService() {
         super.onCreate()
         log("Wi-Fi tile service created")
 
-        reportToAnalytics(this)
-
         mainHandler = Handler(mainLooper)
 
         wifiChangeListener = WifiChangeListener(networkChangeCallback)
@@ -63,19 +61,18 @@ class WifiTileService : ReportingTileService() {
             PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         if (getWifiEnabled(this)) {
-            wifiSSID = sharedPreferences
-                ?.getString(
-                    resources.getString(R.string.last_connected_wifi_key),
-                    null
-                )
+            // Wi-Fi SSID is retrieved async using shell commands, visualise
+            //  last connected Wi-Fi SSID until actual SSID is known.
+            // TODO: Get Wi-Fi SSID synchronously using location permission
+            wifiSSID = getLastConnectedWifi(this)
         }
     }
 
     override fun onStartListening() {
         super.onStartListening()
 
-        setListeners()
         syncTile()
+        setListeners()
     }
 
 
@@ -146,8 +143,6 @@ class WifiTileService : ReportingTileService() {
             if ((wifiEnabled && !isTurningOffWifi) || isTurningOnWifi) {
 
                 if (wifiEnabled) isTurningOnWifi = false
-
-                // Update tile properties
 
                 it.label = (if (wifiConnected) wifiSSID else null)
                     ?: resources.getString(R.string.wifi)

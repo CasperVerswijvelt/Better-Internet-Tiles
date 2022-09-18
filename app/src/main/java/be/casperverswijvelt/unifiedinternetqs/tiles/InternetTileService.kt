@@ -66,8 +66,6 @@ class InternetTileService : ReportingTileService() {
         super.onCreate()
         log("Internet tile service created")
 
-        reportToAnalytics(this)
-
         mainHandler = Handler(mainLooper)
 
         wifiChangeListener = WifiChangeListener(wifiChangeCallback)
@@ -89,8 +87,8 @@ class InternetTileService : ReportingTileService() {
     override fun onStartListening() {
         super.onStartListening()
 
-        setListeners()
         syncTile()
+        setListeners()
     }
 
 
@@ -188,8 +186,6 @@ class InternetTileService : ReportingTileService() {
                         isTurningOnWifi = false
                     }
 
-                    // Update tile properties
-
                     it.state = Tile.STATE_ACTIVE
                     it.icon = getWifiIcon(applicationContext)
                     it.label = if (isTurningOnWifi)
@@ -204,8 +200,6 @@ class InternetTileService : ReportingTileService() {
                         isTurningOnData = false
                     }
 
-                    // Update tile properties
-
                     it.state = Tile.STATE_ACTIVE
                     it.icon = getCellularNetworkIcon(applicationContext)
                     it.label = getCellularNetworkText(
@@ -214,8 +208,6 @@ class InternetTileService : ReportingTileService() {
                     )
                 }
                 else -> {
-
-                    // Update tile properties
 
                     it.state = Tile.STATE_INACTIVE
                     it.icon = Icon.createWithResource(

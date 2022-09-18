@@ -19,7 +19,6 @@ class NFCTileService : ReportingTileService() {
 
     private var isTurningOnNFC = false
     private var isTurningOffNFC = false
-    private var receiverRegistered = false
 
     private val runToggleNFC = Runnable {
         toggleNFC()
@@ -39,8 +38,6 @@ class NFCTileService : ReportingTileService() {
         super.onCreate()
         log("NFC tile service created")
 
-        reportToAnalytics(this)
-
         mainHandler = Handler(mainLooper)
         sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -49,8 +46,8 @@ class NFCTileService : ReportingTileService() {
     override fun onStartListening() {
         super.onStartListening()
 
-        setListeners()
         syncTile()
+        setListeners()
     }
 
 
@@ -116,8 +113,6 @@ class NFCTileService : ReportingTileService() {
 
                 if (nfcEnabled) isTurningOnNFC = false
 
-                // Update tile properties
-
                 it.state = Tile.STATE_ACTIVE
                 it.subtitle =
                     if (isTurningOnNFC) resources.getString(R.string.turning_on) else resources.getString(
@@ -144,17 +139,13 @@ class NFCTileService : ReportingTileService() {
             nfcReceiver,
             IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
         )
-        receiverRegistered = true
     }
 
     private fun removeListeners() {
 
         log("Removing listeners")
 
-        if (receiverRegistered) {
-            unregisterReceiver(nfcReceiver)
-            receiverRegistered = false
-        }
+        unregisterReceiver(nfcReceiver)
     }
 
     private fun log(text: String) {
