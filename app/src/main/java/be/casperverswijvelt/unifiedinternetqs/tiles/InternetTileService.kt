@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
-import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -226,6 +225,8 @@ class InternetTileService : ReportingTileService() {
 
         log("Setting listeners")
 
+        // set wifiConnected to false, it will be updated asynchronously
+        //  after starting to listen to the wifiChangeListener.
         wifiConnected = false
         isTurningOnWifi = false
         isTurningOnData = false

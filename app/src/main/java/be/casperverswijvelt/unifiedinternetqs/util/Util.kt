@@ -65,12 +65,13 @@ fun getDataEnabled(context: Context): Boolean {
 
 fun getWifiEnabled(context: Context): Boolean {
 
-    return (context.getSystemService(TileService.WIFI_SERVICE) as WifiManager).isWifiEnabled
+    return (context.getSystemService(Context.WIFI_SERVICE) as WifiManager)
+        .isWifiEnabled
 }
 
 fun getNFCEnabled(context: Context): Boolean {
 
-    return (context.getSystemService(TileService.NFC_SERVICE) as NfcManager)
+    return (context.getSystemService(Context.NFC_SERVICE) as NfcManager)
         .defaultAdapter?.isEnabled ?: false
 }
 
@@ -137,7 +138,7 @@ fun getWifiIcon(context: Context): Icon {
 fun getCellularNetworkIcon(context: Context): Icon {
 
     val tm =
-        context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
+        context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
     val signalStrength = tm.signalStrength?.level ?: 0
 
     // TODO: We should try to get the signal strength of the data sim here.
@@ -164,7 +165,7 @@ fun getCellularNetworkText(
 
     val info = ArrayList<String>()
     val tm =
-        context.getSystemService(TileService.TELEPHONY_SERVICE) as TelephonyManager
+        context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
     val subscriptionInfo = getDataSubscriptionInfo(context)
     // No data sim set or no read phone state permission
@@ -220,7 +221,8 @@ fun getDataSubscriptionInfo(context: Context): SubscriptionInfo? {
         == PackageManager.PERMISSION_GRANTED
     ) {
         val sm =
-            context.getSystemService(TileService.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+            context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as
+                    SubscriptionManager
         val subId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             SubscriptionManager.getActiveDataSubscriptionId()
         } else {
@@ -363,9 +365,7 @@ fun grantReadPhoneState(callback: ((Shell.Result?) -> Unit)? = {}) {
     )
 }
 
-private fun log(text: String) {
-    Log.d(TAG, text)
-}
+// Analytics
 
 fun saveTileUsed(instance: TileService) {
     PreferenceManager.getDefaultSharedPreferences(instance)
@@ -394,7 +394,7 @@ fun reportToAnalytics(context: Context) {
             //  than 12 hours ago
             if (diff >= minDiff) {
 
-                Log.d(TileApplication.TAG, "Sending Analytics data")
+                log("Sending Analytics data")
                 val url =
                     URL("https://bitanalytics.casperverswijvelt.be/api/report")
                 with(url.openConnection() as HttpURLConnection) {
@@ -458,8 +458,7 @@ fun reportToAnalytics(context: Context) {
                     val dataString = data.toString().toByteArray(Charsets.UTF_8)
                     outputStream.write(dataString, 0, dataString.size)
 
-                    Log.d(
-                        TileApplication.TAG,
+                    log(
                         "\nSuccessfully sent 'POST' request to URL : $url " +
                                 "with data ${dataString};" +
                                 " Response Code: " +
@@ -473,13 +472,10 @@ fun reportToAnalytics(context: Context) {
                     current
                 ).apply()
             } else {
-                Log.e(
-                    TileApplication.TAG,
-                    "Already sent analytics report $diff hours ago"
-                )
+               log("Already sent analytics report $diff hours ago")
             }
         } catch (e: Exception) {
-            Log.e(TileApplication.TAG, "Error sending analytics data: $e")
+            log("Error sending analytics data: $e")
         }
     }.start()
 }
@@ -514,4 +510,8 @@ private fun <T> wasTileUsedInLastXHours(
 
 private fun hoursToMs(hours: Long): Long {
     return hours * 60 * 60 * 1000
+}
+
+private fun log(text: String) {
+    Log.d(TAG, text)
 }

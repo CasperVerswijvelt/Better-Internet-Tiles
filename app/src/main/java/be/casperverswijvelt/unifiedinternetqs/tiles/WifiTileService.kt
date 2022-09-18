@@ -174,6 +174,8 @@ class WifiTileService : ReportingTileService() {
 
         log("Setting listeners")
 
+        // set wifiConnected to false, it will be updated asynchronously
+        //  after starting to listen to the wifiChangeListener.
         wifiConnected = false
 
         wifiChangeListener?.startListening(applicationContext)
