@@ -45,17 +45,10 @@
     <string name="feedback_title">Tilbakemelding/rapporter en feil</string>
     <string name="root_access_denied_description" tools:ignore="Typos">Gå til ditt rot-tildelingsprogram (f-eks. Magisk) og innvilg tilgang til «Better Internet Tiles»-programmet.</string>
     <string name="shell_access_not_set_up">Du trenger rot-tilgang eller Shizuku v 11+ for å bruke dette programmet. Forsikre deg om at du har installert Shizuku-programmet og at Shizuku kjører. Deretter må du innvilge denne tilgangen for dette programmet. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
-    <string name="restart_app_key" translatable="false"></string>
-    <string name="request_shizuku_access_key" translatable="false"></string>
-    <string name="add_mobile_data_tile_key" translatable="false"></string>
-    <string name="add_internet_tile_key" translatable="false"></string>
-    <string name="add_nfc_tile_key" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="app_info_key" translatable="false"></string>
-    <string name="require_unlock_key" translatable="false"></string>
-    <string name="request_root_access_key" translatable="false"></string>
-    <string name="add_wifi_tile_key" translatable="false"></string>
-    <string name="last_connected_wifi_key" translatable="false"></string>
-    <string name="not_connected"></string>
-    <string name="airplane_mode"></string>
+    <string name="request_shizuku_access_key" translatable="false"/>
+    <string name="add_internet_tile_key" translatable="false"/>
+    <string name="app_name" translatable="false"/>
+    <string name="require_unlock_key" translatable="false"/>
+    <string name="add_wifi_tile_key" translatable="false"/>
+    <string name="not_connected"/>
 </resources>
