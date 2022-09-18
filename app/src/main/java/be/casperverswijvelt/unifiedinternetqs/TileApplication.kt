@@ -25,7 +25,8 @@ class TileApplication : Application() {
 
         ExecutorServiceSingleton.getInstance()
 
-        setCrashlyticsId(
+        initializeFirebase(
+            this,
             getInstallId(
                 PreferenceManager.getDefaultSharedPreferences(
                     this

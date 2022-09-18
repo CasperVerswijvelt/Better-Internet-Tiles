@@ -6,6 +6,7 @@ fun reportException (e: Throwable) {
     FirebaseCrashlytics.getInstance().recordException(e)
 }
 
-fun setCrashlyticsId (uuid: String) {
-    FirebaseCrashlytics.getInstance().setUserId(uuid)
+fun initializeFirebase (context: Context, userId: String) {
+    FirebaseApp.initializeApp(context)
+    FirebaseCrashlytics.getInstance().setUserId(userId)
 }

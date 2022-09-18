@@ -1,11 +1,14 @@
 package be.casperverswijvelt.unifiedinternetqs.util
 
+import android.content.Context
+import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 fun reportException (e: Throwable) {
     FirebaseCrashlytics.getInstance().recordException(e)
 }
 
-fun setCrashlyticsId (uuid: String) {
-    FirebaseCrashlytics.getInstance().setUserId(uuid)
+fun initializeFirebase (context: Context, userId: String) {
+    FirebaseApp.initializeApp(context)
+    FirebaseCrashlytics.getInstance().setUserId(userId)
 }
