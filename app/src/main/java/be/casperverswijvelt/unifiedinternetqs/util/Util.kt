@@ -1,7 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.util
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -24,7 +23,6 @@ import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
-import be.casperverswijvelt.unifiedinternetqs.TileApplication
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -157,7 +155,6 @@ fun getCellularNetworkIcon(context: Context): Icon {
     )
 }
 
-@SuppressLint("MissingPermission")
 fun getCellularNetworkText(
     context: Context,
     telephonyDisplayInfo: TelephonyDisplayInfo?
@@ -180,36 +177,30 @@ fun getCellularNetworkText(
         return context.getString(R.string.no_service)
     }
 
-    if (
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
-        telephonyDisplayInfo != null
-    ) {
-
-        when (telephonyDisplayInfo.overrideNetworkType) {
-            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> {
-                info.add("4G+")
+    var connType: String? = null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        connType = telephonyDisplayInfo?.let {
+            when (telephonyDisplayInfo.overrideNetworkType) {
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> "4G+"
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> "5Ge"
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> "5G"
+                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> "5G+"
+                else -> null
             }
-            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> {
-                info.add("5Ge")
-            }
-            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> {
-                info.add("5G")
-            }
-            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> {
-                info.add("5G+")
-            }
-            else -> {
-                getNetworkClassString(tm.dataNetworkType)?.let {
-                    info.add(it)
-                }
-            }
-        }
-
-    } else {
-        getNetworkClassString(tm.dataNetworkType)?.let {
-            info.add(it)
         }
     }
+
+    // Fallback
+    if (
+        connType == null &&
+        context.checkSelfPermission(
+            Manifest.permission.READ_PHONE_STATE
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        connType = getNetworkClassString(tm.dataNetworkType)
+    }
+
+    connType?.let { info.add(it) }
 
     return info.joinToString(separator = ", ")
 }
@@ -217,8 +208,9 @@ fun getCellularNetworkText(
 fun getDataSubscriptionInfo(context: Context): SubscriptionInfo? {
 
     if (
-        context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-        == PackageManager.PERMISSION_GRANTED
+        context.checkSelfPermission(
+            Manifest.permission.READ_PHONE_STATE
+        ) == PackageManager.PERMISSION_GRANTED
     ) {
         val sm =
             context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as
