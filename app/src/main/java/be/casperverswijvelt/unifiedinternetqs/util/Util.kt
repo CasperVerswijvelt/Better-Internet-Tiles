@@ -480,7 +480,7 @@ fun reportToAnalytics(context: Context) {
     }.start()
 }
 
-private fun getInstallId(sharedPreferences: SharedPreferences): String {
+fun getInstallId(sharedPreferences: SharedPreferences): String {
     val installationIdKey = "INSTALLATION_ID"
     return sharedPreferences.getString(installationIdKey, null) ?: run {
         val uuid = UUID.randomUUID().toString()

@@ -6,10 +6,8 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
-import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
-import be.casperverswijvelt.unifiedinternetqs.util.reportException
-import be.casperverswijvelt.unifiedinternetqs.util.reportToAnalytics
+import androidx.preference.PreferenceManager
+import be.casperverswijvelt.unifiedinternetqs.util.*
 import com.topjohnwu.superuser.Shell
 
 class TileApplication : Application() {
@@ -27,6 +25,13 @@ class TileApplication : Application() {
 
         ExecutorServiceSingleton.getInstance()
 
+        setCrashlyticsId(
+            getInstallId(
+                PreferenceManager.getDefaultSharedPreferences(
+                    this
+                )
+            )
+        )
         reportToAnalytics(this)
 
         // Check if main shell has root access
