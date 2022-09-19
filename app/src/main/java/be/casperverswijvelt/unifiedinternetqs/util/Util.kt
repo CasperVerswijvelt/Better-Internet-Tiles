@@ -418,11 +418,11 @@ fun reportToAnalytics(context: Context) {
                         static.put("uuid", getInstallId(sharedPref))
                         static.put("brand", Build.BRAND)
                         static.put("model", Build.MODEL)
-                        static.put("dist", BuildConfig.FLAVOR)
 
                         dynamic.put("sdk", Build.VERSION.SDK_INT)
                         dynamic.put("version", BuildConfig.VERSION_CODE)
                         dynamic.put("lang", Locale.getDefault().language)
+                        dynamic.put("dist", BuildConfig.FLAVOR)
 
                         tiles.put(
                             "internet",
@@ -480,7 +480,8 @@ fun reportToAnalytics(context: Context) {
                         current
                     ).apply()
                 } else {
-                    log("Already sent analytics report $diff hours ago")
+                    log("Already sent analytics report ${diff/1000/60/60} " +
+                            "hours ago")
                 }
             } catch (e: Exception) {
                 log("Error sending analytics data: $e")
