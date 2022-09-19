@@ -400,6 +400,8 @@ fun reportToAnalytics(context: Context) {
                     with(url.openConnection() as HttpURLConnection) {
                         requestMethod = "POST"
                         doOutput = true
+                        connectTimeout = 10000
+                        readTimeout = 20000
 
                         // JSON Format
                         setRequestProperty("Content-Type", "application/json")
@@ -455,9 +457,14 @@ fun reportToAnalytics(context: Context) {
                         data.put("static", static)
                         data.put("dynamic", dynamic)
 
-                        val dataString =
-                            data.toString().toByteArray(Charsets.UTF_8)
-                        outputStream.write(dataString, 0, dataString.size)
+                        val dataString = data
+                            .toString()
+                            .toByteArray(Charsets.UTF_8)
+                        outputStream.write(
+                            dataString,
+                            0,
+                            dataString.size
+                        )
 
                         log(
                             "\nSuccessfully sent 'POST' request to URL : $url " +
