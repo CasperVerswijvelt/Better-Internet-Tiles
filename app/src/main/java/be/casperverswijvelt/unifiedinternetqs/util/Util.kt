@@ -359,6 +359,12 @@ fun grantReadPhoneState(callback: ((Shell.Result?) -> Unit)? = {}) {
 
 // Analytics
 
+class Analytics {
+    companion object {
+        var reportMutex = Object()
+    }
+}
+
 fun saveTileUsed(instance: TileService) {
     PreferenceManager.getDefaultSharedPreferences(instance)
         ?.edit()
@@ -369,108 +375,109 @@ fun saveTileUsed(instance: TileService) {
 fun reportToAnalytics(context: Context) {
     if (BuildConfig.DEBUG) return
     Thread {
-        // TODO: Use MUTEX of some kind to make sure this doesn't run multiple
-        //  times concurrently on app start due to multiple tile services
-        //  initiating this.
-        try {
-            val sharedPref = PreferenceManager
-                .getDefaultSharedPreferences(context)
-            val lastReportTimestampKey = "LAST_REPORT_TIMESTAMP"
+        synchronized(Analytics.reportMutex) {
+            try {
+                val sharedPref = PreferenceManager
+                    .getDefaultSharedPreferences(context)
+                val lastReportTimestampKey = "LAST_REPORT_TIMESTAMP"
 
-            val lastReportTimestamp = sharedPref.getLong(
-                lastReportTimestampKey,
-                0
-            )
-            val current = System.currentTimeMillis()
-            val minDiff = hoursToMs(12)
-            val diff = current - lastReportTimestamp
-
-            // Only send analytics data if last sent out report was more
-            //  than 12 hours ago
-            if (diff >= minDiff) {
-
-                log("Sending Analytics data")
-                val url =
-                    URL("https://bitanalytics.casperverswijvelt.be/api/report")
-                with(url.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    doOutput = true
-
-                    // JSON Format
-                    setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty("Accept", "application/json")
-
-                    // Small JSON message containing some basic information
-                    //  to report to analytics. This data is used for
-                    //  informational purpose only.
-                    val data = JSONObject()
-                    val dynamic = JSONObject()
-                    val static = JSONObject()
-                    val tiles = JSONObject()
-
-                    static.put("uuid", getInstallId(sharedPref))
-                    static.put("brand", Build.BRAND)
-                    static.put("model", Build.MODEL)
-                    static.put("dist", BuildConfig.FLAVOR)
-
-                    dynamic.put("sdk", Build.VERSION.SDK_INT)
-                    dynamic.put("version", BuildConfig.VERSION_CODE)
-                    dynamic.put("lang", Locale.getDefault().language)
-
-                    tiles.put(
-                        "internet",
-                        wasTileUsedInLastXHours(
-                            InternetTileService::class.java,
-                            sharedPref
-                        )
-                    )
-                    tiles.put(
-                        "data",
-                        wasTileUsedInLastXHours(
-                            MobileDataTileService::class.java,
-                            sharedPref
-                        )
-                    )
-                    tiles.put(
-                        "wifi",
-                        wasTileUsedInLastXHours(
-                            WifiTileService::class.java,
-                            sharedPref
-                        )
-                    )
-                    tiles.put(
-                        "nfc",
-                        wasTileUsedInLastXHours(
-                            NFCTileService::class.java,
-                            sharedPref
-                        )
-                    )
-
-                    dynamic.put("tiles", tiles)
-                    data.put("static", static)
-                    data.put("dynamic", dynamic)
-
-                    val dataString = data.toString().toByteArray(Charsets.UTF_8)
-                    outputStream.write(dataString, 0, dataString.size)
-
-                    log(
-                        "\nSuccessfully sent 'POST' request to URL : $url " +
-                                "with data ${dataString};" +
-                                " Response Code: " +
-                                "$responseCode"
-                    )
-                }
-
-                // Save timestamp in shared preferences
-                sharedPref.edit().putLong(
+                val lastReportTimestamp = sharedPref.getLong(
                     lastReportTimestampKey,
-                    current
-                ).apply()
-            } else {
-               log("Already sent analytics report $diff hours ago")
+                    0
+                )
+                val current = System.currentTimeMillis()
+                val minDiff = hoursToMs(12)
+                val diff = current - lastReportTimestamp
+
+                // Only send analytics data if last sent out report was more
+                //  than 12 hours ago
+                if (diff >= minDiff) {
+
+                    log("Sending Analytics data")
+                    val url =
+                        URL("https://bitanalytics.casperverswijvelt" +
+                                ".be/api/report")
+                    with(url.openConnection() as HttpURLConnection) {
+                        requestMethod = "POST"
+                        doOutput = true
+
+                        // JSON Format
+                        setRequestProperty("Content-Type", "application/json")
+                        setRequestProperty("Accept", "application/json")
+
+                        // Small JSON message containing some basic information
+                        //  to report to analytics. This data is used for
+                        //  informational purpose only.
+                        val data = JSONObject()
+                        val dynamic = JSONObject()
+                        val static = JSONObject()
+                        val tiles = JSONObject()
+
+                        static.put("uuid", getInstallId(sharedPref))
+                        static.put("brand", Build.BRAND)
+                        static.put("model", Build.MODEL)
+                        static.put("dist", BuildConfig.FLAVOR)
+
+                        dynamic.put("sdk", Build.VERSION.SDK_INT)
+                        dynamic.put("version", BuildConfig.VERSION_CODE)
+                        dynamic.put("lang", Locale.getDefault().language)
+
+                        tiles.put(
+                            "internet",
+                            wasTileUsedInLastXHours(
+                                InternetTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "data",
+                            wasTileUsedInLastXHours(
+                                MobileDataTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "wifi",
+                            wasTileUsedInLastXHours(
+                                WifiTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "nfc",
+                            wasTileUsedInLastXHours(
+                                NFCTileService::class.java,
+                                sharedPref
+                            )
+                        )
+
+                        dynamic.put("tiles", tiles)
+                        data.put("static", static)
+                        data.put("dynamic", dynamic)
+
+                        val dataString =
+                            data.toString().toByteArray(Charsets.UTF_8)
+                        outputStream.write(dataString, 0, dataString.size)
+
+                        log(
+                            "\nSuccessfully sent 'POST' request to URL : $url " +
+                                    "with data ${dataString};" +
+                                    " Response Code: " +
+                                    "$responseCode"
+                        )
+                    }
+
+                    // Save timestamp in shared preferences
+                    sharedPref.edit().putLong(
+                        lastReportTimestampKey,
+                        current
+                    ).apply()
+                } else {
+                    log("Already sent analytics report $diff hours ago")
+                }
+            } catch (e: Exception) {
+                log("Error sending analytics data: $e")
             }
-        } catch (e: Exception) {
-            log("Error sending analytics data: $e")
         }
     }.start()
 }
