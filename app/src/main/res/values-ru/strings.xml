@@ -34,8 +34,9 @@
     <string name="restart_app_title">Перезапустить приложение</string>
     <string name="settings">Настройки</string>
     <string name="feedback_title">Обратная связь/сообщить ошибку</string>
-    <string name="request_shizuku_access_summary">Использовать Shizuku чтобы разрешать доступ оболочки.</string>
+    <string name="request_shizuku_access_summary">Использовать Shizuku чтобы разрешать доступ оболочки</string>
     <string name="request_root_access_title">Запрашивать доступ рута</string>
-    <string name="request_root_access_summary">Использовать рут чтобы разрешать доступ оболочки.</string>
+    <string name="request_root_access_summary">Использовать рут чтобы разрешать доступ оболочки</string>
     <string name="restart_app_summary">Перезапустить приложение если что-то не так.</string>
+    <string name="require_android_13_description">Добавьте виджеты вручную, открыв меню быстрых настроек</string>
 </resources>
