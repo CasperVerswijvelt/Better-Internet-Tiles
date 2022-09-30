@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="wifi">Wi-Fi</string>
+    <string name="nfc">NFC</string>
+    <string name="on">Açık</string>
+    <string name="request_root_access_title">Root erişimi talep et</string>
+    <string name="request_root_access_summary">Kabuk erişimi vermek için root kullanın</string>
+    <string name="require_unlock_title">Kilit açma gerektir</string>
+    <string name="app_description_shell_access">Wi-Fi ve mobil veriyi açıp kapatmak ve mevcut Wi-Fi ağ adını okumak için kabuk erişimi gerekir. Shizuku, root erişimi gerektirmeden bu işi halledebilir.</string>
+    <string name="app_description_about">Birleşik ve gerçekten kullanışlı bir internet hızlı ayarlar kutucuğu (Android 12\'den farklı olarak).</string>
+    <string name="off">Kapalı</string>
+    <string name="require_unlock_summary">Kilit ekranındayken ağ modları arasında geçiş yapmayı önleyin.</string>
+    <string name="app_description_usage">Wi-Fi ve mobil veri arasında geçiş yapmak için yeni İnternet kutucuğuna dokunun. Android 12 öncesinde olduğu gibi ilgili kutucuklar da mevcuttur.</string>
+    <string name="mobile_data">Mobil veri</string>
+    <string name="turning_on">Açılıyor...</string>
+    <string name="request_shizuku_access_title">Shizuku\'ya erişim talep et</string>
+    <string name="request_shizuku_access_summary">Kabuk erişimi vermek için Shizuku\'yu kullanın</string>
+    <string name="not_connected">Bağlı değil</string>
+</resources>
