@@ -3,7 +3,8 @@
 <img alt="GitHub" src="https://img.shields.io/github/license/casperverswijvelt/better-internet-tiles"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/casperverswijvelt/better-internet-tiles"> <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/casperverswijvelt/better-internet-tiles"> <a href="https://hosted.weblate.org/engage/better-internet-tiles/"><img src="https://hosted.weblate.org/widgets/better-internet-tiles/-/translations/svg-badge.svg" alt="Translation status" />
 </a>
 
-<a href="https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a>
+<a href="https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a> <a href="https://f-droid.org/packages/be.casperverswijvelt.unifiedinternetqs"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60px"></a>
+
 
 ## About
 
