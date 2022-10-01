@@ -26,7 +26,7 @@ Shell access is required to enable/disable Wi-Fi and mobile data, as well as for
 - Ability to configure access to the tiles while the phone is locked
 
 ## How to install
-- Download and install the app using either the [Google Play Store](https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs) or by getting the 'app-release.apk' file from the the [latest release in the GitHub repository](https://github.com/CasperVerswijvelt/Unified-Internet-QS/releases/latest). (hopefully F-Droid soon too)
+- Download and install the app using either the [Google Play Store](https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs), the [F-Droid app store](https://f-droid.org/packages/be.casperverswijvelt.unifiedinternetqs), or by getting the 'app-release.apk' file from the the [latest release in the GitHub repository](https://github.com/CasperVerswijvelt/Unified-Internet-QS/releases/latest).
 - Open the app, and click on the 'Request Shizuku access' or 'Request root access' button, depending on which method of Shell access you prefer.
 - Only if you are using Shizuku:
   - You must start the Shizuku server each time the device is booted. Follow the instructions in the Shizuku application.
