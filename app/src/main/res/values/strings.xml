@@ -63,4 +63,6 @@
     <string name="network_not_available">Network not available</string>
     <string name="no_service">No service</string>
     <string name="airplane_mode">Airplane mode</string>
+    <string name="weblate" translatable="false">Weblate</string>
+    <string name="help_translate">Help translate this app!</string>
 </resources>

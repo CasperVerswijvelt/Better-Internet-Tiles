@@ -96,6 +96,14 @@
                 android:data="https://forum.xda-developers.com/t/better-internet-tiles-bring-back-wi-fi-and-mobile-data-toggles-non-root.4373925/" />
         </Preference>
         <Preference
+            android:icon="@drawable/baseline_translate_24"
+            android:title="@string/weblate"
+            android:summary="@string/help_translate">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://hosted.weblate.org/projects/better-internet-tiles/translations/" />
+        </Preference>
+        <Preference
             android:icon="@drawable/ic_baseline_loop_24"
             android:key="@string/restart_app_key"
             android:summary="@string/restart_app_summary"
