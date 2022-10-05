@@ -3,7 +3,8 @@
 <img alt="GitHub" src="https://img.shields.io/github/license/casperverswijvelt/better-internet-tiles"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/casperverswijvelt/better-internet-tiles"> <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/casperverswijvelt/better-internet-tiles"> <a href="https://hosted.weblate.org/engage/better-internet-tiles/"><img src="https://hosted.weblate.org/widgets/better-internet-tiles/-/translations/svg-badge.svg" alt="Translation status" />
 </a>
 
-<a href="https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a>
+<a href="https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a> <a href="https://f-droid.org/packages/be.casperverswijvelt.unifiedinternetqs"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60px"></a>
+
 
 ## About
 
@@ -25,7 +26,7 @@ Shell access is required to enable/disable Wi-Fi and mobile data, as well as for
 - Ability to configure access to the tiles while the phone is locked
 
 ## How to install
-- Download and install the app using either the [Google Play Store](https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs) or by getting the 'app-release.apk' file from the the [latest release in the GitHub repository](https://github.com/CasperVerswijvelt/Unified-Internet-QS/releases/latest). (hopefully F-Droid soon too)
+- Download and install the app using either the [Google Play Store](https://play.google.com/store/apps/details?id=be.casperverswijvelt.unifiedinternetqs), the [F-Droid app store](https://f-droid.org/packages/be.casperverswijvelt.unifiedinternetqs), or by getting the 'app-release.apk' file from the the [latest release in the GitHub repository](https://github.com/CasperVerswijvelt/Unified-Internet-QS/releases/latest).
 - Open the app, and click on the 'Request Shizuku access' or 'Request root access' button, depending on which method of Shell access you prefer.
 - Only if you are using Shizuku:
   - You must start the Shizuku server each time the device is booted. Follow the instructions in the Shizuku application.

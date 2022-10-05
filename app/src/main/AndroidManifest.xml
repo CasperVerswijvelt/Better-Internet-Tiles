@@ -14,15 +14,14 @@
 
     <application
         android:name=".TileApplication"
-        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UnifiedInternetQS"
-        android:exported="true"
-        android:allowBackup="true"
-        android:usesCleartextTraffic="true">
+        android:exported="false"
+        android:localeConfig="@xml/locales_config"
+        tools:targetApi="tiramisu">
 
         <provider
             android:name="rikka.shizuku.ShizukuProvider"

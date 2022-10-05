@@ -1,0 +1,10 @@
+New
+- Added dutch and norwegion language support
+- Added basic analytics reporting (language, android version, device brand and model, app version, used tiles, build flavor). This data will be used to get a better view on which features/languages should be focussed on next. Analytics tools is selfhosted using Report Anything, no data is shared.
+Improvements and fixes
+- Internet tile: changed 'Wi-Fi on' subtitle to 'Not connected'
+- Updated depencies
+- Code and dependency cleanup
+- Use seperate build flavors for PlayStore, GitHub and F-Droid releases. This was needed to exclude closed source Google libraries for releasing on F-Droid, as well as for keeping track for analytics purposes.
+- Automated builds and deployments using GitHub actions for Playstore and GitHub releases
+- Weblate platform is now used for contributing translations, check it out!
