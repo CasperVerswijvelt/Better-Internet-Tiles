@@ -1,0 +1,6 @@
+New
+- Added button that redirects to the app's locale settings
+Improvements and fixes
+- Added Turkish, Norwegian and Russian to the locale config so they are available in the per app language settings
+- Fixed ghost UI in the app that appears after changing app language
+- Some small app theme changes in light mode
