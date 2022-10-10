@@ -5,6 +5,7 @@ import android.app.StatusBarManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
@@ -35,6 +36,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         findPreference<Preference>(resources.getString(R.string.app_info_key))?.summary =
             "${resources.getString(R.string.app_name)} version ${BuildConfig.VERSION_NAME}"
+        findPreference<Preference>(resources.getString(R.string.language_key))?.summary =
+            Resources.getSystem().configuration.locales[0].displayLanguage
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
@@ -128,6 +131,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         R.string.nfc,
                         R.drawable.nfc_24
                     )
+                }
+                resources.getString(R.string.language_key) -> {
+                    val intent =
+                        Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                    intent.data =
+                        Uri.fromParts("package", context.packageName, null)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_NO_HISTORY or
+                                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                    startActivity(intent)
                 }
                 else -> {
                 }
