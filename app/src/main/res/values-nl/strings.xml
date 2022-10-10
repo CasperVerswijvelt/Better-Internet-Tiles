@@ -48,4 +48,5 @@
     <string name="shell_access_not_set_up">Je hebt ofwel root-toegang nodig, of Shizuku 11+ werkende hebben om deze app te gebruiken. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="airplane_mode">Vliegtuigmodus</string>
     <string name="help_translate">Help met het vertalen van deze app!</string>
+    <string name="language">Taal</string>
 </resources>
