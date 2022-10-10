@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .add(contentViewId, SettingsFragment())
+            .replace(contentViewId, SettingsFragment())
             .commit()
     }
 }
