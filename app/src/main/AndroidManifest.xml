@@ -37,7 +37,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.ComposeActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
