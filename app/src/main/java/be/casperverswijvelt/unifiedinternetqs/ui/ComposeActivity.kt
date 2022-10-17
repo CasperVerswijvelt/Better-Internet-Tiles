@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package be.casperverswijvelt.unifiedinternetqs.ui
 
 import android.annotation.SuppressLint
@@ -9,11 +11,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +43,7 @@ class ComposeActivity : ComponentActivity() {
                 else -> lightColorScheme()
             }
             MaterialTheme(colorScheme = colorScheme) {
+                Surface(Modifier.background(colorScheme.background)) {}
                 App()
             }
         }
@@ -55,18 +63,20 @@ fun App() {
             }
         }
     ) {
-        NavHost(
-            navController = navController,
-            startDestination = NavigationItem.Home.route
-        ) {
-            composable(NavigationItem.Home.route) {
-                Box(Modifier.fillMaxSize().background(Color.Black))
-            }
-            composable(NavigationItem.Settings.route) {
-                Box(Modifier.fillMaxSize().background(Color.Yellow))
-            }
-            composable(NavigationItem.Info.route) {
-                Box(Modifier.fillMaxSize().background(Color.Green))
+        Box (Modifier.padding(it)) {
+            NavHost(
+                navController = navController,
+                startDestination = NavigationItem.Home.route
+            ) {
+                composable(NavigationItem.Home.route) {
+                    HomePage()
+                }
+                composable(NavigationItem.Settings.route) {
+                    Box(modifier = Modifier.fillMaxSize().background(Color.Yellow))
+                }
+                composable(NavigationItem.Info.route) {
+                    Box(Modifier.fillMaxSize().background(Color.Green))
+                }
             }
         }
     }
@@ -100,5 +110,33 @@ fun BottomNavigationBar(onTabSelected: (NavigationItem) -> Unit) {
             )
         }
     }
+}
 
+@Composable
+fun BITTopAppBar() {
+    TopAppBar(
+        title = {
+            Text(
+                "Large TopAppBar",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Localized description"
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "Localized description"
+                )
+            }
+        }
+    )
 }
