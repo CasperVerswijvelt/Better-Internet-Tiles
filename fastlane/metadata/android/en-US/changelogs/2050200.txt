@@ -1,0 +1,5 @@
+Improvements and fixes
+- Fixed issue causing the app to crash when a tile becomes inactive
+- Hide some settings (language, add-tile shortcuts) on Android versions lower than 13
+- Fixed some tile labels (Mobile Data, NFC) not being translated according to the app language setting
+- Translation updates (Russian, Turkish)
