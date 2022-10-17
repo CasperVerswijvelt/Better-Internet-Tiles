@@ -109,6 +109,8 @@ class NFCTileService : ReportingTileService() {
 
             val nfcEnabled = getNFCEnabled(applicationContext)
 
+            it.label = getString(R.string.nfc)
+
             if ((nfcEnabled && !isTurningOffNFC) || isTurningOnNFC) {
 
                 if (nfcEnabled) isTurningOnNFC = false

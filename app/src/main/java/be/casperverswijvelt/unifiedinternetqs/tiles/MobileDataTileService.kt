@@ -128,6 +128,8 @@ class MobileDataTileService : ReportingTileService() {
             val airplaneModeEnabled = getAirplaneModeEnabled(applicationContext)
             val dataEnabled = getDataEnabled(applicationContext)
 
+            it.label = getText(R.string.mobile_data)
+
             if (airplaneModeEnabled) {
 
                 it.state = Tile.STATE_UNAVAILABLE
