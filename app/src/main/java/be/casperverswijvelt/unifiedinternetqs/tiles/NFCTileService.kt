@@ -145,7 +145,11 @@ class NFCTileService : ReportingTileService() {
 
         log("Removing listeners")
 
-        unregisterReceiver(nfcReceiver)
+        try {
+            unregisterReceiver(nfcReceiver)
+        } catch (e: IllegalArgumentException) {
+            // Ignore
+        }
     }
 
     private fun log(text: String) {

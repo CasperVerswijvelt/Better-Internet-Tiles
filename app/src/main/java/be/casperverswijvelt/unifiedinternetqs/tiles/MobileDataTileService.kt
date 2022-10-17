@@ -177,7 +177,11 @@ class MobileDataTileService : ReportingTileService() {
         log("Removing listeners")
 
         cellularChangeListener?.stopListening(applicationContext)
-        unregisterReceiver(airplaneModeReceiver)
+        try {
+            unregisterReceiver(airplaneModeReceiver)
+        } catch (e: IllegalArgumentException) {
+            // Ignore
+        }
     }
 
     private fun log(text: String) {
