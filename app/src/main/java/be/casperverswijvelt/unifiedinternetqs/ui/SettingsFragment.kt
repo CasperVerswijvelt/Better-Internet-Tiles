@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -38,6 +39,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
             "${resources.getString(R.string.app_name)} version ${BuildConfig.VERSION_NAME}"
         findPreference<Preference>(resources.getString(R.string.language_key))?.summary =
             Resources.getSystem().configuration.locales[0].displayLanguage
+
+        val settingsCategory = findPreference<PreferenceCategory>(
+            resources.getString(R.string.settings_key)
+        )
+
+        // Hide some settings based on android version
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+
+            // Hide language settings
+            val localeSetting = findPreference<Preference>(
+                resources.getString(R.string.language_key)
+            )
+            localeSetting?.let { settingsCategory?.removePreference(it) }
+
+            // Hide tile-add buttons
+            val addTileCategory = findPreference<PreferenceCategory>(
+                resources.getString(R.string.add_tiles_key)
+            )
+            addTileCategory?.let { preferenceScreen.removePreference(it) }
+        }
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
@@ -133,17 +154,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     )
                 }
                 resources.getString(R.string.language_key) -> {
-                    val intent =
-                        Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
-                    intent.data =
-                        Uri.fromParts("package", context.packageName, null)
-                    intent.flags =
-                        Intent.FLAG_ACTIVITY_NO_HISTORY or
-                                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                    startActivity(intent)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val intent =
+                            Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                        intent.data =
+                            Uri.fromParts("package", context.packageName, null)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NO_HISTORY or
+                                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                        startActivity(intent)
+                    } else {
+                        // Should not happen, language setting is hidden
+                    }
                 }
-                else -> {
-                }
+                else -> {}
             }
         }
         return super.onPreferenceTreeClick(preference)
@@ -176,13 +200,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
             )
         } else {
-            AlertDialog.Builder(context)
-                .setTitle(R.string.require_android_13)
-                .setMessage(R.string.require_android_13_description)
-                .setPositiveButton(android.R.string.ok) { _, _ -> }
-                .setCancelable(true)
-                .create()
-                .show()
+            // Should not happen, add-tile buttons are hidden
         }
     }
 }

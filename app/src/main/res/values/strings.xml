@@ -67,4 +67,6 @@
     <string name="help_translate">Help translate this app!</string>
     <string name="language">Language</string>
     <string name="language_key" translatable="false">language</string>
+    <string name="settings_key" translatable="false">settings</string>
+    <string name="add_tiles_key" translatable="false">add_tiles</string>
 </resources>
