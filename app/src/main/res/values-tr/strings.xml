@@ -48,4 +48,5 @@
     <string name="add_nfc_tile">NFC bloğu ekle</string>
     <string name="airplane_mode">Uçak modu</string>
     <string name="help_translate">Bu uygulamayı çevirmeye yardım edin!</string>
+    <string name="language">Dil</string>
 </resources>
