@@ -423,6 +423,14 @@ fun reportToAnalytics(context: Context) {
                         dynamic.put("version", BuildConfig.VERSION_CODE)
                         dynamic.put("lang", Locale.getDefault().language)
                         dynamic.put("dist", BuildConfig.FLAVOR)
+                        dynamic.put(
+                            "shell",
+                            when {
+                                Shell.isAppGrantedRoot() == true -> "root"
+                                ShizukuUtil.hasShizukuPermission() -> "shizuku"
+                                else -> "none"
+                            }
+                        )
 
                         tiles.put(
                             "internet",
