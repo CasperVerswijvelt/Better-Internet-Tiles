@@ -109,6 +109,8 @@ class NFCTileService : ReportingTileService() {
 
             val nfcEnabled = getNFCEnabled(applicationContext)
 
+            it.label = getString(R.string.nfc)
+
             if ((nfcEnabled && !isTurningOffNFC) || isTurningOnNFC) {
 
                 if (nfcEnabled) isTurningOnNFC = false
@@ -145,7 +147,11 @@ class NFCTileService : ReportingTileService() {
 
         log("Removing listeners")
 
-        unregisterReceiver(nfcReceiver)
+        try {
+            unregisterReceiver(nfcReceiver)
+        } catch (e: IllegalArgumentException) {
+            // Ignore
+        }
     }
 
     private fun log(text: String) {

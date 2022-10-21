@@ -128,6 +128,8 @@ class MobileDataTileService : ReportingTileService() {
             val airplaneModeEnabled = getAirplaneModeEnabled(applicationContext)
             val dataEnabled = getDataEnabled(applicationContext)
 
+            it.label = getText(R.string.mobile_data)
+
             if (airplaneModeEnabled) {
 
                 it.state = Tile.STATE_UNAVAILABLE
@@ -177,7 +179,11 @@ class MobileDataTileService : ReportingTileService() {
         log("Removing listeners")
 
         cellularChangeListener?.stopListening(applicationContext)
-        unregisterReceiver(airplaneModeReceiver)
+        try {
+            unregisterReceiver(airplaneModeReceiver)
+        } catch (e: IllegalArgumentException) {
+            // Ignore
+        }
     }
 
     private fun log(text: String) {

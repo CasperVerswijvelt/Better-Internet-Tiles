@@ -33,7 +33,6 @@ class TileApplication : Application() {
                 )
             )
         )
-        reportToAnalytics(this)
 
         // Check if main shell has root access
         Shell.getShell {
@@ -50,6 +49,8 @@ class TileApplication : Application() {
 
                 startShizukuDetectionService()
             }
+
+            reportToAnalytics(this)
         }
     }
 

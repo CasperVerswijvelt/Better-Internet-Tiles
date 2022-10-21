@@ -19,7 +19,8 @@
 
     <PreferenceCategory
         android:text="@string/settings"
-        android:title="@string/settings">
+        android:title="@string/settings"
+        android:key="@string/settings_key">
 
         <SwitchPreference
             android:defaultValue="true"
@@ -54,7 +55,8 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:text="@string/add_tiles_title"
-        android:title="@string/add_tiles_title">
+        android:title="@string/add_tiles_title"
+        android:key="@string/add_tiles_key">
         <Preference
             android:selectable="false"
             android:persistent="false"

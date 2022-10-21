@@ -38,13 +38,15 @@
     <string name="shell_access_not_set_up">Bu uygulama için ya root erişimine ya da Shizuku 11+\'nın yüklü ve izinli olarak çalışıyor olmasına ihtiyacınız vardır. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="root_access_denied_description">Root yönetim uygulamanızdan (örneğin Magisk yöneticisi) \'Daha İyi İnternet Kutucukları\' için root erişimini el ile verin.</string>
     <string name="root_access_denied">Root erişim izni verilemedi</string>
-    <string name="no_service">Servis yok</string>
-    <string name="network_not_available">Ağ mevcut değil</string>
+    <string name="no_service">Hizmet yok</string>
+    <string name="network_not_available">Ağ kullanılamıyor</string>
     <string name="internet">İnternet</string>
-    <string name="require_android_13_description">Hızlı ayarlar menüsünü açarak bloğu manuel olarak ekleyin</string>
+    <string name="require_android_13_description">Hızlı ayarlar menüsünü açarak bloğu elle ekleyin</string>
     <string name="tile_added_error">Blok eklenemedi</string>
     <string name="add_tiles_description">Bu blokları aşağıdaki kısayol düğmelerini kullanarak ekleyin! Android 12 ve altında bunu hızlı ayarlardan el ile yapmanız gerekir.</string>
     <string name="add_tiles_title">Blok ekle</string>
     <string name="add_nfc_tile">NFC bloğu ekle</string>
     <string name="airplane_mode">Uçak modu</string>
+    <string name="help_translate">Bu uygulamayı çevirmeye yardım edin!</string>
+    <string name="language">Dil</string>
 </resources>
