@@ -1,4 +1,4 @@
-package be.casperverswijvelt.unifiedinternetqs.ui
+package be.casperverswijvelt.unifiedinternetqs.ui.legacy
 
 import android.app.AlertDialog
 import android.app.StatusBarManager

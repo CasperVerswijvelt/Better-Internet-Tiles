@@ -1,14 +1,10 @@
-package be.casperverswijvelt.unifiedinternetqs.ui
+package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
-import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
-import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
-import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 

@@ -27,7 +27,7 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
-import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
+import be.casperverswijvelt.unifiedinternetqs.ui.legacy.MainActivity
 import com.topjohnwu.superuser.Shell
 import org.json.JSONObject
 import java.lang.reflect.Method

@@ -21,6 +21,7 @@
         android:theme="@style/Theme.UnifiedInternetQS"
         android:exported="false"
         android:localeConfig="@xml/locales_config"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="tiramisu">
 
         <provider
@@ -37,7 +38,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.ComposeActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -92,7 +93,7 @@
         </service>
 
         <activity
-            android:name=".ui.LongPressReceiverActivity"
+            android:name=".tiles.LongPressReceiverActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:exported="true">
