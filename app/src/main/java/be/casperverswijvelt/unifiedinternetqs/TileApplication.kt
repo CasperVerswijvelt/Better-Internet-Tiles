@@ -27,11 +27,7 @@ class TileApplication : Application() {
 
         initializeFirebase(
             this,
-            getInstallId(
-                PreferenceManager.getDefaultSharedPreferences(
-                    this
-                )
-            )
+            getInstallId(this)
         )
 
         // Check if main shell has root access

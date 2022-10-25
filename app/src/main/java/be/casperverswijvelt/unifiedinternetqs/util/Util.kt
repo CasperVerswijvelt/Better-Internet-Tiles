@@ -23,12 +23,16 @@ import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.ui.legacy.MainActivity
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.lang.reflect.Method
 import java.net.HttpURLConnection
@@ -255,22 +259,12 @@ private fun getNetworkClassString(networkType: Int): String? {
     }
 }
 
-fun setLastConnectedWifi(context: Context, ssid: String?) {
-    val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-    val editor = sharedPref.edit()
-    editor.putString(
-        context.resources.getString(R.string.last_connected_wifi_key),
-        ssid
-    )
-    editor.apply()
+fun setLastConnectedWifi(context: Context, ssid: String?) = runBlocking  {
+    BITPreferences(context).setLastConnectedSSID(ssid)
 }
 
-fun getLastConnectedWifi(context: Context): String? {
-    val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-    return sharedPref.getString(
-        context.resources.getString(R.string.last_connected_wifi_key),
-        null
-    )
+fun getLastConnectedWifi(context: Context): String? = runBlocking {
+    BITPreferences(context).getLastConnectedSSID.first()
 }
 
 // Shell access
@@ -366,6 +360,7 @@ class Analytics {
 }
 
 fun saveTileUsed(instance: TileService) {
+    // TODO replace with datastore
     PreferenceManager.getDefaultSharedPreferences(instance)
         ?.edit()
         ?.putLong(instance.javaClass.name, System.currentTimeMillis())
@@ -415,7 +410,7 @@ fun reportToAnalytics(context: Context) {
                         val static = JSONObject()
                         val tiles = JSONObject()
 
-                        static.put("uuid", getInstallId(sharedPref))
+                        static.put("uuid", getInstallId(context))
                         static.put("brand", Build.BRAND)
                         static.put("model", Build.MODEL)
 
@@ -498,14 +493,14 @@ fun reportToAnalytics(context: Context) {
     }.start()
 }
 
-fun getInstallId(sharedPreferences: SharedPreferences): String {
-    val installationIdKey = "INSTALLATION_ID"
-    return sharedPreferences.getString(installationIdKey, null) ?: run {
+fun getInstallId(context: Context): String = runBlocking {
+
+    val preferences = BITPreferences(context)
+    val existingId =  preferences.getInstallationId.firstOrNull()
+
+    existingId ?: run {
         val uuid = UUID.randomUUID().toString()
-        sharedPreferences.edit().putString(
-            installationIdKey, UUID.randomUUID()
-                .toString()
-        ).apply()
+        preferences.setInstallationId(uuid)
         uuid
     }
 }

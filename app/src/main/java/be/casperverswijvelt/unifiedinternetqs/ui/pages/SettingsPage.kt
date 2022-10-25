@@ -14,9 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.TogglePreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.TopBarPage
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
@@ -24,12 +26,14 @@ import be.casperverswijvelt.unifiedinternetqs.ui.components.TopBarPage
 fun SettingsPage() {
 
     val context = LocalContext.current
+    val dataStore = BITPreferences(context)
+    val coroutineScope = rememberCoroutineScope()
 
     TopBarPage(
         title = stringResource(R.string.settings)
     ) {
 
-        var toggled by remember { mutableStateOf(false) }
+        val toggled by dataStore.getRequireUnlock.collectAsState(initial = true)
         TogglePreferenceEntry(
             icon = {
                 Icon(Icons.Outlined.Lock, "lock")
@@ -38,7 +42,9 @@ fun SettingsPage() {
             subTitle = stringResource(R.string.require_unlock_summary),
             toggled
         ) {
-            toggled = it
+            coroutineScope.launch {
+                dataStore.setRequireUnlock(it)
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

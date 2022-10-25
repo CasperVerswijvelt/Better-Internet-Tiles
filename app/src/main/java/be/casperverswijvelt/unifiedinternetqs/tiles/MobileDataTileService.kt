@@ -7,10 +7,13 @@ import android.service.quicksettings.Tile
 import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.util.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class MobileDataTileService : ReportingTileService() {
 
@@ -18,7 +21,7 @@ class MobileDataTileService : ReportingTileService() {
         const val TAG = "MobileDataTile"
     }
 
-    private var sharedPreferences: SharedPreferences? = null
+    private lateinit var preferences: BITPreferences
 
     private var isTurningOnData = false
     private var isTurningOffData = false
@@ -51,8 +54,7 @@ class MobileDataTileService : ReportingTileService() {
         mainHandler = Handler(mainLooper)
 
         cellularChangeListener = CellularChangeListener(networkChangeCallback)
-        sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferences = BITPreferences(this)
     }
 
     override fun onStartListening() {
@@ -87,18 +89,15 @@ class MobileDataTileService : ReportingTileService() {
             return
         }
 
-        if (
-            sharedPreferences?.getBoolean(
-                resources.getString(R.string.require_unlock_key),
-                true
-            ) == true
-        ) {
+        runBlocking {
+            if (preferences.getRequireUnlock.first()) {
 
-            unlockAndRun(runToggleMobileData)
+                unlockAndRun(runToggleMobileData)
 
-        } else {
+            } else {
 
-            mainHandler?.post(runToggleMobileData)
+                mainHandler?.post(runToggleMobileData)
+            }
         }
     }
 

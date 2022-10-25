@@ -1,17 +1,18 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
-import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
 import be.casperverswijvelt.unifiedinternetqs.util.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class InternetTileService : ReportingTileService() {
 
@@ -21,7 +22,7 @@ class InternetTileService : ReportingTileService() {
 
     private var wifiConnected = false
     private var wifiSSID: String? = null
-    private var sharedPreferences: SharedPreferences? = null
+    private lateinit var preferences: BITPreferences
 
     private var isTurningOnData = false
     private var isTurningOnWifi = false
@@ -69,18 +70,11 @@ class InternetTileService : ReportingTileService() {
 
         wifiChangeListener = WifiChangeListener(wifiChangeCallback)
         cellularChangeListener = CellularChangeListener(cellularChangeCallback)
+        preferences = BITPreferences(this)
 
-        sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        if (getWifiEnabled(this)) {
-            wifiSSID = sharedPreferences
-                ?.getString(
-                    resources.getString(R.string.last_connected_wifi_key),
-                    null
-                )
+        runBlocking {
+            wifiSSID = preferences.getLastConnectedSSID.first()
         }
-
     }
 
     override fun onStartListening() {
@@ -109,18 +103,15 @@ class InternetTileService : ReportingTileService() {
             return
         }
 
-        if (
-            sharedPreferences?.getBoolean(
-                resources.getString(R.string.require_unlock_key),
-                true
-            ) == true
-        ) {
+        runBlocking {
+            if (preferences.getRequireUnlock.first()) {
 
-            unlockAndRun(runCycleInternet)
+                unlockAndRun(runCycleInternet)
 
-        } else {
+            } else {
 
-            mainHandler?.post(runCycleInternet)
+                mainHandler?.post(runCycleInternet)
+            }
         }
     }
 

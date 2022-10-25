@@ -7,7 +7,10 @@ import android.service.quicksettings.Tile
 import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.util.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class NFCTileService : ReportingTileService() {
 
@@ -15,7 +18,7 @@ class NFCTileService : ReportingTileService() {
         const val TAG = "NFCTile"
     }
 
-    private var sharedPreferences: SharedPreferences? = null
+    private lateinit var preferences: BITPreferences
 
     private var isTurningOnNFC = false
     private var isTurningOffNFC = false
@@ -39,8 +42,7 @@ class NFCTileService : ReportingTileService() {
         log("NFC tile service created")
 
         mainHandler = Handler(mainLooper)
-        sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferences = BITPreferences(this)
     }
 
     override fun onStartListening() {
@@ -49,7 +51,6 @@ class NFCTileService : ReportingTileService() {
         syncTile()
         setListeners()
     }
-
 
     override fun onStopListening() {
         super.onStopListening()
@@ -69,18 +70,15 @@ class NFCTileService : ReportingTileService() {
             return
         }
 
-        if (
-            sharedPreferences?.getBoolean(
-                resources.getString(R.string.require_unlock_key),
-                true
-            ) == true
-        ) {
+        runBlocking {
+            if (preferences.getRequireUnlock.first()) {
 
-            unlockAndRun(runToggleNFC)
+                unlockAndRun(runToggleNFC)
 
-        } else {
+            } else {
 
-            mainHandler?.post(runToggleNFC)
+                mainHandler?.post(runToggleNFC)
+            }
         }
     }
 

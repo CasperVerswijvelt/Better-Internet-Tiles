@@ -1,16 +1,17 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.SharedPreferences
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
-import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
 import be.casperverswijvelt.unifiedinternetqs.util.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class WifiTileService : ReportingTileService() {
 
@@ -20,7 +21,7 @@ class WifiTileService : ReportingTileService() {
 
     private var wifiConnected = false
     private var wifiSSID: String? = null
-    private var sharedPreferences: SharedPreferences? = null
+    private lateinit var preferences: BITPreferences
 
     private var isTurningOnWifi = false
     private var isTurningOffWifi = false
@@ -55,10 +56,9 @@ class WifiTileService : ReportingTileService() {
         log("Wi-Fi tile service created")
 
         mainHandler = Handler(mainLooper)
+        preferences = BITPreferences(this)
 
         wifiChangeListener = WifiChangeListener(networkChangeCallback)
-        sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         if (getWifiEnabled(this)) {
             // Wi-Fi SSID is retrieved async using shell commands, visualise
@@ -94,18 +94,15 @@ class WifiTileService : ReportingTileService() {
             return
         }
 
-        if (
-            sharedPreferences?.getBoolean(
-                resources.getString(R.string.require_unlock_key),
-                true
-            ) == true
-        ) {
+        runBlocking {
+            if (preferences.getRequireUnlock.first()) {
 
-            unlockAndRun(runToggleInternet)
+                unlockAndRun(runToggleInternet)
 
-        } else {
+            } else {
 
-            mainHandler?.post(runToggleInternet)
+                mainHandler?.post(runToggleInternet)
+            }
         }
     }
 
