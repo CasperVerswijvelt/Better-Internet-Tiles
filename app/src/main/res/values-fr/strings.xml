@@ -1,2 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="nfc">NFC</string>
+    <string name="on">Activé</string>
+    <string name="off">Désactivé</string>
+    <string name="app_description_usage">Appuyez sur la nouvelle tuile Internet pour basculer entre le Wi-Fi et les données mobiles. Les tuiles respectives sont également disponibles, comme c\'était le cas avant Android 12.</string>
+    <string name="not_connected">Déconnecté</string>
+    <string name="require_unlock_summary">Empêchez le changement des modes réseau sur l\'écran de verrouillage.</string>
+    <string name="request_shizuku_access_title">Demande d’accès à Shizuku</string>
+    <string name="xda_title">Fil de discussion sur XDA Developers</string>
+    <string name="settings">Paramètres</string>
+    <string name="permissions">Autorisations</string>
+    <string name="about">À propos</string>
+    <string name="other">Autre</string>
+    <string name="shizuku_access_granted">Accès à Shizuku accordé.</string>
+    <string name="github_title">Dépôt GitHub</string>
+    <string name="request_shizuku_access_summary">Utiliser Shizuku pour accorder l’accès au Shell</string>
+    <string name="request_root_access_title">Demande d\'accès root</string>
+    <string name="request_root_access_summary">Utiliser root pour accorder l’accès au Shell</string>
+    <string name="restart_app_title">Redémarrer l\'application</string>
+    <string name="restart_app_summary">Essayer de redémarrer l\'application si quelque chose ne va pas.</string>
+    <string name="feedback_title">Commentaires / Signaler un bug</string>
+    <string name="language">Langue</string>
+    <string name="airplane_mode">Mode Avion</string>
+    <string name="root_access_granted">Accès root accordé.</string>
+    <string name="root_access_denied">Impossible d\'accorder l\'accès root</string>
+    <string name="internet">Internet</string>
+    <string name="network_not_available">Réseau non disponible</string>
+    <string name="no_service">Aucun service</string>
+    <string name="shell_access_required">Accès au Shell requis</string>
+    <string name="root_access_denied_description">Accordez manuellement l\'accès root à « Better Internet Tiles » à partir de votre application de gestion root (ex. Magisk manager).</string>
+    <string name="hide_service_title">Cachez-moi !</string>
+    <string name="hide_service_description">Cette notification garantit que les tuiles fonctionnent correctement avec Shizuku. N\'hésitez pas à la cacher.</string>
+    <string name="toast_foreground_service_error">Impossible de démarrer le service d\'avant-plan. Veuillez contacter le développeur.</string>
+    <string name="add_mobile_data_tile">Ajouter la tuile Données Mobiles</string>
+    <string name="add_internet_tile">Ajouter la tuile Internet</string>
+    <string name="add_nfc_tile">Ajouter la tuile NFC</string>
+    <string name="add_tiles_title">Ajouter des tuiles</string>
+    <string name="tile_added_error">Impossible d\'ajouter la tuile</string>
+    <string name="require_android_13">Nécessite Android 13+</string>
+    <string name="add_wifi_tile">Ajouter la tuile Wi-Fi</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="turning_on">Activation...</string>
+    <string name="mobile_data">Données mobiles</string>
+    <string name="require_unlock_title">Exiger le déverrouillage</string>
+    <string name="shell_access_not_set_up">Vous avez soit besoin d\'un accès root, soit de Shizuku 11+ installé et fonctionnant avec une permission accordée pour cette application. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="add_tiles_description">Ajoutez ces tuiles en utilisant les boutons de raccourci ci-dessous ! Sous Android 12 et moins, vous devez le faire manuellement depuis les réglages rapides.</string>
+    <string name="require_android_13_description">Ajoutez manuellement la tuile en ouvrant le menu des réglages rapides</string>
+    <string name="help_translate">Aidez-nous à traduire cette application !</string>
+    <string name="app_description_about">Une tuile de réglage rapide Internet, unifiée et réellement utile (contrairement à Android 12).</string>
+    <string name="app_description_shell_access">L\'activation/désactivation du Wi-Fi et des données mobiles, et la lecture du nom du réseau Wi-Fi actuel, nécessitent un accès au Shell. Shizuku peut s\'en charger sans nécessiter d\'accès root.</string>
+</resources>
