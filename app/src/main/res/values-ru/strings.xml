@@ -47,4 +47,6 @@
     <string name="shizuku_access_granted">Доступ Shizuku разрешен</string>
     <string name="root_access_denied_description">Предоставить \'Better Internet Tiles\' права супер-пользователя вручную из вашего приложения управления Root (напр. Magisk manager).</string>
     <string name="shell_access_not_set_up">Для работы приложения Вам необходимы права супер-пользователя (Root), либо установленный и активированный Shizuku 11+ <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="language">Язык</string>
+    <string name="help_translate">Помогите перевести это приложение!</string>
 </resources>
