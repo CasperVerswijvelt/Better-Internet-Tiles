@@ -63,7 +63,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.core:core-ktx:1.9.0"
-    implementation "com.google.android.material:material:1.6.1"
+    implementation "com.google.android.material:material:1.7.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
 
     // App restarting
@@ -78,8 +78,8 @@ dependencies {
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 
     // Firebase Analytics
-    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.2.13"
-    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.2.13"
+    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.3.2"
+    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.3.2"
 }
 
 configurations {
