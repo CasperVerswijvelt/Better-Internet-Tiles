@@ -1,2 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_description_shell_access">Für das aktivieren und deaktivieren von WLAN und mobilen Daten, sowie das anzeigen des Netzwerk-Namens, benötigt diese App Shell-Zugriff. Dieser kann entweder per Root, oder ohne Root auch mit Shizuku erlaubt werden.</string>
+    <string name="nfc">NFC</string>
+    <string name="wifi">WLAN</string>
+    <string name="mobile_data">Mobile Daten</string>
+    <string name="not_connected">Nicht verbunden</string>
+    <string name="require_unlock_title">Auf dem Sperrbildschirm deaktivieren</string>
+    <string name="off">Aus</string>
+    <string name="turning_on">Wird aktiviert...</string>
+    <string name="request_shizuku_access_title">Shizuku-Zugriff anfordern</string>
+    <string name="require_unlock_summary">Verhindert das Umschalten von WLAN und mobilen Daten auf dem Sperrbildschirm.</string>
+    <string name="restart_app_summary">Versuche zuerst die App neu zu starten, falls etwas nicht funktioniert.</string>
+    <string name="request_shizuku_access_summary">Shizuku benutzen um den Shell-Zugriff zu ermöglichen</string>
+    <string name="restart_app_title">App neustarten</string>
+    <string name="request_root_access_title">Root-Zugriff anfordern</string>
+    <string name="feedback_title">Feedback / einen Fehler melden</string>
+    <string name="permissions">Berechtigungen</string>
+    <string name="github_title">GitHub Repository</string>
+    <string name="xda_title">XDA Developers Thread</string>
+    <string name="settings">Einstellungen</string>
+    <string name="about">Über diese App</string>
+    <string name="shizuku_access_granted">Shell-Zugriff über Shizuku gewährt.</string>
+    <string name="other">Mehr</string>
+    <string name="request_root_access_summary">Root benutzen um den Shell-Zugriff zu ermöglichen</string>
+    <string name="language">Sprache</string>
+    <string name="help_translate">Hilf mit diese App zu übersetzen!</string>
+    <string name="airplane_mode">Flugmodus</string>
+    <string name="no_service">Kein Dienst</string>
+    <string name="network_not_available">Netzwerk nicht verfügbar</string>
+    <string name="internet">Internet</string>
+    <string name="require_android_13_description">Füge die Schnelleinstellungstaste manuell im Schnelleinstellungsmenü hinzu</string>
+    <string name="require_android_13">Benötigt Android 13+</string>
+    <string name="tile_added_error">Die Schnelleinstellungstaste konnte nicht hinzugefügt werden</string>
+    <string name="add_tiles_description">Füge die Schnelleinstellungstaste automatisch mit den folgenden Optionen ein. In Android 12 musst du dies manuell in dem Schnelleinstellungen machen.</string>
+    <string name="root_access_granted">Root-Zugriff gewährt.</string>
+    <string name="add_tiles_title">Schnelleinstellungstasten hinzufügen</string>
+    <string name="add_nfc_tile">NFC Schnelleinstellungstaste hinzufügen</string>
+    <string name="add_internet_tile">Internet Schnelleinstellungstaste hinzufügen</string>
+    <string name="add_mobile_data_tile">Mobile Daten Schnelleinstellungstaste hinzufügen</string>
+    <string name="toast_foreground_service_error">Der \"foreground-service\" konnte nicht gestartet werden. Melde diesen Fehler bitte dem Entwickler.</string>
+    <string name="hide_service_description">Diese Benachrichtigung sorgt dafür dass diese App mit Shizuku im Hintergrund läuft und nicht vom System beendet wird. Du kannst diese Benachrichtigung verstecken.</string>
+    <string name="add_wifi_tile">WLAN Schnelleinstellungstaste hinzufügen</string>
+    <string name="hide_service_title">Versteck\' mich!</string>
+    <string name="shell_access_required">Diese App benötigt Shell-Zugriff</string>
+    <string name="shell_access_not_set_up">Du benötigst entweder Root-Zugriff oder Shizuku 11+ (installiert und laufend), um diese App zu nutzen. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="root_access_denied_description">Gewähre dieser App (Better Internet Tiles) manuell den Root Zugriff über eine App (wie z.B. Magisk Manager).</string>
+    <string name="root_access_denied">Konnte keinen Root-Zugriff gewähren</string>
+    <string name="on">An</string>
+    <string name="app_description_about">Eine neue, kombinierte und nützliche Schnelleinstellungstaste (im Vergleich zu Android 12).</string>
+    <string name="app_description_usage">Drücke auf die neue Schnelleinstellungstaste um zwischen WLAN und mobilen Daten zu wechseln. Getrennte Tasten, wie sie vor Android 12 der Standard waren, sind auch verfügbar.</string>
+</resources>
