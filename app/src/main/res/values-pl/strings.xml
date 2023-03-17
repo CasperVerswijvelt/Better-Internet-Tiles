@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_description_usage">Dotknij nowej kafelki Internetu by przełączyć pomiędzy Wi-Fi a danymi mobilnymi. Odpowiednie kafelki są również dostępne, tak jak to było przed Androidem 12.</string>
+    <string name="app_description_usage">Stuknij nowy kafelek Internetu, aby przełączać się między Wi-Fi a komórkową transmisją danych. Dostępne są również odpowiednie kafelki, tak jak przed Androidem 12.</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Dane mobilne</string>
     <string name="nfc">NFC</string>
@@ -39,7 +39,7 @@
     <string name="airplane_mode">Tryb samolotowy</string>
     <string name="help_translate">Pomóż przetłumaczyć tą aplikację!</string>
     <string name="language">Język</string>
-    <string name="app_description_about">Zunifikowane i rzeczywiście użyteczne kafelki szybkich-ustawień od Internetu (W przeciwieństwie do Androida 12).</string>
+    <string name="app_description_about">Ujednolicony i faktycznie przydatny kafelek szybkich ustawień internetowych (w przeciwieństwie do Androida 12).</string>
     <string name="app_description_shell_access">Włączenie/wyłączenie Wi-Fi oraz danych mobilnych oraz odczytywanie bieżączej nazwy sieci Wi-Fi wymaga dostępu do powłoki. Shizuku może zająć się tym bez wymagania również dostępu do roota.</string>
     <string name="off">Wyłącz</string>
     <string name="request_root_access_summary">Użyj roota do zezwolenia dostępu do powłoki</string>
