@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_description_about">Un tile per Internet dei quick-settings unificato e davvero utile (a differenza di Android 12).</string>
+    <string name="app_description_usage">Tocca il nuovo tile Internet per alternare tra Wi-Fi e dati mobili. Sono disponibili anche i rispettivi tile, come le versioni precedenti ad Android 12.</string>
+    <string name="not_connected">Non connesso</string>
+    <string name="request_root_access_title">Richiedi l\'accesso root</string>
+    <string name="request_root_access_summary">Usa il root per concedere l\'accesso alla shell</string>
+    <string name="restart_app_title">Riavvia l\'app</string>
+    <string name="restart_app_summary">Prova a riavviare l\'app se qualcosa non va.</string>
+    <string name="feedback_title">Feedback/segnala un bug</string>
+    <string name="xda_title">Thread su XDA Developers</string>
+    <string name="app_description_shell_access">L\'attivazione/disattivazione del Wi-Fi e dei dati mobili e la lettura del nome della rete Wi-Fi richiedono l\'accesso alla shell. Shizuku può occuparsene anche senza richiedere l\'accesso root.</string>
+    <string name="nfc">NFC</string>
+    <string name="request_shizuku_access_summary">Usa Shizuku per concedere l\'accesso alla shell</string>
+    <string name="require_unlock_summary">Impedisce la commutazione delle modalità di rete quando sei sulla schermata di blocco.</string>
+    <string name="mobile_data">Dati mobili</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="on">On</string>
+    <string name="permissions">Permessi</string>
+    <string name="other">Altro</string>
+    <string name="request_shizuku_access_title">Richiedi l\'accesso a Shizuku</string>
+    <string name="tile_added_error">Non è stato possibile aggiungere il tile</string>
+    <string name="airplane_mode">Modalità aereo</string>
+    <string name="github_title">GitHub repository</string>
+    <string name="settings">Impostazioni</string>
+    <string name="hide_service_title">Nascondimi!</string>
+    <string name="hide_service_description">Questa notifica garantisce che i tiles funzionino correttamente con Shizuku. Sentiti libero di nasconderlo.</string>
+    <string name="require_android_13_description">Aggiungi manualmente il tile aprendo il menu dei quick-settings</string>
+    <string name="network_not_available">Rete non disponibile</string>
+    <string name="no_service">Nessun servizio</string>
+    <string name="about">Info</string>
+    <string name="add_mobile_data_tile">Aggiungi tile dati mobili</string>
+    <string name="add_wifi_tile">Aggiungi tile Wi-Fi</string>
+    <string name="root_access_denied">Non è stato possibile accedere al root</string>
+    <string name="root_access_denied_description">Concedi manualmente l\'accesso root a \"Better Internet Tiles\" dalla tua app di gestione root (ad es. Magisk manager).</string>
+    <string name="shell_access_required">È richiesto l\'accesso alla shell</string>
+    <string name="toast_foreground_service_error">Impossibile avviare il servizio in primo piano (foreground). Si prega di contattare lo sviluppatore.</string>
+    <string name="add_internet_tile">Aggiungi tile Internet</string>
+    <string name="add_nfc_tile">Aggiungi tile NFC</string>
+    <string name="add_tiles_title">Aggiungi tiles</string>
+    <string name="root_access_granted">Accesso root garantito.</string>
+    <string name="add_tiles_description">Aggiungi queste tiles utilizzando gli shortcuts qui sotto! Su Android 12 e versioni precedenti devi farlo manualmente dalle impostazioni rapide.</string>
+    <string name="require_android_13">Richiede Android 13+</string>
+    <string name="require_unlock_title">Richiedi sblocco</string>
+    <string name="shizuku_access_granted">Accesso garantito a Shizuku.</string>
+    <string name="help_translate">Aiuta a tradurre questa app!</string>
+    <string name="language">Lingua</string>
+    <string name="off">Off</string>
+    <string name="turning_on">Accendendo...</string>
+    <string name="internet">Internet</string>
+    <string name="shell_access_not_set_up">È necessario l\'accesso root o Shizuku 11+ installato e in esecuzione con l\'autorizzazione concessa per questa app. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+</resources>
