@@ -4,8 +4,8 @@
     <string name="nfc">NFC</string>
     <string name="turning_on">Включение...</string>
     <string name="not_connected">Не подключено</string>
-    <string name="app_description_usage">Новый переключатель \'Интернет\' позволяет быстро переключаться между Wi-Fi и мобильным интернетом. Отдельные переключатели так же доступны, как это было до Android 12</string>
-    <string name="require_unlock_summary">Запретить переключение сетевых режимов на экране блокировки</string>
+    <string name="app_description_usage">Новый переключатель \'Интернет\' позволяет быстро переключаться между Wi-Fi и мобильным интернетом. Отдельные переключатели так же доступны, как это было до Android 12.</string>
+    <string name="require_unlock_summary">Запретить переключение сетевых режимов на экране блокировки.</string>
     <string name="require_unlock_title">Требуется разблокировка экрана</string>
     <string name="request_shizuku_access_title">Запросить доступ к Shizuku</string>
     <string name="github_title">GitHub репозиторий</string>
@@ -16,7 +16,7 @@
     <string name="add_nfc_tile">Добавить переключатель NFC</string>
     <string name="xda_title">Обсуждение на XDA Developers</string>
     <string name="about">Сведения</string>
-    <string name="root_access_granted">Права супер-пользователя предоставлены</string>
+    <string name="root_access_granted">Права супер-пользователя предоставлены.</string>
     <string name="root_access_denied">Не удалось получить права супер-пользователя</string>
     <string name="hide_service_title">Спрячьте меня!</string>
     <string name="internet">Интернет</string>
@@ -27,7 +27,7 @@
     <string name="add_tiles_title">Добавить переключатели</string>
     <string name="off">Выключено</string>
     <string name="app_description_about">Объединёный и действительно полезеный переключатель \'Интернет\' (быстрее чем стандартный в Android 12).</string>
-    <string name="app_description_shell_access">Для переключения Wi-Fi и мобильного интернета, а так же для отображения названия сети необходимы права супер-пользователи или повышенные привелегии с помощью Shizuku</string>
+    <string name="app_description_shell_access">Для переключения Wi-Fi и мобильного интернета, а так же для отображения названия сети необходимы права супер-пользователи или повышенные привелегии с помощью Shizuku.</string>
     <string name="mobile_data">Мобильные данные</string>
     <string name="on">Включено</string>
     <string name="other">Дополнительно</string>
@@ -37,14 +37,16 @@
     <string name="request_shizuku_access_summary">Использовать Shizuku чтобы повысить привелегии приложения</string>
     <string name="request_root_access_title">Запросить права супер-пользователя</string>
     <string name="request_root_access_summary">Использовать права супер-пользователя для повышения привелегий приложения</string>
-    <string name="restart_app_summary">Перезапустить приложение</string>
+    <string name="restart_app_summary">Перезапустить приложение, если что-то кажется не так.</string>
     <string name="require_android_13_description">Добавьте переключатели вручную, открыв меню быстрых настроек</string>
     <string name="toast_foreground_service_error">Не удалось запустить фоновую службу. Пожалуйста, свяжитесь с разработчиком.</string>
     <string name="no_service">Нет сигнала</string>
     <string name="airplane_mode">Режим самолета</string>
     <string name="shell_access_required">Необходимо повысить привелегии приложения</string>
     <string name="hide_service_description">Это уведомление обеспечивает правильную работу плиток с Shizuku. Уведомление можно скрыть.</string>
-    <string name="shizuku_access_granted">Доступ Shizuku разрешен</string>
+    <string name="shizuku_access_granted">Доступ Shizuku разрешен.</string>
     <string name="root_access_denied_description">Предоставить \'Better Internet Tiles\' права супер-пользователя вручную из вашего приложения управления Root (напр. Magisk manager).</string>
     <string name="shell_access_not_set_up">Для работы приложения Вам необходимы права супер-пользователя (Root), либо установленный и активированный Shizuku 11+ <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="language">Язык</string>
+    <string name="help_translate">Помогите перевести это приложение!</string>
 </resources>

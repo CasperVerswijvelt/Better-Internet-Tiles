@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_description_usage">Stuknij nowy kafelek Internetu, aby przełączać się między Wi-Fi a komórkową transmisją danych. Dostępne są również odpowiednie kafelki, tak jak przed Androidem 12.</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="mobile_data">Dane mobilne</string>
+    <string name="nfc">NFC</string>
+    <string name="on">Włącz</string>
+    <string name="turning_on">Włączanie...</string>
+    <string name="not_connected">Nie połączono</string>
+    <string name="require_unlock_title">Wymagaj odblokowywania</string>
+    <string name="require_unlock_summary">Zapobiegaj przełączaniu trybów sieci kiedy jesteś w ekranie blokady.</string>
+    <string name="request_shizuku_access_summary">Użyj Shizuku do zezwolenia dostępu do powłoki</string>
+    <string name="request_shizuku_access_title">Zażądaj dostępu poprzez Shizuku</string>
+    <string name="restart_app_title">Zrestartuj aplikację</string>
+    <string name="restart_app_summary">Spróbuj zrestartować aplikację jeśli coś wydaje się źle działać.</string>
+    <string name="feedback_title">Opinia/zgłoś błąd</string>
+    <string name="github_title">Repozytorium GitHub</string>
+    <string name="xda_title">Wątek na XDA Developers</string>
+    <string name="settings">Ustawienia</string>
+    <string name="permissions">Uprawnienia</string>
+    <string name="about">O</string>
+    <string name="other">Inne</string>
+    <string name="root_access_granted">Dostęp do roota zezwolony.</string>
+    <string name="root_access_denied">Nie można zezwolić dostępu do roota</string>
+    <string name="root_access_denied_description">Ręcznie zezwól na dostęp do roota dla \'Better Internet Tiles\' z poziomu aplikacji do zarządzania rootem (np. Magisk manager).</string>
+    <string name="shell_access_required">Wymagany dostęp do powłoki</string>
+    <string name="hide_service_title">Ukryj mnie!</string>
+    <string name="toast_foreground_service_error">Nie można uruchomić usługi pierwszoplanowej. Skontaktuj się z twórcą.</string>
+    <string name="add_wifi_tile">Dodaj kafelkę Wi-Fi</string>
+    <string name="add_mobile_data_tile">Dodaj kafelkę danych mobilnych</string>
+    <string name="hide_service_description">To powiadomienie zapewnia czy kafelki działają poprawnie z Shizuku. Możesz je ukryć.</string>
+    <string name="add_tiles_description">Dodaj te kafelki poprzez przyciski skrótów poniżej! W Androidzie 12 lub poniżej musisz to zrobić ręcznie poprzez szybkie-ustawienia.</string>
+    <string name="tile_added_error">Nie można było dodać kafelki</string>
+    <string name="require_android_13">Wymaga Androida 13+</string>
+    <string name="require_android_13_description">Dodaj kafelkę ręcznie otwierając menu szybkich-ustawień</string>
+    <string name="internet">Internet</string>
+    <string name="network_not_available">Sieć niedostępna</string>
+    <string name="no_service">Brak usługi</string>
+    <string name="airplane_mode">Tryb samolotowy</string>
+    <string name="help_translate">Pomóż przetłumaczyć tą aplikację!</string>
+    <string name="language">Język</string>
+    <string name="app_description_about">Ujednolicony i faktycznie przydatny kafelek szybkich ustawień internetowych (w przeciwieństwie do Androida 12).</string>
+    <string name="app_description_shell_access">Włączenie/wyłączenie Wi-Fi oraz danych mobilnych oraz odczytywanie bieżączej nazwy sieci Wi-Fi wymaga dostępu do powłoki. Shizuku może zająć się tym bez wymagania również dostępu do roota.</string>
+    <string name="off">Wyłącz</string>
+    <string name="request_root_access_summary">Użyj roota do zezwolenia dostępu do powłoki</string>
+    <string name="request_root_access_title">Zażądaj dostępu do roota</string>
+    <string name="shizuku_access_granted">Dostęp poprzez Shizuku zezwolony.</string>
+    <string name="add_nfc_tile">Dodaj kafelkę NFC</string>
+    <string name="shell_access_not_set_up">Musisz albo potrzebować dostępu do roota, albo zainstalowanego i działającego Shizuku 11+ z zezwolonym uprawnieniem dla tej aplikacji. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="add_internet_tile">Dodaj kafelkę Internetu</string>
+    <string name="add_tiles_title">Dodaj kafelki</string>
+</resources>

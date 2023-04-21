@@ -172,7 +172,9 @@ fun getCellularNetworkText(
     // No data sim set or no read phone state permission
         ?: return context.getString(R.string.network_not_available)
 
-    info.add(subscriptionInfo.displayName.toString())
+    subscriptionInfo.displayName?.let {
+        info.add(it.toString())
+    }
 
     // TODO: Use signal strength of data SIM
     if (tm.signalStrength?.level == 0) {

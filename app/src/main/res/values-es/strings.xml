@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="turning_on">Encendiendo...</string>
+    <string name="hide_service_title">Ocultame!</string>
+    <string name="no_service">Sin servicio</string>
+    <string name="off">Apagado</string>
+    <string name="toast_foreground_service_error">No se pudo iniciar el servicio. Por favor contacta al desarrollador.</string>
+    <string name="require_android_13_description">Agrega el botón de manera manual abriendo el menú de ajustes rápidos</string>
+    <string name="request_shizuku_access_summary">Utilizar Shizuku para obtener acceso a shell</string>
+    <string name="github_title">Repositorio en GitHub</string>
+    <string name="app_description_about">Un botón de rápido acceso unificado y realmente útil (no como el de Android 12).</string>
+    <string name="app_description_usage">Toca el nuevo botón de internet para cambiar entre Wi-Fi y datos móviles. También están disponibles los botones por separado, como era antes de Android 12.</string>
+    <string name="nfc">NFC</string>
+    <string name="on">Encendido</string>
+    <string name="request_root_access_summary">Utilizar root para obtener acceso a shell</string>
+    <string name="restart_app_title">Reiniciar app</string>
+    <string name="app_description_shell_access">Encender y apagar Wi-Fi y datos móviles, así como leer la información de la red Wi-Fi actual, requiere acceso shell. Shizuku puede encargarse de esto sin necesidad de root.</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="mobile_data">Datos móviles</string>
+    <string name="require_unlock_summary">No permite cambiar el tipo de conexión cuando la pantalla está bloqueada.</string>
+    <string name="request_shizuku_access_title">Solicitar acceso a Shizuku</string>
+    <string name="restart_app_summary">Intenta reiniciar la app en caso de que algo funcione mal.</string>
+    <string name="feedback_title">Retroalimentación/reportar un bug</string>
+    <string name="shizuku_access_granted">Acceso a Shizuku exitoso.</string>
+    <string name="not_connected">Desconectado</string>
+    <string name="require_unlock_title">Requerir desbloqueo</string>
+    <string name="request_root_access_title">Solicitar acceso root</string>
+    <string name="xda_title">Hilo en XDA Developers</string>
+    <string name="settings">Ajustes</string>
+    <string name="about">Acerca de</string>
+    <string name="root_access_granted">Acceso root exitoso.</string>
+    <string name="permissions">Permisos</string>
+    <string name="other">Otros</string>
+    <string name="root_access_denied">No se pudo obtener acceso root</string>
+    <string name="root_access_denied_description">Otorga acceso a root de manera manual a \'Better Internet Tiles\' desde la app de administración root (ej. Magisk manager).</string>
+    <string name="hide_service_description">Esta notificación se asegura de que los botones funcionen correctamente junto a Shizuku. Siéntete libre de esconderla.</string>
+    <string name="language">Idioma</string>
+    <string name="shell_access_not_set_up">Necesitas acceso root o Shizuku 11+ instalado y funcionando con permisos otorgados a esta app. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="shell_access_required">Se necesita acceso a shell</string>
+    <string name="add_wifi_tile">Agregar botón de Wi-Fi</string>
+    <string name="add_mobile_data_tile">Agregar botón de datos móviles</string>
+    <string name="add_internet_tile">Agregar botón de Internet</string>
+    <string name="add_nfc_tile">Agregar botón de NFC</string>
+    <string name="tile_added_error">No se pudo agregar el botón</string>
+    <string name="internet">Internet</string>
+    <string name="network_not_available">Red no disponible</string>
+    <string name="add_tiles_title">Agregar botones</string>
+    <string name="add_tiles_description">Agrega los botones usando los accesos directos de abajo! En Android 12 y anteriores, debes agregar los botones de manera manual en los ajustes rápidos.</string>
+    <string name="require_android_13">Se necesita Android 13+</string>
+    <string name="airplane_mode">Modo avión</string>
+    <string name="help_translate">Ayuda a traducir la app!</string>
+</resources>
