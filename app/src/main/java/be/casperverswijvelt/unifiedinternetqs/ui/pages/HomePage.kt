@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
+import be.casperverswijvelt.unifiedinternetqs.ui.components.ColorPalette
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
@@ -99,14 +101,16 @@ fun HomePage() {
                         iconId = R.drawable.ic_baseline_signal_wifi_3_bar_24,
                         title= stringResource(id = R.string.wifi),
                         subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = WifiTileService::class.java
+                        serviceClass = WifiTileService::class.java,
+                        enabled = true
                     )
                     QuickAddTile(
                         modifier = Modifier.weight(.5f),
                         iconId = R.drawable.ic_baseline_mobile_data_24,
                         title= stringResource(id = R.string.mobile_data),
                         subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = MobileDataTileService::class.java
+                        serviceClass = MobileDataTileService::class.java,
+                        enabled = false
                     )
                 }
                 Row (
@@ -117,14 +121,16 @@ fun HomePage() {
                         iconId = R.drawable.ic_baseline_public_24,
                         title= stringResource(id = R.string.internet),
                         subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = InternetTileService::class.java
+                        serviceClass = InternetTileService::class.java,
+                        enabled = false
                     )
                     QuickAddTile(
                         modifier = Modifier.weight(.5f),
                         iconId = R.drawable.nfc_24,
                         title= stringResource(id = R.string.nfc),
                         subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = NFCTileService::class.java
+                        serviceClass = NFCTileService::class.java,
+                        enabled = true
                     )
                 }
             }
@@ -138,6 +144,7 @@ fun <T>QuickAddTile(
     iconId: Int,
     title: String,
     subTitle: String? = null,
+    enabled: Boolean,
     serviceClass: Class<T>
 ) {
     val context = LocalContext.current
@@ -169,7 +176,8 @@ fun <T>QuickAddTile(
         },
         iconId = iconId,
         title = title,
-        subTitle = subTitle
+        subTitle = subTitle,
+        enabled = enabled
     )
 }
 
@@ -178,24 +186,21 @@ fun Tile(
     modifier: Modifier = Modifier,
     iconId: Int,
     title: String,
-    enabled: Boolean = false,
+    enabled: Boolean = true,
     subTitle: String? = null,
     onClick: () -> Unit = {}
 ) {
+    val darkTheme = isSystemInDarkTheme()
+    val scheme = MaterialTheme.colorScheme
+
     val bgColor = if (enabled)
-        MaterialTheme.colorScheme.onPrimaryContainer
+        if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
     else
-        MaterialTheme.colorScheme.onTertiary
+        if (darkTheme) scheme.onTertiary else Color(0x11000000)
 
-    val fgColor = if (enabled)
-        MaterialTheme.colorScheme.background
-    else
-        Color.White
+    val fgColor = if (enabled) Color.Black else if (darkTheme) Color.White else Color.Black
 
-    val fgColorLight = if (enabled)
-        MaterialTheme.colorScheme.onTertiary
-    else
-        Color(0xFF9C9C9C)
+    val fgColorLight = Color(fgColor.red, fgColor.green, fgColor.blue, .7f)
 
     Box(
         modifier = modifier
