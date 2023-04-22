@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wifi">Wi-Fi</string>
+    <string name="app_description_about">統一され、Android 12のものより使えるクイック設定のインターネットタイル</string>
+    <string name="app_description_usage">新しいインターネットタイルをタップすると、Wi-Fiとモバイルデータを切り換えることができます。 Android 12以前にあったような、独立したタイルも用意されています。</string>
+    <string name="nfc">NFC</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="turning_on">有効にしています…</string>
+    <string name="not_connected">接続していません</string>
+    <string name="require_unlock_title">ロック解除を要求</string>
+    <string name="permissions">権限</string>
+    <string name="about">アプリ情報</string>
+    <string name="other">その他</string>
+    <string name="shell_access_not_set_up">このアプリを使用するには、Shizuku 11+が動作しているか、rootアクセスが必要です。<a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="shell_access_required">シェルアクセスが必要</string>
+    <string name="hide_service_description">Shizukuを使用してタイルを正常に動作させるための通知です。隠してもかまいません。</string>
+    <string name="add_wifi_tile">Wi-Fiタイルを追加</string>
+    <string name="add_internet_tile">インターネットタイルを追加</string>
+    <string name="add_nfc_tile">NFCタイルを追加</string>
+    <string name="require_android_13">Android 13以降が必要</string>
+    <string name="internet">インターネット</string>
+    <string name="network_not_available">ネットワーク接続がありません</string>
+    <string name="no_service">圏外</string>
+    <string name="language">言語</string>
+    <string name="mobile_data">モバイルデータ</string>
+    <string name="request_shizuku_access_title">Shizukuアクセスを要求</string>
+    <string name="request_root_access_title">rootアクセスを要求</string>
+    <string name="request_root_access_summary">シェルにアクセスするためにrootを使用する</string>
+    <string name="restart_app_summary">何かがおかしい時、アプリの再起動を試してください。</string>
+    <string name="request_shizuku_access_summary">シェルにアクセスするためにShizukuを使用する</string>
+    <string name="restart_app_title">アプリを再起動</string>
+    <string name="app_description_shell_access">Wi-Fiやモバイルデータのオンオフを切り替えたり、接続中のWi-Fiネットワークを表示するにはシェルアクセスが必要です。Shizukuを使うことにより、rootなしで動作させることができます。</string>
+    <string name="settings">設定</string>
+    <string name="feedback_title">フィードバック/バグの報告</string>
+    <string name="xda_title">XDA Developersスレッド</string>
+    <string name="github_title">GitHubリポジトリ</string>
+    <string name="shizuku_access_granted">Shizukuアクセスが許可されました</string>
+    <string name="root_access_granted">rootアクセスが許可されました</string>
+    <string name="root_access_denied">rootアクセスがありません</string>
+    <string name="root_access_denied_description">rootマネージャー(Magisk Managerなど)から、「Better Internet Tiles」に対して手動でrootアクセスを許可してください。</string>
+    <string name="add_mobile_data_tile">モバイルデータタイルを追加</string>
+    <string name="toast_foreground_service_error">フォアグラウンドサービスを開始できませんでした。開発者にお問い合わせください(英語)。</string>
+    <string name="add_tiles_title">タイルを追加</string>
+    <string name="add_tiles_description">ショートカットからタイルを追加できます。Android 12およびそれ以下のバージョンでは、クイック設定パネルから手動で追加する必要があります。</string>
+    <string name="tile_added_error">タイルを追加できませんでした</string>
+    <string name="help_translate">このアプリの翻訳を手伝ってください！</string>
+    <string name="require_android_13_description">クイック設定メニューから手動でタイルを追加してください</string>
+    <string name="airplane_mode">機内モード</string>
+    <string name="require_unlock_summary">端末がロックされている時に、ネットワークモードを変更できないようにします。</string>
+</resources>
