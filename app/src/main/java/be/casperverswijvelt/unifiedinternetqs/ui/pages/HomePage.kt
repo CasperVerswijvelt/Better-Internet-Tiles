@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.StatusBarManager
 import android.content.ComponentName
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,11 +24,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -48,8 +58,8 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@ExperimentalMaterial3Api
 @Composable
 fun HomePage() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -144,6 +154,7 @@ fun HomePage() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T>QuickAddTile(
     modifier: Modifier = Modifier,
@@ -155,6 +166,9 @@ fun <T>QuickAddTile(
 ) {
     val context = LocalContext.current
     val errorText = stringResource(R.string.tile_added_error)
+    val tileAdded = stringResource(R.string.tile_added)
+    val tileAlreadyAdded = stringResource(R.string.tile_already_added)
+    var android13ModalOpen by remember { mutableStateOf(false) }
     Tile(
         modifier = modifier,
         onClick = {
@@ -169,15 +183,34 @@ fun <T>QuickAddTile(
                     ),
                     title,
                     android.graphics.drawable.Icon.createWithResource(context, iconId),
-                    {},
+                    { Handler(Looper.getMainLooper()).post(it) },
                     {
-                        Toast.makeText(
-                            context,
-                            "$errorText ($it)",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val text = when(it) {
+                            StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ADDED -> {
+                                tileAdded
+                            }
+                            StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED -> {
+                                tileAlreadyAdded
+                            }
+                            StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_NOT_ADDED -> {
+                                ""
+                            }
+                            else -> {
+                                errorText
+                            }
+                        }
+                        println(it)
+                        if(text.isNotEmpty()) {
+                            Toast.makeText(
+                                context,
+                                text,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 )
+            } else {
+                android13ModalOpen = true
             }
         },
         iconId = iconId,
@@ -185,6 +218,38 @@ fun <T>QuickAddTile(
         subTitle = subTitle,
         enabled = enabled
     )
+    if (android13ModalOpen) {
+        AlertDialog(
+            onDismissRequest = { android13ModalOpen = false }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.large
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(id = R.string.require_android_13),
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(26.dp))
+                    Text(
+                        text = stringResource(id = R.string.require_android_13_description),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextButton(
+                        onClick = { android13ModalOpen = false },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text(stringResource(id = R.string.ok))
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
