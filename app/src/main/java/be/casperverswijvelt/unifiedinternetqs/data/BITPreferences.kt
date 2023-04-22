@@ -90,19 +90,23 @@ class BITPreferences(private val context: Context) {
     val getShellMethod: kotlinx.coroutines.flow.Flow<ShellMethod> = context
         .dataStore.data.map {
             it[KEY_SHELL_METHOD]?.let {methodString ->
-                ShellMethod.valueOf(methodString)
+                ShellMethod.getByValue(methodString)
             } ?: ShellMethod.AUTO
         }
 
     suspend fun setShellMethod(shellMethod: ShellMethod) {
         context.dataStore.edit {
-            it[KEY_SHELL_METHOD] = shellMethod.toString()
+            it[KEY_SHELL_METHOD] = shellMethod.method
         }
     }
 }
-
 enum class ShellMethod(val method: String) {
     ROOT("root"),
     SHIZUKU("shizuku"),
-    AUTO("auto")
+    AUTO("auto");
+    companion object {
+        infix fun getByValue(value: String): ShellMethod {
+            return ShellMethod.values().firstOrNull() { it.method == value } ?: AUTO
+        }
+    }
 }

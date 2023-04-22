@@ -82,6 +82,27 @@ fun HomePage() {
                 )
                 .verticalScroll(rememberScrollState())
         ) {
+            ElevatedCard(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.error
+                ),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Column (Modifier.padding(16.dp)) {
+
+                    Text(
+                        modifier = Modifier.padding(PaddingValues(bottom = 16.dp)),
+                        text = stringResource(R.string.about),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(R.string.app_description_about)
+                    )
+                }
+            }
             OutlinedCard(
                 Modifier
                     .padding(16.dp)

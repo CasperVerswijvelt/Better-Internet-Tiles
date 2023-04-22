@@ -79,5 +79,6 @@
     <string name="version">version</string>
     <string name="shizuku" translatable="false">Shizuku</string>
     <string name="root" translatable="false">Root</string>
+    <string name="auto" translatable="false">Auto</string>
     <string name="ok">Ok</string>
 </resources>

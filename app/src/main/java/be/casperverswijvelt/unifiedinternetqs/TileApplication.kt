@@ -61,10 +61,11 @@ class TileApplication : Application() {
                             runBlocking {
                                 preferences.setShellMethod(ShellMethod.ROOT)
                             }
-                        } else if (!ShizukuUtil.hasShizukuPermission()) {
+                        } else if (ShizukuUtil.hasShizukuPermission()) {
                             runBlocking {
                                 preferences.setShellMethod(ShellMethod.SHIZUKU)
                             }
+                        } else {
                             // Assume that Shizuku is used but not bound yet: start Shizuku
                             //  detection foreground service.
                             // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is

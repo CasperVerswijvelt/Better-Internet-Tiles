@@ -22,6 +22,8 @@ import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
 import be.casperverswijvelt.unifiedinternetqs.ui.components.LargeTopBarPage
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.TogglePreferenceEntry
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
+import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,8 +51,18 @@ fun SettingsPage() {
             ShellMethodPage (
                 shellMethod = shellMethod,
                 onShellMethodSelected = {
+                    println(shellMethod)
                     coroutineScope.launch {
                         dataStore.setShellMethod(it)
+                    }
+                    when (it) {
+                        ShellMethod.SHIZUKU -> {
+                            ShizukuUtil.requestShizukuPermission { }
+                        }
+                        ShellMethod.ROOT -> {
+                            Shell.getShell()
+                        }
+                        ShellMethod.AUTO -> { }
                     }
                 },
                 onBackClicked = {
@@ -111,7 +123,7 @@ fun BaseSettings(
             subTitle = when (shellMethod) {
                 ShellMethod.SHIZUKU -> stringResource(id = R.string.shizuku)
                 ShellMethod.ROOT -> stringResource(id = R.string.root)
-                else -> ""
+                ShellMethod.AUTO -> stringResource(id = R.string.auto)
             }
         ) {
             onShellMethodClicked()
