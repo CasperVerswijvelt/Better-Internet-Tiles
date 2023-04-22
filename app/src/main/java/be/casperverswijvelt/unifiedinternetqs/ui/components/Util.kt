@@ -47,7 +47,8 @@ fun PreferenceEntry(
                 Text(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = subTitle
+                    text = subTitle,
+                    lineHeight = 18.sp
                 )
             }
         }
