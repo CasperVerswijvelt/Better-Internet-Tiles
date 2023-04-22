@@ -69,6 +69,8 @@
     <string name="language_key" translatable="false">language</string>
     <string name="settings_key" translatable="false">settings</string>
     <string name="add_tiles_key" translatable="false">add_tiles</string>
+    <string name="tap_to_add">Tap to add</string>
+    <string name="available_tiles">Available tiles</string>
     <string name="home">Home</string>
     <string name="app_info">App Info</string>
     <string name="version">version</string>

@@ -1,5 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -101,5 +102,50 @@ fun TopBarPage(
                 .verticalScroll(rememberScrollState()),
             content = content
         )
+    }
+}
+
+@Composable
+fun ColorPalette () {
+    val colors = arrayOf(
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.onPrimary,
+        MaterialTheme.colorScheme.primaryContainer,
+        MaterialTheme.colorScheme.onPrimaryContainer,
+        MaterialTheme.colorScheme.inversePrimary,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.onSecondary,
+        MaterialTheme.colorScheme.secondaryContainer,
+        MaterialTheme.colorScheme.onSecondaryContainer,
+        MaterialTheme.colorScheme.tertiary,
+        MaterialTheme.colorScheme.onTertiary,
+        MaterialTheme.colorScheme.tertiaryContainer,
+        MaterialTheme.colorScheme.onTertiaryContainer,
+        MaterialTheme.colorScheme.background,
+        MaterialTheme.colorScheme.onBackground,
+        MaterialTheme.colorScheme.surface,
+        MaterialTheme.colorScheme.onSurface,
+        MaterialTheme.colorScheme.surfaceVariant,
+        MaterialTheme.colorScheme.onSurfaceVariant,
+        MaterialTheme.colorScheme.surfaceTint,
+        MaterialTheme.colorScheme.surfaceTint,
+        MaterialTheme.colorScheme.surfaceTint,
+        MaterialTheme.colorScheme.inverseSurface,
+        MaterialTheme.colorScheme.inverseOnSurface,
+        MaterialTheme.colorScheme.error,
+        MaterialTheme.colorScheme.onError,
+        MaterialTheme.colorScheme.errorContainer,
+        MaterialTheme.colorScheme.onErrorContainer,
+        MaterialTheme.colorScheme.outline,
+        MaterialTheme.colorScheme.outlineVariant,
+        MaterialTheme.colorScheme.scrim
+
+
+    )
+    colors.forEach {color ->
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp)
+            .background(color))
     }
 }
