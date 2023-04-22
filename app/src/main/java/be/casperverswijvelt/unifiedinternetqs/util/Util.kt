@@ -24,11 +24,12 @@ import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
+import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
-import be.casperverswijvelt.unifiedinternetqs.ui.legacy.MainActivity
+import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -87,13 +88,14 @@ fun getAirplaneModeEnabled(context: Context): Boolean {
 }
 
 fun getConnectedWifiSSID(
-    context: Context? = null,
+    context: Context,
     callback: ((String?) -> Unit)
 ) {
 
     if (hasShellAccess(context)) {
         executeShellCommandAsync(
-            "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'"
+            command = "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'",
+            context = context
         ) {
             val pattern = "(?<=(networkId|wifiNetworkKey)=\").*(?=\")".toRegex()
             it?.out?.forEach { wifiString ->
@@ -290,42 +292,67 @@ fun getShellAccessRequiredDialog(context: Context): Dialog {
         .create()
 }
 
-fun executeShellCommand(command: String): Shell.Result? {
-    if (Shell.isAppGrantedRoot() == true) {
-        return Shell.cmd(command).exec()
-    } else if (ShizukuUtil.hasShizukuPermission()) {
-        val process = ShizukuUtil.executeCommand(command)
-        return object : Shell.Result() {
-            override fun getOut(): MutableList<String> {
-                return process
-                    .inputStream.bufferedReader()
-                    .use { it.readText() }
-                    .split("\n".toRegex())
-                    .toMutableList()
-            }
+fun executeShellCommand(command: String, context: Context): Shell.Result? {
+    val preferences = BITPreferences(context = context)
+    val shellMethod = runBlocking {
+         preferences.getShellMethod.first()
+    }
 
-            override fun getErr(): MutableList<String> {
-                return process
-                    .errorStream.bufferedReader()
-                    .use { it.readText() }
-                    .split("\n".toRegex())
-                    .toMutableList()
+    when (shellMethod) {
+        ShellMethod.ROOT -> {
+            if (Shell.isAppGrantedRoot() == true) {
+                return Shell.cmd(command).exec()
             }
-
-            override fun getCode(): Int {
-                return process.exitValue()
+        }
+        ShellMethod.SHIZUKU -> {
+            if (ShizukuUtil.hasShizukuPermission()) {
+                return executeShizukuCommand(command)
+            }
+        }
+        ShellMethod.AUTO -> {
+            if (Shell.isAppGrantedRoot() == true) {
+                return Shell.cmd(command).exec()
+            } else if (ShizukuUtil.hasShizukuPermission()) {
+                return executeShizukuCommand(command)
             }
         }
     }
+
     return null
+}
+
+private fun executeShizukuCommand(command: String): Shell.Result? {
+    val process = ShizukuUtil.executeCommand(command)
+    return object : Shell.Result() {
+        override fun getOut(): MutableList<String> {
+            return process
+                .inputStream.bufferedReader()
+                .use { it.readText() }
+                .split("\n".toRegex())
+                .toMutableList()
+        }
+
+        override fun getErr(): MutableList<String> {
+            return process
+                .errorStream.bufferedReader()
+                .use { it.readText() }
+                .split("\n".toRegex())
+                .toMutableList()
+        }
+
+        override fun getCode(): Int {
+            return process.exitValue()
+        }
+    }
 }
 
 fun executeShellCommandAsync(
     command: String,
+    context: Context,
     callback: ((Shell.Result?) -> Unit)? = {}
 ) {
     ExecutorServiceSingleton.getInstance().execute {
-        val result = executeShellCommand(command)
+        val result = executeShellCommand(command, context)
         callback?.let { it(result) }
     }
 }
@@ -346,10 +373,11 @@ fun hasShellAccess(context: Context? = null): Boolean {
     return hasShellAccess
 }
 
-fun grantReadPhoneState(callback: ((Shell.Result?) -> Unit)? = {}) {
+fun grantReadPhoneState(context: Context, callback: ((Shell.Result?) -> Unit)? = {}) {
     return executeShellCommandAsync(
-        "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}",
-        callback
+        context = context,
+        command = "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}",
+        callback = callback,
     )
 }
 

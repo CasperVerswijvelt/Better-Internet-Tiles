@@ -1,14 +1,19 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
-import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.util.*
+import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
+import be.casperverswijvelt.unifiedinternetqs.util.getNFCEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -89,13 +94,13 @@ class NFCTileService : ReportingTileService() {
         if (nfcEnabled || isTurningOnNFC) {
             isTurningOnNFC = false
             isTurningOffNFC = true
-            executeShellCommandAsync("svc nfc disable") {
+            executeShellCommandAsync("svc nfc disable", applicationContext) {
                 syncTile()
             }
         } else {
             isTurningOnNFC = true
             isTurningOffNFC = false
-            executeShellCommandAsync("svc nfc enable") {
+            executeShellCommandAsync("svc nfc enable", applicationContext) {
                 syncTile()
             }
         }

@@ -113,7 +113,7 @@ class WifiTileService : ReportingTileService() {
         if (wifiEnabled || isTurningOnWifi) {
             isTurningOnWifi = false
             isTurningOffWifi = true
-            executeShellCommandAsync("svc wifi disable") {
+            executeShellCommandAsync("svc wifi disable", applicationContext) {
                 if (it?.isSuccess != true) {
                     isTurningOffWifi = false
                 }
@@ -122,7 +122,7 @@ class WifiTileService : ReportingTileService() {
         } else {
             isTurningOnWifi = true
             isTurningOffWifi = false
-            executeShellCommandAsync("svc wifi enable") {
+            executeShellCommandAsync("svc wifi enable", applicationContext) {
                 if (it?.isSuccess != true) {
                     isTurningOnWifi = false
                 }

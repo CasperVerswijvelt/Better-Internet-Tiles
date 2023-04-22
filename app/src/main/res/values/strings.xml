@@ -14,7 +14,7 @@
     <string name="nfc">NFC</string>
     <string name="on">On</string>
     <string name="off">Off</string>
-    <string name="turning_on">Turning on...</string>
+    <string name="turning_on">Turning on…</string>
     <string name="not_connected">Not connected</string>
     <string name="require_unlock_key" translatable="false">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
@@ -71,7 +71,10 @@
     <string name="add_tiles_key" translatable="false">add_tiles</string>
     <string name="tap_to_add">Tap to add</string>
     <string name="available_tiles">Available tiles</string>
+    <string name="shell_method">Shell method</string>
     <string name="home">Home</string>
     <string name="app_info">App Info</string>
     <string name="version">version</string>
+    <string name="shizuku" translatable="false">Shizuku</string>
+    <string name="root" translatable="false">Root</string>
 </resources>

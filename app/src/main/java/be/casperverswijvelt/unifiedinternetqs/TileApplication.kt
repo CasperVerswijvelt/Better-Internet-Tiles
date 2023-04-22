@@ -7,8 +7,13 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
+import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
+import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
 import be.casperverswijvelt.unifiedinternetqs.util.*
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 
 class TileApplication : Application() {
 
@@ -30,23 +35,47 @@ class TileApplication : Application() {
             getInstallId(this)
         )
 
-        // Check if main shell has root access
-        Shell.getShell {
+        val preferences = BITPreferences(this)
+        runBlocking {
+            when (preferences.getShellMethod.first()) {
+                ShellMethod.ROOT ->  {
+                    Shell.getShell {
+                        reportToAnalytics(this@TileApplication)
+                    }
+                }
+                ShellMethod.SHIZUKU -> {
+                    if (!ShizukuUtil.hasShizukuPermission()) {
+                        // Assume that Shizuku is used but not bound yet: start Shizuku detection
+                        // foreground service.
+                        // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
+                        //  needed
+                        startShizukuDetectionService()
+                    }
+                    reportToAnalytics(this@TileApplication)
+                }
+                ShellMethod.AUTO -> {
+                    // Mode AUTO is when user has not explicitly set a
+                    Shell.getShell {
 
-            // If neither root access or Shizuku access is detected, assume that
-            //  Shizuku is used but not bound yet: start Shizuku detection
-            //  foreground service.
-            // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
-            //  needed
-            if (
-                Shell.isAppGrantedRoot() != true &&
-                !ShizukuUtil.hasShizukuPermission()
-            ) {
+                        if (Shell.isAppGrantedRoot() == true) {
+                            runBlocking {
+                                preferences.setShellMethod(ShellMethod.ROOT)
+                            }
+                        } else if (!ShizukuUtil.hasShizukuPermission()) {
+                            runBlocking {
+                                preferences.setShellMethod(ShellMethod.SHIZUKU)
+                            }
+                            // Assume that Shizuku is used but not bound yet: start Shizuku
+                            //  detection foreground service.
+                            // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
+                            //  needed
+                            startShizukuDetectionService()
+                        }
 
-                startShizukuDetectionService()
+                        reportToAnalytics(this@TileApplication)
+                    }
+                }
             }
-
-            reportToAnalytics(this)
         }
     }
 

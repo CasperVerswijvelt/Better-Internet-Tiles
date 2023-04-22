@@ -88,7 +88,7 @@ class CellularChangeListener(private val callback: NetworkChangeCallback) {
                 Manifest.permission.READ_PHONE_STATE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            grantReadPhoneState()
+            grantReadPhoneState(context = context)
         }
 
         isListening = true

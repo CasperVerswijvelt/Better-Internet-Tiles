@@ -1,17 +1,25 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
-import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
-import be.casperverswijvelt.unifiedinternetqs.util.*
+import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
+import be.casperverswijvelt.unifiedinternetqs.util.getAirplaneModeEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
+import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
+import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -108,13 +116,13 @@ class MobileDataTileService : ReportingTileService() {
         if (dataEnabled || isTurningOnData) {
             isTurningOnData = false
             isTurningOffData = true
-            executeShellCommandAsync("svc data disable") {
+            executeShellCommandAsync("svc data disable", applicationContext) {
                 syncTile()
             }
         } else {
             isTurningOnData = true
             isTurningOffData = false
-            executeShellCommandAsync("svc data enable") {
+            executeShellCommandAsync("svc data enable", applicationContext) {
                 syncTile()
             }
         }

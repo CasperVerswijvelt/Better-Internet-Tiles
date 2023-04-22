@@ -44,7 +44,6 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
-import be.casperverswijvelt.unifiedinternetqs.ui.components.ColorPalette
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
@@ -66,7 +65,7 @@ fun HomePage() {
                 .padding(it)
                 .verticalScroll(rememberScrollState())
         ) {
-            Card(
+            OutlinedCard(
                 Modifier
                     .padding(16.dp)
                     .fillMaxWidth()

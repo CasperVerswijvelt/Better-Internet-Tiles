@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
-import be.casperverswijvelt.unifiedinternetqs.ui.components.TopBarPage
+import be.casperverswijvelt.unifiedinternetqs.ui.components.LargeTopBarPage
 import com.jakewharton.processphoenix.ProcessPhoenix
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -31,7 +31,7 @@ fun InfoPage() {
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
-    TopBarPage(
+    LargeTopBarPage(
         title = stringResource(R.string.about)
     ) {
 

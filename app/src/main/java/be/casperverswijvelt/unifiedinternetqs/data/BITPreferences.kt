@@ -33,6 +33,7 @@ class BITPreferences(private val context: Context) {
         private val KEY_INSTALLATION_ID = stringPreferencesKey(
             "INSTALLATION_ID"
         )
+        private val KEY_SHELL_METHOD = stringPreferencesKey("shell_method")
     }
 
     fun loadPreferences() {
@@ -83,4 +84,25 @@ class BITPreferences(private val context: Context) {
             it[KEY_INSTALLATION_ID] = id
         }
     }
+
+    // Shell method
+
+    val getShellMethod: kotlinx.coroutines.flow.Flow<ShellMethod> = context
+        .dataStore.data.map {
+            it[KEY_SHELL_METHOD]?.let {methodString ->
+                ShellMethod.valueOf(methodString)
+            } ?: ShellMethod.AUTO
+        }
+
+    suspend fun setShellMethod(shellMethod: ShellMethod) {
+        context.dataStore.edit {
+            it[KEY_SHELL_METHOD] = shellMethod.toString()
+        }
+    }
+}
+
+enum class ShellMethod(val method: String) {
+    ROOT("root"),
+    SHIZUKU("shizuku"),
+    AUTO("auto")
 }

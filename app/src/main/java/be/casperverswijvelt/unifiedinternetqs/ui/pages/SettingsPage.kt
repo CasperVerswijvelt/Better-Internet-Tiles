@@ -13,11 +13,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
+import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
+import be.casperverswijvelt.unifiedinternetqs.ui.components.LargeTopBarPage
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.TogglePreferenceEntry
-import be.casperverswijvelt.unifiedinternetqs.ui.components.TopBarPage
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -27,9 +31,45 @@ fun SettingsPage() {
 
     val context = LocalContext.current
     val dataStore = BITPreferences(context)
+    val shellMethod by dataStore.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
     val coroutineScope = rememberCoroutineScope()
 
-    TopBarPage(
+    val navController = rememberNavController()
+    
+    NavHost(navController = navController, startDestination = "settings") {
+        composable("settings") {
+            BaseSettings (
+                shellMethod = shellMethod,
+                onShellMethodClicked = {
+                    navController.navigate("shell_method")
+                }
+            )
+        }
+        composable("shell_method") {
+            ShellMethodPage (
+                shellMethod = shellMethod,
+                onShellMethodSelected = {
+                    coroutineScope.launch {
+                        dataStore.setShellMethod(it)
+                    }
+                },
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun BaseSettings(
+    onShellMethodClicked: () -> Unit,
+    shellMethod: ShellMethod
+) {
+    val context = LocalContext.current
+    val dataStore = BITPreferences(context)
+    val coroutineScope = rememberCoroutineScope()
+    LargeTopBarPage(
         title = stringResource(R.string.settings)
     ) {
 
@@ -65,6 +105,16 @@ fun SettingsPage() {
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                 context.startActivity(intent)
             }
+        }
+        PreferenceEntry(
+            title = stringResource(R.string.shell_method),
+            subTitle = when (shellMethod) {
+                ShellMethod.SHIZUKU -> stringResource(id = R.string.shizuku)
+                ShellMethod.ROOT -> stringResource(id = R.string.root)
+                else -> ""
+            }
+        ) {
+            onShellMethodClicked()
         }
     }
 }

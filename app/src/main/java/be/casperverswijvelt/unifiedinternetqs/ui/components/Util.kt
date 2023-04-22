@@ -2,11 +2,13 @@ package be.casperverswijvelt.unifiedinternetqs.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -63,6 +65,39 @@ fun PreferenceEntry(
 }
 
 @Composable
+fun RadioEntry(
+    title: String,
+    enabled: Boolean = false,
+    onClicked: () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { onClicked() }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(50.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            RadioButton(selected = enabled, onClick = { onClicked() })
+        }
+        Text(
+            modifier = Modifier.padding(bottom = 4.dp).weight(1f),
+            fontSize = 18.sp,
+            text = title
+        )
+    }
+}
+
+@Composable
 fun TogglePreferenceEntry(
     icon: @Composable () -> Unit = {},
     title: String,
@@ -83,7 +118,7 @@ fun TogglePreferenceEntry(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarPage(
+fun LargeTopBarPage(
     title: String,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -99,7 +134,8 @@ fun TopBarPage(
         },
     ) {
         Column (
-            modifier = Modifier.padding(top = it.calculateTopPadding())
+            modifier = Modifier
+                .padding(top = it.calculateTopPadding())
                 .verticalScroll(rememberScrollState()),
             content = content
         )

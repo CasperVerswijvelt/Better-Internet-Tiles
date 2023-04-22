@@ -130,10 +130,10 @@ class InternetTileService : ReportingTileService() {
 
         when {
             wifiEnabled -> {
-                executeShellCommandAsync("svc wifi disable")
+                executeShellCommandAsync("svc wifi disable", applicationContext)
 
                 isTurningOnData = true
-                executeShellCommandAsync("svc data enable") {
+                executeShellCommandAsync("svc data enable", applicationContext) {
                     if (it?.isSuccess != true) {
                         isTurningOnData = false
                     }
@@ -141,10 +141,10 @@ class InternetTileService : ReportingTileService() {
                 }
             }
             dataEnabled -> {
-                executeShellCommandAsync("svc data disable")
+                executeShellCommandAsync("svc data disable", applicationContext)
 
                 isTurningOnWifi = true
-                executeShellCommandAsync("svc wifi enable") {
+                executeShellCommandAsync("svc wifi enable", applicationContext) {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }
@@ -153,7 +153,7 @@ class InternetTileService : ReportingTileService() {
             }
             else -> {
                 isTurningOnWifi = true
-                executeShellCommandAsync("svc wifi enable") {
+                executeShellCommandAsync("svc wifi enable", applicationContext) {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }
