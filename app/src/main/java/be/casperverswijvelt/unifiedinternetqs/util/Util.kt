@@ -110,7 +110,7 @@ fun getConnectedWifiSSID(
     }
 }
 
-fun getWifiIcon(context: Context): Icon {
+fun getWifiIcon(context: Context): Int {
 
     val wm = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
     val rssi: Int? = try {
@@ -126,38 +126,31 @@ fun getWifiIcon(context: Context): Icon {
         WifiManager.calculateSignalLevel(it, 5) // 0-4
     } ?: 0
 
-    return Icon.createWithResource(
-        context,
-        when (signalStrength) {
-            4 -> R.drawable.ic_baseline_signal_wifi_4_bar_24
-            3 -> R.drawable.ic_baseline_signal_wifi_3_bar_24
-            2 -> R.drawable.ic_baseline_signal_wifi_2_bar_24
-            1 -> R.drawable.ic_baseline_signal_wifi_1_bar_24
-            else -> R.drawable.ic_baseline_signal_wifi_0_bar_24
-        }
-    )
+    return when (signalStrength) {
+        4 -> R.drawable.ic_baseline_signal_wifi_4_bar_24
+        3 -> R.drawable.ic_baseline_signal_wifi_3_bar_24
+        2 -> R.drawable.ic_baseline_signal_wifi_2_bar_24
+        1 -> R.drawable.ic_baseline_signal_wifi_1_bar_24
+        else -> R.drawable.ic_baseline_signal_wifi_0_bar_24
+    }
 }
 
-fun getCellularNetworkIcon(context: Context): Icon {
+fun getCellularNetworkIcon(context: Context): Int {
 
     val tm =
         context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-    val signalStrength = tm.signalStrength?.level ?: 0
 
     // TODO: We should try to get the signal strength of the data sim here.
     //  Only solution I found to do this requires fine location access, which I don't really want
     //  to add.
 
-    return Icon.createWithResource(
-        context,
-        when (signalStrength) {
-            4 -> R.drawable.ic_baseline_signal_cellular_4_bar_24
-            3 -> R.drawable.ic_baseline_signal_cellular_3_bar_24
-            2 -> R.drawable.ic_baseline_signal_cellular_2_bar_24
-            1 -> R.drawable.ic_baseline_signal_cellular_1_bar_24
-            else -> R.drawable.ic_baseline_signal_cellular_0_bar
-        }
-    )
+    return when (tm.signalStrength?.level ?: 0) {
+        4 -> R.drawable.ic_baseline_signal_cellular_4_bar_24
+        3 -> R.drawable.ic_baseline_signal_cellular_3_bar_24
+        2 -> R.drawable.ic_baseline_signal_cellular_2_bar_24
+        1 -> R.drawable.ic_baseline_signal_cellular_1_bar_24
+        else -> R.drawable.ic_baseline_signal_cellular_0_bar
+    }
 }
 
 fun getCellularNetworkText(

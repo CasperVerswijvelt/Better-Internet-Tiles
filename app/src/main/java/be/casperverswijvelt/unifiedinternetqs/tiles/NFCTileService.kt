@@ -10,7 +10,7 @@ class NFCTileService : ReportingTileService() {
 
     override fun onCreate() {
         super.onCreate()
-        log("Wi-Fi tile service created")
+        log("NFC tile service created")
 
         tileBehaviour = NFCTileBehaviour(
             context = this,

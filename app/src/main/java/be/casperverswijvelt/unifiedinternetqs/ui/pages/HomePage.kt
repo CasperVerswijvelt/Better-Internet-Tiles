@@ -7,6 +7,10 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +35,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -170,6 +178,14 @@ fun HomePage() {
                         enabled = true
                     )
                 }
+                Row (
+                    horizontalArrangement = Arrangement.spacedBy(tileSpacing)
+                ) {
+                    LiveTile(
+                        modifier = Modifier.weight(.5f)
+                    )
+                    Spacer(modifier = Modifier.weight(.5f))
+                }
             }
         }
     }
@@ -274,6 +290,48 @@ fun <T>QuickAddTile(
 }
 
 @Composable
+fun LiveTile(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+    var tileState: TileState by remember { mutableStateOf(TileState()) }
+    val tileBehaviour = remember {
+        val behaviour = WifiTileBehaviour(
+            context = context,
+            onRequestUpdate = {},
+            showDialog = {
+                // TODO
+            },
+        )
+        behaviour.onRequestUpdate = {
+            tileState = behaviour.getTileState()
+            println("onRequestUpdate ${tileState.state}")
+        }
+        behaviour
+    }
+
+    Tile(
+        modifier = modifier,
+        iconId = tileState.icon,
+        title = tileState.label,
+        subTitle = tileState.subtitle,
+        enabled = tileState.state == android.service.quicksettings.Tile.STATE_ACTIVE,
+        onClick = {
+            tileBehaviour.onClick()
+        }
+    )
+
+    DisposableEffect(tileBehaviour) {
+
+        tileState = tileBehaviour.getTileState()
+        TileSyncService.addBehaviourListener(tileBehaviour)
+
+        onDispose {
+            TileSyncService.removeBehaviourListener(tileBehaviour)
+        }
+    }
+}
+
+@Composable
 fun Tile(
     modifier: Modifier = Modifier,
     iconId: Int,
@@ -284,14 +342,19 @@ fun Tile(
 ) {
     val darkTheme = isSystemInDarkTheme()
     val scheme = MaterialTheme.colorScheme
+    val animationSpec = tween<Color>(350, easing = EaseInOut)
 
-    val bgColor = if (enabled)
-        if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
-    else
-        if (darkTheme) scheme.onTertiary else Color(0x11000000)
-
-    val fgColor = if (enabled) Color.Black else if (darkTheme) Color.White else Color.Black
-
+    val bgColor by animateColorAsState(
+        targetValue = if (enabled)
+            if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
+        else
+            if (darkTheme) scheme.onTertiary else Color(0x11000000),
+        animationSpec = animationSpec
+    )
+    val fgColor by animateColorAsState(
+        targetValue = if (enabled) Color.Black else if (darkTheme) Color.White else Color.Black,
+        animationSpec = animationSpec
+    )
     val fgColorLight = Color(fgColor.red, fgColor.green, fgColor.blue, .7f)
 
     Box(
@@ -333,13 +396,4 @@ fun Tile(
             }
         }
     }
-}
-@Preview
-@Composable
-fun tile() {
-    Tile(
-        iconId = R.drawable.ic_baseline_loop_24,
-        title= "Internet",
-        subTitle = "Off"
-    )
 }

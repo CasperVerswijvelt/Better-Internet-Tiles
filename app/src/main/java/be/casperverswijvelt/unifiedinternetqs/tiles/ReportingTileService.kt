@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.content.ComponentName
+import android.graphics.drawable.Icon
 import android.service.quicksettings.TileService
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
@@ -51,11 +52,13 @@ abstract class ReportingTileService: TileService() {
     protected fun syncTile() {
         qsTile?.let {
             val tileState = tileBehaviour.getTileState()
-            qsTile.label = tileState.label
-            qsTile.subtitle = tileState.subtitle
-            qsTile.state = tileState.state
-            qsTile.icon = tileState.icon
-            qsTile.updateTile()
+            it.label = tileState.label
+            it.subtitle = tileState.subtitle
+            it.state = tileState.state
+            it.icon = tileState.icon?.let { iconId ->
+                Icon.createWithResource(applicationContext, iconId)
+            }
+            it.updateTile()
         }
     }
 }

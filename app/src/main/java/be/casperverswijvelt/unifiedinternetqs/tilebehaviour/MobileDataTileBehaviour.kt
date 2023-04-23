@@ -86,10 +86,7 @@ class MobileDataTileBehaviour(
             if (!dataEnabled) TileSyncService.isTurningOffData = false
 
             tile.state = Tile.STATE_INACTIVE
-            tile.icon = Icon.createWithResource(
-                context,
-                R.drawable.ic_baseline_mobile_data_24
-            )
+            tile.icon = R.drawable.ic_baseline_mobile_data_24
             tile.subtitle = resources.getString(R.string.off)
         }
 

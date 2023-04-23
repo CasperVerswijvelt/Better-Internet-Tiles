@@ -54,6 +54,7 @@ class NFCTileBehaviour(
         val tile = TileState()
         val nfcEnabled = getNFCEnabled(context)
 
+        tile.icon = R.drawable.nfc_24
         tile.label = resources.getString(R.string.nfc)
 
         if ((nfcEnabled && !TileSyncService.isTurningOffNFC) || TileSyncService.isTurningOnNFC) {
@@ -93,6 +94,7 @@ class NFCTileBehaviour(
                 onRequestUpdate()
             }
         }
+        onRequestUpdate()
     }
 
     private fun log(text: String) {

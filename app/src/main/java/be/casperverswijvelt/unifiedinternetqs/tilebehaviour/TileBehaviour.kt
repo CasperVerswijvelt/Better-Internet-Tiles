@@ -12,7 +12,7 @@ abstract class TileBehaviour(
     protected val context: Context,
     val showDialog: (Dialog) -> Unit,
     val unlockAndRun: (Runnable) -> Unit = { it.run() },
-    val onRequestUpdate: () -> Unit
+    var onRequestUpdate: () -> Unit
 ) {
 
     protected val preferences = BITPreferences(context)

@@ -17,6 +17,11 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -43,6 +48,15 @@ class TileSyncService: Service() {
 
         var isTurningOnNFC = false
         var isTurningOffNFC = false
+
+        private val behaviourListeners = arrayListOf<TileBehaviour>()
+
+        fun addBehaviourListener(tileBehaviour: TileBehaviour) {
+            behaviourListeners.add(tileBehaviour)
+        }
+        fun removeBehaviourListener(tileBehaviour: TileBehaviour) {
+            behaviourListeners.remove(tileBehaviour)
+        }
     }
 
     private val wifiChangeListener: WifiChangeListener = WifiChangeListener {
@@ -140,6 +154,11 @@ class TileSyncService: Service() {
         requestListeningState(MobileDataTileService::class.java)
         requestListeningState(InternetTileService::class.java)
         requestListeningState(NFCTileService::class.java)
+
+        requestTileBehaviourUpdate(WifiTileBehaviour::class.java)
+        requestTileBehaviourUpdate(MobileDataTileBehaviour::class.java)
+        requestTileBehaviourUpdate(InternetTileBehaviour::class.java)
+        requestTileBehaviourUpdate(NFCTileBehaviour::class.java)
     }
 
     override fun onDestroy() {
@@ -155,20 +174,34 @@ class TileSyncService: Service() {
     private fun onWifiUpdated() {
         requestListeningState(WifiTileService::class.java)
         requestListeningState(InternetTileService::class.java)
+
+        requestTileBehaviourUpdate(WifiTileBehaviour::class.java)
+        requestTileBehaviourUpdate(InternetTileBehaviour::class.java)
     }
 
     private fun onCellularUpdated() {
         requestListeningState(MobileDataTileService::class.java)
         requestListeningState(InternetTileService::class.java)
+
+        requestTileBehaviourUpdate(MobileDataTileBehaviour::class.java)
+        requestTileBehaviourUpdate(InternetTileBehaviour::class.java)
     }
 
     private fun onNFCUpdated() {
         requestListeningState(NFCTileService::class.java)
+
+        requestTileBehaviourUpdate(NFCTileBehaviour::class.java)
     }
-    private fun <T>requestListeningState( cls: Class<T>) {
+    private fun <T>requestListeningState(cls: Class<T>) {
         TileService.requestListeningState(
             applicationContext,
             ComponentName(applicationContext, cls)
         )
+    }
+
+    private fun <T>requestTileBehaviourUpdate(cls: Class<T>) {
+        behaviourListeners.forEach {
+            if (it.javaClass == cls) it.onRequestUpdate()
+        }
     }
 }

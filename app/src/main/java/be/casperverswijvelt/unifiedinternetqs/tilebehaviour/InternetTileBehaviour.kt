@@ -94,10 +94,7 @@ class InternetTileBehaviour(
             else -> {
 
                 tile.state = Tile.STATE_INACTIVE
-                tile.icon = Icon.createWithResource(
-                    context,
-                    R.drawable.ic_baseline_public_off_24
-                )
+                tile.icon = R.drawable.ic_baseline_public_off_24
                 tile.label = resources.getString(R.string.internet)
             }
         }
@@ -151,6 +148,7 @@ class InternetTileBehaviour(
                 }
             }
         }
+        onRequestUpdate()
     }
 
     private fun log(text: String) {

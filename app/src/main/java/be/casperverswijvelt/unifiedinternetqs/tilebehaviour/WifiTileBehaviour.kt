@@ -80,10 +80,7 @@ class WifiTileBehaviour(
 
             tile.label = resources.getString(R.string.wifi)
             tile.state = Tile.STATE_INACTIVE
-            tile.icon = Icon.createWithResource(
-                context,
-                R.drawable.ic_baseline_signal_wifi_0_bar_24
-            )
+            tile.icon = R.drawable.ic_baseline_signal_wifi_0_bar_24
             tile.subtitle = resources.getString(R.string.off)
         }
         return tile
@@ -112,6 +109,7 @@ class WifiTileBehaviour(
                 onRequestUpdate()
             }
         }
+        onRequestUpdate()
     }
 
     private fun log(text: String) {
