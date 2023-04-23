@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.drawable.Icon
 import android.net.ConnectivityManager
+import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.nfc.NfcManager
 import android.os.Build
@@ -37,7 +37,8 @@ import org.json.JSONObject
 import java.lang.reflect.Method
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 const val TAG = "Util"
 
@@ -111,13 +112,10 @@ fun getConnectedWifiSSID(
 }
 
 fun getWifiIcon(context: Context): Int {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    val wm = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-    val rssi: Int? = try {
-        wm.connectionInfo.rssi
-    } catch (e: Exception) {
-        log("Could not get Wi-Fi RSSI: ${e.message}")
-        null
+    val rssi = cm.activeNetwork?.let {
+        (cm.getNetworkCapabilities(it)?.transportInfo as? WifiInfo)?.rssi
     }
     val signalStrength = rssi?.let {
         // We use 5 levels for our icon visualisation, so we use this deprecated

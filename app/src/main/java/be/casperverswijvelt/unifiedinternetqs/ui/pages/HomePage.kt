@@ -303,7 +303,6 @@ fun LiveTile(modifier: Modifier = Modifier) {
         )
         behaviour.onRequestUpdate = {
             tileState = behaviour.getTileState()
-            println("onRequestUpdate ${tileState.state}")
         }
         behaviour
     }
