@@ -22,7 +22,6 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
-import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
@@ -363,14 +362,7 @@ fun executeShellCommandAsync(
  */
 fun hasShellAccess(context: Context? = null): Boolean {
 
-    val hasShellAccess =
-        Shell.isAppGrantedRoot() == true || ShizukuUtil.hasShizukuPermission()
-
-    if (hasShellAccess) {
-        context?.stopService(Intent(context, ShizukuDetectService::class.java))
-    }
-
-    return hasShellAccess
+    return Shell.isAppGrantedRoot() == true || ShizukuUtil.hasShizukuPermission()
 }
 
 fun grantReadPhoneState(context: Context, callback: ((Shell.Result?) -> Unit)? = {}) {

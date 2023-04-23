@@ -9,6 +9,8 @@ import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOffNFC
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOnNFC
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getNFCEnabled
@@ -25,19 +27,9 @@ class NFCTileService : ReportingTileService() {
 
     private lateinit var preferences: BITPreferences
 
-    private var isTurningOnNFC = false
-    private var isTurningOffNFC = false
-
     private val runToggleNFC = Runnable {
         toggleNFC()
         syncTile()
-    }
-    private val nfcReceiver = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1?.action == NfcAdapter.ACTION_ADAPTER_STATE_CHANGED) {
-                syncTile()
-            }
-        }
     }
 
     private var mainHandler: Handler? = null
@@ -52,19 +44,15 @@ class NFCTileService : ReportingTileService() {
 
     override fun onStartListening() {
         super.onStartListening()
+        log("Start listening")
 
         syncTile()
-        setListeners()
-    }
-
-    override fun onStopListening() {
-        super.onStopListening()
-
-        removeListeners()
     }
 
     override fun onClick() {
         super.onClick()
+
+        log("onClick")
 
         if (!hasShellAccess(applicationContext)) {
 
@@ -96,12 +84,14 @@ class NFCTileService : ReportingTileService() {
             isTurningOffNFC = true
             executeShellCommandAsync("svc nfc disable", applicationContext) {
                 syncTile()
+                requestUpdateTile()
             }
         } else {
             isTurningOnNFC = true
             isTurningOffNFC = false
             executeShellCommandAsync("svc nfc enable", applicationContext) {
                 syncTile()
+                requestUpdateTile()
             }
         }
     }
@@ -133,27 +123,6 @@ class NFCTileService : ReportingTileService() {
             }
 
             it.updateTile()
-        }
-    }
-
-    private fun setListeners() {
-
-        log("Setting listeners")
-
-        registerReceiver(
-            nfcReceiver,
-            IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
-        )
-    }
-
-    private fun removeListeners() {
-
-        log("Removing listeners")
-
-        try {
-            unregisterReceiver(nfcReceiver)
-        } catch (e: IllegalArgumentException) {
-            // Ignore
         }
     }
 

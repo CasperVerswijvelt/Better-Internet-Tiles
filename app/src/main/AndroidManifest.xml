@@ -37,6 +37,19 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name=".TileSyncService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver
+            android:name=".BootCompletedBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
@@ -54,6 +67,8 @@
             android:label="@string/internet"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
@@ -65,6 +80,8 @@
             android:label="@string/wifi"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
@@ -76,6 +93,8 @@
             android:label="@string/mobile_data"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
@@ -87,6 +106,8 @@
             android:label="@string/nfc"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>

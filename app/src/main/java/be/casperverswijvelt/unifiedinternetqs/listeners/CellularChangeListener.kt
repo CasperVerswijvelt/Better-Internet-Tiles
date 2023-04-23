@@ -12,28 +12,31 @@ import android.telephony.*
 import androidx.core.content.ContextCompat
 import be.casperverswijvelt.unifiedinternetqs.util.grantReadPhoneState
 
-class CellularChangeListener(private val callback: NetworkChangeCallback) {
+class CellularChangeListener(private val callback: (type: NetworkChangeType?) -> Unit) {
 
-    var currentTelephonyDisplayInfo: TelephonyDisplayInfo? = null
+    companion object {
+        var currentTelephonyDisplayInfo: TelephonyDisplayInfo? = null
+    }
+
     private var isListening = false
 
     private val mobileNetworkCallback =
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                callback.handleChange(NetworkChangeType.NETWORK_AVAILABLE)
+                callback(NetworkChangeType.NETWORK_AVAILABLE)
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                callback.handleChange(NetworkChangeType.NETWORK_LOST)
+                callback(NetworkChangeType.NETWORK_LOST)
             }
         }
 
     private val phoneStateListener = object : PhoneStateListener() {
         @Deprecated("Deprecated in Java")
         override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-            callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
+            callback(NetworkChangeType.SIGNAL_STRENGTH)
         }
     }
 
@@ -43,12 +46,12 @@ class CellularChangeListener(private val callback: NetworkChangeCallback) {
                 TelephonyCallback.SignalStrengthsListener,
                 TelephonyCallback.DisplayInfoListener {
                 override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-                    callback.handleChange(NetworkChangeType.SIGNAL_STRENGTH)
+                    callback(NetworkChangeType.SIGNAL_STRENGTH)
                 }
 
                 override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
                     currentTelephonyDisplayInfo = telephonyDisplayInfo
-                    callback.handleChange(NetworkChangeType.DISPLAY_INFO)
+                    callback(NetworkChangeType.DISPLAY_INFO)
                 }
             }
         } else {

@@ -5,11 +5,16 @@ import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOffWifi
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOnWifi
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.wifiConnected
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.wifiSSID
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
-import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
-import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import be.casperverswijvelt.unifiedinternetqs.util.*
+import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
+import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getWifiIcon
+import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -19,36 +24,13 @@ class WifiTileService : ReportingTileService() {
         const val TAG = "WifiTile"
     }
 
-    private var wifiConnected = false
-    private var wifiSSID: String? = null
     private lateinit var preferences: BITPreferences
-
-    private var isTurningOnWifi = false
-    private var isTurningOffWifi = false
 
     private val runToggleInternet = Runnable {
         toggleWifi()
         syncTile()
     }
-    private val networkChangeCallback = object : NetworkChangeCallback {
-        override fun handleChange(type: NetworkChangeType?) {
-            if (type == NetworkChangeType.NETWORK_LOST) {
-                wifiConnected = false
-                wifiSSID = null
-                setLastConnectedWifi(applicationContext, wifiSSID)
-            } else if (type == NetworkChangeType.NETWORK_AVAILABLE) {
-                wifiConnected = true
-                getConnectedWifiSSID(applicationContext) {
-                    wifiSSID = it
-                    setLastConnectedWifi(applicationContext, wifiSSID)
-                    syncTile()
-                }
-            }
-            syncTile()
-        }
-    }
 
-    private var wifiChangeListener: WifiChangeListener? = null
     private var mainHandler: Handler? = null
 
     override fun onCreate() {
@@ -57,33 +39,19 @@ class WifiTileService : ReportingTileService() {
 
         mainHandler = Handler(mainLooper)
         preferences = BITPreferences(this)
-
-        wifiChangeListener = WifiChangeListener(networkChangeCallback)
-
-        if (getWifiEnabled(this)) {
-            // Wi-Fi SSID is retrieved async using shell commands, visualise
-            //  last connected Wi-Fi SSID until actual SSID is known.
-            // TODO: Get Wi-Fi SSID synchronously using location permission
-            wifiSSID = getLastConnectedWifi(this)
-        }
     }
 
     override fun onStartListening() {
         super.onStartListening()
+        log("Start listening")
 
         syncTile()
-        setListeners()
-    }
-
-
-    override fun onStopListening() {
-        super.onStopListening()
-
-        removeListeners()
     }
 
     override fun onClick() {
         super.onClick()
+
+        log("onClick")
 
         if (!hasShellAccess(applicationContext)) {
 
@@ -118,6 +86,7 @@ class WifiTileService : ReportingTileService() {
                     isTurningOffWifi = false
                 }
                 syncTile()
+                requestUpdateTile()
             }
         } else {
             isTurningOnWifi = true
@@ -127,6 +96,7 @@ class WifiTileService : ReportingTileService() {
                     isTurningOnWifi = false
                 }
                 syncTile()
+                requestUpdateTile()
             }
         }
     }
@@ -165,24 +135,6 @@ class WifiTileService : ReportingTileService() {
 
             it.updateTile()
         }
-    }
-
-    private fun setListeners() {
-
-        log("Setting listeners")
-
-        // set wifiConnected to false, it will be updated asynchronously
-        //  after starting to listen to the wifiChangeListener.
-        wifiConnected = false
-
-        wifiChangeListener?.startListening(applicationContext)
-    }
-
-    private fun removeListeners() {
-
-        log("Removing listeners")
-
-        wifiChangeListener?.stopListening(applicationContext)
     }
 
     private fun log(text: String) {

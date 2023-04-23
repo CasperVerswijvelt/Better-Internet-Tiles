@@ -1,18 +1,14 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.drawable.Icon
 import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOffData
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOnData
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
-import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
-import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getAirplaneModeEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
@@ -31,28 +27,11 @@ class MobileDataTileService : ReportingTileService() {
 
     private lateinit var preferences: BITPreferences
 
-    private var isTurningOnData = false
-    private var isTurningOffData = false
-
     private val runToggleMobileData = Runnable {
         toggleMobileData()
         syncTile()
     }
 
-    private val networkChangeCallback = object : NetworkChangeCallback {
-        override fun handleChange(type: NetworkChangeType?) {
-            syncTile()
-        }
-    }
-    private val airplaneModeReceiver = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED) {
-                syncTile()
-            }
-        }
-    }
-
-    private var cellularChangeListener: CellularChangeListener? = null
     private var mainHandler: Handler? = null
 
     override fun onCreate() {
@@ -60,33 +39,20 @@ class MobileDataTileService : ReportingTileService() {
         log("Mobile data tile service created")
 
         mainHandler = Handler(mainLooper)
-
-        cellularChangeListener = CellularChangeListener(networkChangeCallback)
         preferences = BITPreferences(this)
     }
 
     override fun onStartListening() {
         super.onStartListening()
+        log("Start listening")
 
         syncTile()
-        setListeners()
-    }
-
-
-    override fun onStopListening() {
-        super.onStopListening()
-
-        removeListeners()
-    }
-
-    override fun onTileRemoved() {
-        super.onTileRemoved()
-
-        removeListeners()
     }
 
     override fun onClick() {
         super.onClick()
+
+        log("onClick")
 
         if (!hasShellAccess(applicationContext)) {
 
@@ -118,14 +84,17 @@ class MobileDataTileService : ReportingTileService() {
             isTurningOffData = true
             executeShellCommandAsync("svc data disable", applicationContext) {
                 syncTile()
+                requestUpdateTile()
             }
         } else {
             isTurningOnData = true
             isTurningOffData = false
             executeShellCommandAsync("svc data enable", applicationContext) {
                 syncTile()
+                requestUpdateTile()
             }
         }
+        syncTile()
     }
 
     private fun syncTile() {
@@ -150,7 +119,7 @@ class MobileDataTileService : ReportingTileService() {
                 it.icon = getCellularNetworkIcon(applicationContext)
                 it.subtitle = getCellularNetworkText(
                     applicationContext,
-                    cellularChangeListener?.currentTelephonyDisplayInfo
+                    CellularChangeListener.currentTelephonyDisplayInfo
                 )
 
             } else {
@@ -166,30 +135,6 @@ class MobileDataTileService : ReportingTileService() {
             }
 
             it.updateTile()
-        }
-    }
-
-    private fun setListeners() {
-
-        log("Setting listeners")
-
-        cellularChangeListener?.startListening(applicationContext)
-
-        registerReceiver(
-            airplaneModeReceiver,
-            IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-        )
-    }
-
-    private fun removeListeners() {
-
-        log("Removing listeners")
-
-        cellularChangeListener?.stopListening(applicationContext)
-        try {
-            unregisterReceiver(airplaneModeReceiver)
-        } catch (e: IllegalArgumentException) {
-            // Ignore
         }
     }
 

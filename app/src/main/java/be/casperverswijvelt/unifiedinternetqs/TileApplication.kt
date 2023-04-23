@@ -35,6 +35,9 @@ class TileApplication : Application() {
             getInstallId(this)
         )
 
+        createNotificationChannel()
+        startTileSyncService()
+
         val preferences = BITPreferences(this)
         runBlocking {
             when (preferences.getShellMethod.first()) {
@@ -44,13 +47,6 @@ class TileApplication : Application() {
                     }
                 }
                 ShellMethod.SHIZUKU -> {
-                    if (!ShizukuUtil.hasShizukuPermission()) {
-                        // Assume that Shizuku is used but not bound yet: start Shizuku detection
-                        // foreground service.
-                        // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
-                        //  needed
-                        startShizukuDetectionService()
-                    }
                     reportToAnalytics(this@TileApplication)
                 }
                 ShellMethod.AUTO -> {
@@ -65,12 +61,6 @@ class TileApplication : Application() {
                             runBlocking {
                                 preferences.setShellMethod(ShellMethod.SHIZUKU)
                             }
-                        } else {
-                            // Assume that Shizuku is used but not bound yet: start Shizuku
-                            //  detection foreground service.
-                            // See https://github.com/RikkaApps/Shizuku/issues/175 for why this is
-                            //  needed
-                            startShizukuDetectionService()
                         }
 
                         reportToAnalytics(this@TileApplication)
@@ -79,20 +69,19 @@ class TileApplication : Application() {
             }
         }
     }
-
-    private fun startShizukuDetectionService() {
+    private fun startTileSyncService() {
         try {
-            createNotificationChannel()
+            println("Start tile sync service!")
             startForegroundService(
                 Intent(
                     this,
-                    ShizukuDetectService::class.java
+                    TileSyncService::class.java
                 )
             )
         } catch (e: Throwable) {
             Log.d(
                 TAG,
-                "Failed to start foreground service due to an ${e.message}"
+                "Failed to start tile sync foreground service due to an ${e.message}"
             )
             reportException(e)
 

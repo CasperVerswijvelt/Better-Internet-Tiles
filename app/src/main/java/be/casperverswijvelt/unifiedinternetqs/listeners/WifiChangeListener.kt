@@ -10,7 +10,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 
-class WifiChangeListener(private val callback: NetworkChangeCallback) {
+class WifiChangeListener(private val callback: (type: NetworkChangeType?) -> Unit) {
 
     private val wifiStateReceiverIntentFilter = IntentFilter()
     private var isListening = false
@@ -60,12 +60,12 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                callback.handleChange(NetworkChangeType.NETWORK_AVAILABLE)
+                callback(NetworkChangeType.NETWORK_AVAILABLE)
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                callback.handleChange(NetworkChangeType.NETWORK_LOST)
+                callback(NetworkChangeType.NETWORK_LOST)
             }
         }
 
@@ -75,7 +75,7 @@ class WifiChangeListener(private val callback: NetworkChangeCallback) {
             when (intent?.action) {
                 WifiManager.RSSI_CHANGED_ACTION,
                 WifiManager.NETWORK_STATE_CHANGED_ACTION,
-                WifiManager.WIFI_STATE_CHANGED_ACTION -> callback.handleChange(
+                WifiManager.WIFI_STATE_CHANGED_ACTION -> callback(
                     NetworkChangeType.SIGNAL_STRENGTH
                 )
             }

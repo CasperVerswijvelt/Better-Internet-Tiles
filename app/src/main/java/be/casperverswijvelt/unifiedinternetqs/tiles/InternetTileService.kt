@@ -5,12 +5,20 @@ import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOnData
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.isTurningOnWifi
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.wifiConnected
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService.Companion.wifiSSID
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
-import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeCallback
-import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
-import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
-import be.casperverswijvelt.unifiedinternetqs.util.*
+import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
+import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
+import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
+import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
+import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getWifiIcon
+import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -20,46 +28,13 @@ class InternetTileService : ReportingTileService() {
         const val TAG = "InternetTile"
     }
 
-    private var wifiConnected = false
-    private var wifiSSID: String? = null
     private lateinit var preferences: BITPreferences
-
-    private var isTurningOnData = false
-    private var isTurningOnWifi = false
 
     private val runCycleInternet = Runnable {
         cycleInternet()
         syncTile()
     }
-    private val cellularChangeCallback = object : NetworkChangeCallback {
-        override fun handleChange(type: NetworkChangeType?) {
-            syncTile()
-        }
-    }
-    private val wifiChangeCallback = object : NetworkChangeCallback {
-        override fun handleChange(type: NetworkChangeType?) {
-            when (type) {
-                NetworkChangeType.NETWORK_LOST -> {
-                    wifiConnected = false
-                    wifiSSID = null
-                    setLastConnectedWifi(applicationContext, wifiSSID)
-                }
-                NetworkChangeType.NETWORK_AVAILABLE -> {
-                    wifiConnected = true
-                    getConnectedWifiSSID(applicationContext) {
-                        wifiSSID = it
-                        setLastConnectedWifi(applicationContext, wifiSSID)
-                        syncTile()
-                    }
-                }
-                else -> {}
-            }
-            syncTile()
-        }
-    }
 
-    private var wifiChangeListener: WifiChangeListener? = null
-    private var cellularChangeListener: CellularChangeListener? = null
     private var mainHandler: Handler? = null
 
     override fun onCreate() {
@@ -68,8 +43,6 @@ class InternetTileService : ReportingTileService() {
 
         mainHandler = Handler(mainLooper)
 
-        wifiChangeListener = WifiChangeListener(wifiChangeCallback)
-        cellularChangeListener = CellularChangeListener(cellularChangeCallback)
         preferences = BITPreferences(this)
 
         runBlocking {
@@ -81,18 +54,12 @@ class InternetTileService : ReportingTileService() {
         super.onStartListening()
 
         syncTile()
-        setListeners()
-    }
-
-
-    override fun onStopListening() {
-        super.onStopListening()
-
-        removeListeners()
     }
 
     override fun onClick() {
         super.onClick()
+
+        log("onClick")
 
         if (!hasShellAccess(applicationContext)) {
 
@@ -138,6 +105,7 @@ class InternetTileService : ReportingTileService() {
                         isTurningOnData = false
                     }
                     syncTile()
+                    requestUpdateTile()
                 }
             }
             dataEnabled -> {
@@ -149,6 +117,7 @@ class InternetTileService : ReportingTileService() {
                         isTurningOnWifi = false
                     }
                     syncTile()
+                    requestUpdateTile()
                 }
             }
             else -> {
@@ -157,6 +126,8 @@ class InternetTileService : ReportingTileService() {
                     if (it?.isSuccess != true) {
                         isTurningOnWifi = false
                     }
+                    syncTile()
+                    requestUpdateTile()
                 }
             }
         }
@@ -194,7 +165,7 @@ class InternetTileService : ReportingTileService() {
                     it.icon = getCellularNetworkIcon(applicationContext)
                     it.label = getCellularNetworkText(
                         applicationContext,
-                        cellularChangeListener?.currentTelephonyDisplayInfo
+                        CellularChangeListener.currentTelephonyDisplayInfo
                     )
                 }
                 else -> {
@@ -210,28 +181,6 @@ class InternetTileService : ReportingTileService() {
 
             it.updateTile()
         }
-    }
-
-    private fun setListeners() {
-
-        log("Setting listeners")
-
-        // set wifiConnected to false, it will be updated asynchronously
-        //  after starting to listen to the wifiChangeListener.
-        wifiConnected = false
-        isTurningOnWifi = false
-        isTurningOnData = false
-
-        wifiChangeListener?.startListening(applicationContext)
-        cellularChangeListener?.startListening(applicationContext)
-    }
-
-    private fun removeListeners() {
-
-        log("Removing listeners")
-
-        wifiChangeListener?.stopListening(applicationContext)
-        cellularChangeListener?.stopListening(applicationContext)
     }
 
     private fun log(text: String) {
