@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.pages
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.StatusBarManager
 import android.content.ComponentName
 import android.os.Build
@@ -9,7 +10,6 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -52,25 +52,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
-import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
-import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
-import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
-import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomePage() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -133,60 +132,116 @@ fun HomePage() {
                 text = stringResource(id = R.string.available_tiles),
 
             )
-            val tileSpacing = 8.dp
-            Column (
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(tileSpacing)
-            ) {
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(tileSpacing)
-                ) {
-                    QuickAddTile(
-                        modifier = Modifier.weight(.5f),
-                        iconId = R.drawable.ic_baseline_signal_wifi_3_bar_24,
-                        title= stringResource(id = R.string.wifi),
-                        subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = WifiTileService::class.java,
-                        enabled = true
-                    )
-                    QuickAddTile(
-                        modifier = Modifier.weight(.5f),
-                        iconId = R.drawable.ic_baseline_mobile_data_24,
-                        title= stringResource(id = R.string.mobile_data),
-                        subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = MobileDataTileService::class.java,
-                        enabled = false
-                    )
-                }
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(tileSpacing)
-                ) {
-                    QuickAddTile(
-                        modifier = Modifier.weight(.5f),
-                        iconId = R.drawable.ic_baseline_public_24,
-                        title= stringResource(id = R.string.internet),
-                        subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = InternetTileService::class.java,
-                        enabled = false
-                    )
-                    QuickAddTile(
-                        modifier = Modifier.weight(.5f),
-                        iconId = R.drawable.nfc_24,
-                        title= stringResource(id = R.string.nfc),
-                        subTitle = stringResource(id = R.string.tap_to_add),
-                        serviceClass = NFCTileService::class.java,
-                        enabled = true
-                    )
-                }
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(tileSpacing)
-                ) {
-                    LiveTile(
-                        modifier = Modifier.weight(.5f)
-                    )
-                    Spacer(modifier = Modifier.weight(.5f))
-                }
-            }
+            TileOverview()
+        }
+    }
+}
+
+@Composable
+fun TileOverview () {
+    var wifiTileState: TileState by remember { mutableStateOf(TileState()) }
+    var mobileDataTileState: TileState by remember { mutableStateOf(TileState()) }
+    var internetTileState: TileState by remember { mutableStateOf(TileState()) }
+    var nfcTileState: TileState by remember { mutableStateOf(TileState()) }
+
+    val context = LocalContext.current
+    val showDialog: (Dialog) -> Unit = {}
+    val tileSpacing = 8.dp
+
+    val wifiTileBehaviour = remember {
+        var behaviour: WifiTileBehaviour? = null
+        behaviour = WifiTileBehaviour(
+            context = context,
+            onRequestUpdate = {
+                wifiTileState = behaviour!!.getTileState()
+            },
+            showDialog = showDialog
+        )
+        behaviour
+    }
+    val mobileDataTileBehaviour = remember {
+        var behaviour: MobileDataTileBehaviour? = null
+        behaviour = MobileDataTileBehaviour(
+            context = context,
+            onRequestUpdate = {
+                mobileDataTileState = behaviour!!.getTileState()
+            },
+            showDialog = showDialog
+        )
+        behaviour!!
+    }
+    val internetTileBehaviour = remember {
+        var behaviour: InternetTileBehaviour? = null
+        behaviour = InternetTileBehaviour(
+            context = context,
+            onRequestUpdate = {
+                internetTileState = behaviour!!.getTileState()
+            },
+            showDialog = showDialog
+        )
+        behaviour!!
+    }
+    val nfcTileBehaviour = remember {
+        var behaviour: NFCTileBehaviour? = null
+        behaviour = NFCTileBehaviour(
+            context = context,
+            onRequestUpdate = {
+                nfcTileState = behaviour!!.getTileState()
+            },
+            showDialog = showDialog
+        )
+        behaviour!!
+    }
+
+    Column (
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(tileSpacing)
+    ) {
+        Row (
+            horizontalArrangement = Arrangement.spacedBy(tileSpacing)
+        ) {
+            LiveTile(
+                modifier = Modifier.weight(.5f),
+                tileState = wifiTileState,
+                onClick = { wifiTileBehaviour.onClick() }
+            )
+            LiveTile(
+                modifier = Modifier.weight(.5f),
+                tileState = mobileDataTileState,
+                onClick = { mobileDataTileBehaviour.onClick() }
+            )
+        }
+        Row (
+            horizontalArrangement = Arrangement.spacedBy(tileSpacing)
+        ) {
+            LiveTile(
+                modifier = Modifier.weight(.5f),
+                tileState = internetTileState,
+                onClick = { internetTileBehaviour.onClick() }
+            )
+            LiveTile(
+                modifier = Modifier.weight(.5f),
+                tileState = nfcTileState,
+                onClick = { nfcTileBehaviour.onClick() }
+            )
+        }
+    }
+    DisposableEffect(Unit) {
+        wifiTileState = wifiTileBehaviour.getTileState()
+        mobileDataTileState = mobileDataTileBehaviour.getTileState()
+        internetTileState = internetTileBehaviour.getTileState()
+        nfcTileState = nfcTileBehaviour.getTileState()
+
+        TileSyncService.addBehaviourListener(wifiTileBehaviour)
+        TileSyncService.addBehaviourListener(mobileDataTileBehaviour)
+        TileSyncService.addBehaviourListener(internetTileBehaviour)
+        TileSyncService.addBehaviourListener(nfcTileBehaviour)
+
+        onDispose {
+            TileSyncService.removeBehaviourListener(wifiTileBehaviour)
+            TileSyncService.removeBehaviourListener(mobileDataTileBehaviour)
+            TileSyncService.removeBehaviourListener(internetTileBehaviour)
+            TileSyncService.removeBehaviourListener(nfcTileBehaviour)
         }
     }
 }
@@ -289,24 +344,11 @@ fun <T>QuickAddTile(
 }
 
 @Composable
-fun LiveTile(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-
-    var tileState: TileState by remember { mutableStateOf(TileState()) }
-    val tileBehaviour = remember {
-        val behaviour = WifiTileBehaviour(
-            context = context,
-            onRequestUpdate = {},
-            showDialog = {
-                // TODO
-            },
-        )
-        behaviour.onRequestUpdate = {
-            tileState = behaviour.getTileState()
-        }
-        behaviour
-    }
-
+fun LiveTile(
+    modifier: Modifier = Modifier,
+    tileState: TileState,
+    onClick: () -> Unit
+) {
     Tile(
         modifier = modifier,
         iconId = tileState.icon,
@@ -314,19 +356,9 @@ fun LiveTile(modifier: Modifier = Modifier) {
         subTitle = tileState.subtitle,
         enabled = tileState.state == android.service.quicksettings.Tile.STATE_ACTIVE,
         onClick = {
-            tileBehaviour.onClick()
+            onClick()
         }
     )
-
-    DisposableEffect(tileBehaviour) {
-
-        tileState = tileBehaviour.getTileState()
-        TileSyncService.addBehaviourListener(tileBehaviour)
-
-        onDispose {
-            TileSyncService.removeBehaviourListener(tileBehaviour)
-        }
-    }
 }
 
 @Composable
