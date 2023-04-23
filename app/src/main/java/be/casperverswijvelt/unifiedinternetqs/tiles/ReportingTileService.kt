@@ -5,6 +5,7 @@ import android.graphics.drawable.Icon
 import android.service.quicksettings.TileService
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
 import be.casperverswijvelt.unifiedinternetqs.util.reportToAnalytics
 import be.casperverswijvelt.unifiedinternetqs.util.saveTileUsed
 
@@ -15,8 +16,12 @@ abstract class ReportingTileService: TileService() {
     override fun onCreate() {
         super.onCreate()
 
-        saveTileUsed(this)
-        reportToAnalytics(this)
+        log("onCreate")
+
+        ExecutorServiceSingleton.getInstance().execute {
+            saveTileUsed(this)
+            reportToAnalytics(this)
+        }
     }
 
     protected fun requestUpdateTile() {
@@ -55,9 +60,7 @@ abstract class ReportingTileService: TileService() {
             it.label = tileState.label
             it.subtitle = tileState.subtitle
             it.state = tileState.state
-            it.icon = tileState.icon?.let { iconId ->
-                Icon.createWithResource(applicationContext, iconId)
-            }
+            it.icon = Icon.createWithResource(applicationContext, tileState.icon)
             it.updateTile()
         }
     }

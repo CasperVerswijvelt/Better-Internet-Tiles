@@ -51,7 +51,6 @@ fun SettingsPage() {
             ShellMethodPage (
                 shellMethod = shellMethod,
                 onShellMethodSelected = {
-                    println(shellMethod)
                     coroutineScope.launch {
                         dataStore.setShellMethod(it)
                     }

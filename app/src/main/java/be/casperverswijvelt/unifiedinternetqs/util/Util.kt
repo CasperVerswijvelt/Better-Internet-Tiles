@@ -313,7 +313,7 @@ fun executeShellCommand(command: String, context: Context): Shell.Result? {
     return null
 }
 
-private fun executeShizukuCommand(command: String): Shell.Result? {
+private fun executeShizukuCommand(command: String): Shell.Result {
     val process = ShizukuUtil.executeCommand(command)
     return object : Shell.Result() {
         override fun getOut(): MutableList<String> {

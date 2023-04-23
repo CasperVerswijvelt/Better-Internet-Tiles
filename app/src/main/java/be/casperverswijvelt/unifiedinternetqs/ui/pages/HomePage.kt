@@ -236,7 +236,6 @@ fun <T>QuickAddTile(
                                 errorText
                             }
                         }
-                        println(it)
                         if(text.isNotEmpty()) {
                             Toast.makeText(
                                 context,
