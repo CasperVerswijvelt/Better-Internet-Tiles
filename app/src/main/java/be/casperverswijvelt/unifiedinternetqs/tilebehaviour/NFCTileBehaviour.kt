@@ -2,25 +2,17 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
-import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
-import be.casperverswijvelt.unifiedinternetqs.util.getAirplaneModeEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
-import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
-import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.getNFCEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
-import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
-class MobileDataTileBehaviour(
+class NFCTileBehaviour(
     context: Context,
     showDialog: (Dialog) -> Unit,
     unlockAndRun: (Runnable) -> Unit = { it.run() },
@@ -28,11 +20,11 @@ class MobileDataTileBehaviour(
 ): TileBehaviour(context, showDialog, unlockAndRun, onRequestUpdate) {
 
     companion object {
-        private const val TAG = "MobileDataTileBehaviour"
+        private const val TAG = "NFCTileBehaviour"
     }
 
-    private val runToggleMobileData = Runnable {
-        toggleMobileData()
+    private val runToggleNFC = Runnable {
+        toggleNFC()
         onRequestUpdate()
     }
 
@@ -41,7 +33,7 @@ class MobileDataTileBehaviour(
 
         if (!hasShellAccess(context)) {
 
-            // Either root or Shizuku access is needed to enable/disable mobile data and Wi-Fi.
+            // Either root or Shizuku access is needed to enable/disable NFC.
             //  There is currently no other way to do this, so this functionality will not work
             //  without root Shizuku access.
             showDialog(getShellAccessRequiredDialog(context))
@@ -50,70 +42,57 @@ class MobileDataTileBehaviour(
 
         if (getRequiresUnlock()) {
 
-            unlockAndRun(runToggleMobileData)
+            unlockAndRun(runToggleNFC)
 
         } else {
 
-            runToggleMobileData.run()
+            runToggleNFC.run()
         }
     }
 
     override fun getTileState(): TileState {
         val tile = TileState()
-        val airplaneModeEnabled = getAirplaneModeEnabled(context)
-        val dataEnabled = getDataEnabled(context)
+        val nfcEnabled = getNFCEnabled(context)
 
-        tile.label = resources.getString(R.string.mobile_data)
+        tile.label = resources.getString(R.string.nfc)
 
-        if (airplaneModeEnabled) {
+        if ((nfcEnabled && !TileSyncService.isTurningOffNFC) || TileSyncService.isTurningOnNFC) {
 
-            tile.state = Tile.STATE_UNAVAILABLE
-            tile.subtitle = resources.getString(R.string.airplane_mode)
-
-        } else if ((dataEnabled && !TileSyncService.isTurningOffData) || TileSyncService.isTurningOnData) {
-
-            if (dataEnabled) TileSyncService.isTurningOnData = false
+            if (nfcEnabled) TileSyncService.isTurningOnNFC = false
 
             tile.state = Tile.STATE_ACTIVE
-            tile.icon = getCellularNetworkIcon(context)
-            tile.subtitle = getCellularNetworkText(
-                context,
-                CellularChangeListener.currentTelephonyDisplayInfo
-            )
+            tile.subtitle =
+                if (TileSyncService.isTurningOnNFC) resources.getString(R.string.turning_on) else resources.getString(
+                    R.string.on
+                )
 
         } else {
 
-            if (!dataEnabled) TileSyncService.isTurningOffData = false
+            if (!nfcEnabled) TileSyncService.isTurningOffNFC = false
 
             tile.state = Tile.STATE_INACTIVE
-            tile.icon = Icon.createWithResource(
-                context,
-                R.drawable.ic_baseline_mobile_data_24
-            )
             tile.subtitle = resources.getString(R.string.off)
         }
-
         return tile
     }
 
-    private fun toggleMobileData() {
+    private fun toggleNFC() {
 
-        val dataEnabled = getDataEnabled(context)
+        val nfcEnabled = getNFCEnabled(context)
 
-        if (dataEnabled || TileSyncService.isTurningOnData) {
-            TileSyncService.isTurningOnData = false
-            TileSyncService.isTurningOffData = true
-            executeShellCommandAsync("svc data disable", context) {
+        if (nfcEnabled || TileSyncService.isTurningOnNFC) {
+            TileSyncService.isTurningOnNFC = false
+            TileSyncService.isTurningOffNFC = true
+            executeShellCommandAsync("svc nfc disable", context) {
                 onRequestUpdate()
             }
         } else {
-            TileSyncService.isTurningOnData = true
-            TileSyncService.isTurningOffData = false
-            executeShellCommandAsync("svc data enable", context) {
+            TileSyncService.isTurningOnNFC = true
+            TileSyncService.isTurningOffNFC = false
+            executeShellCommandAsync("svc nfc enable", context) {
                 onRequestUpdate()
             }
         }
-        onRequestUpdate()
     }
 
     private fun log(text: String) {
