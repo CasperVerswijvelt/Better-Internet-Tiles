@@ -1,11 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.nfc.NfcAdapter
-import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -32,13 +26,10 @@ class NFCTileService : ReportingTileService() {
         syncTile()
     }
 
-    private var mainHandler: Handler? = null
-
     override fun onCreate() {
         super.onCreate()
         log("NFC tile service created")
 
-        mainHandler = Handler(mainLooper)
         preferences = BITPreferences(this)
     }
 
@@ -63,16 +54,18 @@ class NFCTileService : ReportingTileService() {
             return
         }
 
-        runBlocking {
-            if (preferences.getRequireUnlock.first()) {
-
-                unlockAndRun(runToggleNFC)
-
-            } else {
-
-                mainHandler?.post(runToggleNFC)
-            }
+        val requireUnlock = runBlocking {
+            preferences.getRequireUnlock.first()
         }
+        if (requireUnlock) {
+
+            unlockAndRun(runToggleNFC)
+
+        } else {
+
+            runToggleNFC.run()
+        }
+
     }
 
     private fun toggleNFC() {

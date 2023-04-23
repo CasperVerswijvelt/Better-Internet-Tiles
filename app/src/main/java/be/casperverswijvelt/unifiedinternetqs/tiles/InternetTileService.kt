@@ -1,7 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.graphics.drawable.Icon
-import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -35,13 +34,9 @@ class InternetTileService : ReportingTileService() {
         syncTile()
     }
 
-    private var mainHandler: Handler? = null
-
     override fun onCreate() {
         super.onCreate()
         log("Internet tile service created")
-
-        mainHandler = Handler(mainLooper)
 
         preferences = BITPreferences(this)
 
@@ -70,15 +65,16 @@ class InternetTileService : ReportingTileService() {
             return
         }
 
-        runBlocking {
-            if (preferences.getRequireUnlock.first()) {
+        val requireUnlock = runBlocking {
+            preferences.getRequireUnlock.first()
+        }
+        if (requireUnlock) {
 
-                unlockAndRun(runCycleInternet)
+            unlockAndRun(runCycleInternet)
 
-            } else {
+        } else {
 
-                mainHandler?.post(runCycleInternet)
-            }
+            runCycleInternet.run()
         }
     }
 

@@ -1,7 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.graphics.drawable.Icon
-import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -32,13 +31,10 @@ class MobileDataTileService : ReportingTileService() {
         syncTile()
     }
 
-    private var mainHandler: Handler? = null
-
     override fun onCreate() {
         super.onCreate()
         log("Mobile data tile service created")
 
-        mainHandler = Handler(mainLooper)
         preferences = BITPreferences(this)
     }
 
@@ -63,15 +59,15 @@ class MobileDataTileService : ReportingTileService() {
             return
         }
 
-        runBlocking {
-            if (preferences.getRequireUnlock.first()) {
+        val requireUnlock = runBlocking {
+            preferences.getRequireUnlock.first()
+        }
+        if (requireUnlock) {
 
-                unlockAndRun(runToggleMobileData)
+            unlockAndRun(runToggleMobileData)
 
-            } else {
-
-                mainHandler?.post(runToggleMobileData)
-            }
+        } else {
+            runToggleMobileData.run()
         }
     }
 

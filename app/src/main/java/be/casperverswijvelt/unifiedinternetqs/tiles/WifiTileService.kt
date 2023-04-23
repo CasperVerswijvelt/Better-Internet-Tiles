@@ -1,7 +1,6 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import android.graphics.drawable.Icon
-import android.os.Handler
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -31,13 +30,10 @@ class WifiTileService : ReportingTileService() {
         syncTile()
     }
 
-    private var mainHandler: Handler? = null
-
     override fun onCreate() {
         super.onCreate()
         log("Wi-Fi tile service created")
 
-        mainHandler = Handler(mainLooper)
         preferences = BITPreferences(this)
     }
 
@@ -62,15 +58,16 @@ class WifiTileService : ReportingTileService() {
             return
         }
 
-        runBlocking {
-            if (preferences.getRequireUnlock.first()) {
+        val requireUnlock = runBlocking {
+            preferences.getRequireUnlock.first()
+        }
+        if (requireUnlock) {
 
-                unlockAndRun(runToggleInternet)
+            unlockAndRun(runToggleInternet)
 
-            } else {
+        } else {
 
-                mainHandler?.post(runToggleInternet)
-            }
+            runToggleInternet.run()
         }
     }
 
