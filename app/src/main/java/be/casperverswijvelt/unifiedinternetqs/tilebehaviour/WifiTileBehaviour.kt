@@ -18,9 +18,9 @@ import kotlinx.coroutines.runBlocking
 
 class WifiTileBehaviour(
     context: Context,
-    showDialog: (Dialog) -> Unit,
+    showDialog: (Dialog) -> Unit = {},
     unlockAndRun: (Runnable) -> Unit = { it.run() },
-    onRequestUpdate: () -> Unit
+    onRequestUpdate: () -> Unit = {}
 ): TileBehaviour(context, showDialog, unlockAndRun, onRequestUpdate) {
 
     companion object {

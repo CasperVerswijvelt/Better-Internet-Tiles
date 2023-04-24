@@ -24,6 +24,10 @@ abstract class ReportingTileService: TileService() {
         }
     }
 
+    /**
+     * Request the tile to be updated by requesting listening state
+     * on the tile service
+     */
     protected fun requestUpdateTile() {
         requestListeningState(
             applicationContext,

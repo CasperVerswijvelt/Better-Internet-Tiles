@@ -8,6 +8,9 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
+/**
+ * @property onRequestUpdate
+ */
 abstract class TileBehaviour(
     protected val context: Context,
     val showDialog: (Dialog) -> Unit,

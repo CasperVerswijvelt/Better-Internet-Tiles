@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,11 +32,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -52,6 +60,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -193,19 +202,20 @@ fun TileOverview () {
         behaviour!!
     }
 
+
     Column (
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(tileSpacing)
     ) {
         Row (
-            horizontalArrangement = Arrangement.spacedBy(tileSpacing)
+            horizontalArrangement = Arrangement.spacedBy(tileSpacing),
         ) {
-            LiveTile(
+            LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
                 tileState = wifiTileState,
                 onClick = { wifiTileBehaviour.onClick() }
             )
-            LiveTile(
+            LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
                 tileState = mobileDataTileState,
                 onClick = { mobileDataTileBehaviour.onClick() }
@@ -214,12 +224,12 @@ fun TileOverview () {
         Row (
             horizontalArrangement = Arrangement.spacedBy(tileSpacing)
         ) {
-            LiveTile(
+            LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
                 tileState = internetTileState,
                 onClick = { internetTileBehaviour.onClick() }
             )
-            LiveTile(
+            LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
                 tileState = nfcTileState,
                 onClick = { nfcTileBehaviour.onClick() }
@@ -344,6 +354,57 @@ fun <T>QuickAddTile(
 }
 
 @Composable
+fun LiveTileWithButtons(
+    modifier: Modifier = Modifier,
+    tileState: TileState,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = modifier.fillMaxHeight(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        LiveTile(
+            modifier = Modifier.weight(1f),
+            tileState = tileState,
+            onClick = onClick
+        )
+        Column(
+            modifier = Modifier
+                .height(tileHeight)
+                .wrapContentWidth(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+
+            LiveTileExtraButton(onClick = {}, icon = Icons.Filled.Add)
+            Spacer(modifier = Modifier.height(4.dp))
+            LiveTileExtraButton(onClick = {}, icon = Icons.Filled.Settings)
+        }
+    }
+}
+
+@Composable
+fun LiveTileExtraButton(
+    onClick: () -> Unit,
+    icon: ImageVector
+) {
+    val disabledBgColor by buttonBackgroundColor()
+    Box(
+        modifier = Modifier
+            .size(35.dp)
+            .clip(CircleShape)
+            .background(disabledBgColor)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            modifier = Modifier.fillMaxSize(.55f),
+            imageVector = icon,
+            contentDescription = ""
+        )
+    }
+}
+
+@Composable
 fun LiveTile(
     modifier: Modifier = Modifier,
     tileState: TileState,
@@ -361,6 +422,20 @@ fun LiveTile(
     )
 }
 
+val tileHeight = 80.dp
+
+@Composable
+fun buttonBackgroundColor(): State<Color> {
+    val darkTheme = isSystemInDarkTheme()
+    val colorState = remember { mutableStateOf(Color(0x000000)) }
+    var color by colorState
+
+    LaunchedEffect(darkTheme) {
+        color = Color(if (darkTheme) 0x11ffffff else 0x11000000)
+    }
+    return colorState
+}
+
 @Composable
 fun Tile(
     modifier: Modifier = Modifier,
@@ -373,12 +448,13 @@ fun Tile(
     val darkTheme = isSystemInDarkTheme()
     val scheme = MaterialTheme.colorScheme
     val animationSpec = tween<Color>(350, easing = EaseInOut)
+    val disabledBgColor by buttonBackgroundColor()
 
     val bgColor by animateColorAsState(
         targetValue = if (enabled)
             if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
         else
-            if (darkTheme) scheme.onTertiary else Color(0x11000000),
+            disabledBgColor,
         animationSpec = animationSpec
     )
     val fgColor by animateColorAsState(
@@ -390,7 +466,7 @@ fun Tile(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(tileHeight)
             .clip(RoundedCornerShape(30.dp))
             .clickable { onClick() }
             .background(bgColor)
@@ -412,6 +488,8 @@ fun Tile(
             ) {
                 Text(
                     text = title,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                     color = fgColor,
                     fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
@@ -419,6 +497,8 @@ fun Tile(
                 subTitle?.let {
                     Text(
                         text = subTitle,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
                         color = fgColorLight,
                         fontSize = 14.sp
                     )
