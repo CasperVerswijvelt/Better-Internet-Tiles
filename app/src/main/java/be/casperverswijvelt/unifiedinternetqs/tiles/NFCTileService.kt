@@ -9,17 +9,13 @@ class NFCTileService : ReportingTileService() {
     }
 
     override fun onCreate() {
-        super.onCreate()
         log("NFC tile service created")
 
         tileBehaviour = NFCTileBehaviour(
             context = this,
             showDialog = { showDialog(it) },
-            unlockAndRun = { unlockAndRun(it) },
-            onRequestUpdate = {
-                syncTile()
-                requestUpdateTile()
-            }
+            unlockAndRun = { unlockAndRun(it) }
         )
+        super.onCreate()
     }
 }

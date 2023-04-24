@@ -2,7 +2,6 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -14,26 +13,17 @@ import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
 import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
-import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 class MobileDataTileBehaviour(
     context: Context,
     showDialog: (Dialog) -> Unit,
-    unlockAndRun: (Runnable) -> Unit = { it.run() },
-    onRequestUpdate: () -> Unit
-): TileBehaviour(context, showDialog, unlockAndRun, onRequestUpdate) {
+    unlockAndRun: (Runnable) -> Unit = { it.run() }
+): TileBehaviour(context, showDialog, unlockAndRun) {
 
     companion object {
         private const val TAG = "MobileDataTileBehaviour"
-    }
-
-    private val runToggleMobileData = Runnable {
-        toggleMobileData()
-        onRequestUpdate()
     }
 
     override fun onClick() {
@@ -49,12 +39,9 @@ class MobileDataTileBehaviour(
         }
 
         if (getRequiresUnlock()) {
-
-            unlockAndRun(runToggleMobileData)
-
+            unlockAndRun { toggleMobileData() }
         } else {
-
-            runToggleMobileData.run()
+            toggleMobileData()
         }
     }
 
@@ -101,16 +88,16 @@ class MobileDataTileBehaviour(
             TileSyncService.isTurningOnData = false
             TileSyncService.isTurningOffData = true
             executeShellCommandAsync("svc data disable", context) {
-                onRequestUpdate()
+                updateTile()
             }
         } else {
             TileSyncService.isTurningOnData = true
             TileSyncService.isTurningOffData = false
             executeShellCommandAsync("svc data enable", context) {
-                onRequestUpdate()
+                updateTile()
             }
         }
-        onRequestUpdate()
+        updateTile()
     }
 
     private fun log(text: String) {

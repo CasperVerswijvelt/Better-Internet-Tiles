@@ -15,17 +15,11 @@ import kotlinx.coroutines.Runnable
 class NFCTileBehaviour(
     context: Context,
     showDialog: (Dialog) -> Unit,
-    unlockAndRun: (Runnable) -> Unit = { it.run() },
-    onRequestUpdate: () -> Unit
-): TileBehaviour(context, showDialog, unlockAndRun, onRequestUpdate) {
+    unlockAndRun: (Runnable) -> Unit = { it.run() }
+): TileBehaviour(context, showDialog, unlockAndRun) {
 
     companion object {
         private const val TAG = "NFCTileBehaviour"
-    }
-
-    private val runToggleNFC = Runnable {
-        toggleNFC()
-        onRequestUpdate()
     }
 
     override fun onClick() {
@@ -41,12 +35,9 @@ class NFCTileBehaviour(
         }
 
         if (getRequiresUnlock()) {
-
-            unlockAndRun(runToggleNFC)
-
+            unlockAndRun { toggleNFC() }
         } else {
-
-            runToggleNFC.run()
+            toggleNFC()
         }
     }
 
@@ -85,16 +76,16 @@ class NFCTileBehaviour(
             TileSyncService.isTurningOnNFC = false
             TileSyncService.isTurningOffNFC = true
             executeShellCommandAsync("svc nfc disable", context) {
-                onRequestUpdate()
+                updateTile()
             }
         } else {
             TileSyncService.isTurningOnNFC = true
             TileSyncService.isTurningOffNFC = false
             executeShellCommandAsync("svc nfc enable", context) {
-                onRequestUpdate()
+                updateTile()
             }
         }
-        onRequestUpdate()
+        updateTile()
     }
 
     private fun log(text: String) {

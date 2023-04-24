@@ -2,7 +2,6 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -17,23 +16,15 @@ import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiIcon
 import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 class InternetTileBehaviour(
     context: Context,
     showDialog: (Dialog) -> Unit,
-    unlockAndRun: (Runnable) -> Unit = { it.run() },
-    onRequestUpdate: () -> Unit
-): TileBehaviour(context, showDialog, unlockAndRun, onRequestUpdate) {
+    unlockAndRun: (Runnable) -> Unit = { it.run() }
+): TileBehaviour(context, showDialog, unlockAndRun) {
 
     companion object {
         private const val TAG = "InternetDataTileBehaviour"
-    }
-
-    private val runCycleInternet = Runnable {
-        cycleInternet()
-        onRequestUpdate()
     }
 
     override fun onClick() {
@@ -49,12 +40,9 @@ class InternetTileBehaviour(
         }
 
         if (getRequiresUnlock()) {
-
-            unlockAndRun(runCycleInternet)
-
+            unlockAndRun { cycleInternet() }
         } else {
-
-            runCycleInternet.run()
+            cycleInternet()
         }
     }
 
@@ -124,7 +112,7 @@ class InternetTileBehaviour(
                     if (it?.isSuccess != true) {
                         TileSyncService.isTurningOnData = false
                     }
-                    onRequestUpdate()
+                    updateTile()
                 }
             }
             dataEnabled -> {
@@ -135,7 +123,7 @@ class InternetTileBehaviour(
                     if (it?.isSuccess != true) {
                         TileSyncService.isTurningOnWifi = false
                     }
-                    onRequestUpdate()
+                    updateTile()
                 }
             }
             else -> {
@@ -144,11 +132,11 @@ class InternetTileBehaviour(
                     if (it?.isSuccess != true) {
                         TileSyncService.isTurningOnWifi = false
                     }
-                    onRequestUpdate()
+                    updateTile()
                 }
             }
         }
-        onRequestUpdate()
+        updateTile()
     }
 
     private fun log(text: String) {

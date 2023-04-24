@@ -2,7 +2,6 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -19,17 +18,11 @@ import kotlinx.coroutines.runBlocking
 class WifiTileBehaviour(
     context: Context,
     showDialog: (Dialog) -> Unit = {},
-    unlockAndRun: (Runnable) -> Unit = { it.run() },
-    onRequestUpdate: () -> Unit = {}
-): TileBehaviour(context, showDialog, unlockAndRun, onRequestUpdate) {
+    unlockAndRun: (Runnable) -> Unit = { it.run() }
+): TileBehaviour(context, showDialog, unlockAndRun) {
 
     companion object {
         private const val TAG = "WifiTileBehaviour"
-    }
-
-    private val runToggleInternet = Runnable {
-        toggleWifi()
-        onRequestUpdate()
     }
 
     override fun onClick() {
@@ -44,16 +37,10 @@ class WifiTileBehaviour(
             return
         }
 
-        val requireUnlock = runBlocking {
-            preferences.getRequireUnlock.first()
-        }
-        if (requireUnlock) {
-
-            unlockAndRun(runToggleInternet)
-
+        if (getRequiresUnlock()) {
+            unlockAndRun { toggleWifi() }
         } else {
-
-            runToggleInternet.run()
+            toggleWifi()
         }
     }
 
@@ -97,7 +84,7 @@ class WifiTileBehaviour(
                 if (it?.isSuccess != true) {
                     TileSyncService.isTurningOffWifi = false
                 }
-                onRequestUpdate()
+                updateTile()
             }
         } else {
             TileSyncService.isTurningOnWifi = true
@@ -106,10 +93,10 @@ class WifiTileBehaviour(
                 if (it?.isSuccess != true) {
                     TileSyncService.isTurningOnWifi = false
                 }
-                onRequestUpdate()
+                updateTile()
             }
         }
-        onRequestUpdate()
+        updateTile()
     }
 
     private fun log(text: String) {

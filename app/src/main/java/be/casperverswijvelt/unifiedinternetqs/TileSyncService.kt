@@ -71,27 +71,32 @@ class TileSyncService: Service() {
                 getConnectedWifiSSID(applicationContext) { ssid ->
                     wifiSSID = ssid
                     setLastConnectedWifi(applicationContext, wifiSSID)
-                    onWifiUpdated()
+
+                    updateWifiTile()
+                    updateInternetTile()
                 }
             }
             else -> {}
         }
-        onWifiUpdated()
+        updateWifiTile()
+        updateInternetTile()
     }
     private val cellularChangeListener: CellularChangeListener = CellularChangeListener {
-        onCellularUpdated()
+        updateMobileDataTile()
+        updateInternetTile()
     }
     private val airplaneModeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED) {
-                onCellularUpdated()
+                updateMobileDataTile()
+                updateInternetTile()
             }
         }
     }
     private val nfcReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == NfcAdapter.ACTION_ADAPTER_STATE_CHANGED) {
-                onNFCUpdated()
+                updateNFCTile()
             }
         }
     }
@@ -150,15 +155,10 @@ class TileSyncService: Service() {
             IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
         )
 
-        requestListeningState(WifiTileService::class.java)
-        requestListeningState(MobileDataTileService::class.java)
-        requestListeningState(InternetTileService::class.java)
-        requestListeningState(NFCTileService::class.java)
-
-        requestTileBehaviourUpdate(WifiTileBehaviour::class.java)
-        requestTileBehaviourUpdate(MobileDataTileBehaviour::class.java)
-        requestTileBehaviourUpdate(InternetTileBehaviour::class.java)
-        requestTileBehaviourUpdate(NFCTileBehaviour::class.java)
+        updateWifiTile()
+        updateMobileDataTile()
+        updateInternetTile()
+        updateNFCTile()
     }
 
     override fun onDestroy() {
@@ -171,27 +171,26 @@ class TileSyncService: Service() {
         unregisterReceiver(nfcReceiver)
     }
 
-    private fun onWifiUpdated() {
+    private fun updateWifiTile() {
         requestListeningState(WifiTileService::class.java)
-        requestListeningState(InternetTileService::class.java)
-
         requestTileBehaviourUpdate(WifiTileBehaviour::class.java)
-        requestTileBehaviourUpdate(InternetTileBehaviour::class.java)
     }
 
-    private fun onCellularUpdated() {
+    private fun updateMobileDataTile() {
         requestListeningState(MobileDataTileService::class.java)
-        requestListeningState(InternetTileService::class.java)
-
         requestTileBehaviourUpdate(MobileDataTileBehaviour::class.java)
+    }
+
+    private fun updateInternetTile () {
+        requestListeningState(InternetTileService::class.java)
         requestTileBehaviourUpdate(InternetTileBehaviour::class.java)
     }
 
-    private fun onNFCUpdated() {
+    private fun updateNFCTile() {
         requestListeningState(NFCTileService::class.java)
-
         requestTileBehaviourUpdate(NFCTileBehaviour::class.java)
     }
+
     private fun <T>requestListeningState(cls: Class<T>) {
         TileService.requestListeningState(
             applicationContext,
@@ -201,7 +200,7 @@ class TileSyncService: Service() {
 
     private fun <T>requestTileBehaviourUpdate(cls: Class<T>) {
         behaviourListeners.forEach {
-            if (it.javaClass == cls) it.onRequestUpdate()
+            if (it.javaClass == cls) it.updateTile()
         }
     }
 }

@@ -9,17 +9,13 @@ class MobileDataTileService : ReportingTileService() {
     }
 
     override fun onCreate() {
-        super.onCreate()
         log("Mobile data tile service created")
 
         tileBehaviour = MobileDataTileBehaviour(
             context = this,
             showDialog = { showDialog(it) },
-            unlockAndRun = { unlockAndRun(it) },
-            onRequestUpdate = {
-                syncTile()
-                requestUpdateTile()
-            }
+            unlockAndRun = { unlockAndRun(it) }
         )
+        super.onCreate()
     }
 }

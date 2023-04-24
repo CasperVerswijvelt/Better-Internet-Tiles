@@ -8,25 +8,35 @@ import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-/**
- * @property onRequestUpdate
- */
 abstract class TileBehaviour(
     protected val context: Context,
-    val showDialog: (Dialog) -> Unit,
-    val unlockAndRun: (Runnable) -> Unit = { it.run() },
-    var onRequestUpdate: () -> Unit
+    protected val showDialog: (Dialog) -> Unit,
+    protected val unlockAndRun: (Runnable) -> Unit = { it.run() }
 ) {
 
     protected val preferences = BITPreferences(context)
     protected val resources: Resources = context.resources
 
+    private val updateTileListeners = arrayListOf<(TileState) -> Unit>()
+
     abstract fun onClick()
     abstract fun getTileState() : TileState
 
-    fun getRequiresUnlock(): Boolean {
+    protected fun getRequiresUnlock(): Boolean {
         return runBlocking {
             preferences.getRequireUnlock.first()
         }
+    }
+
+    fun updateTile() {
+        updateTileListeners.forEach { it(getTileState()) }
+    }
+
+    fun addUpdateTileListeners(listener: (TileState) -> Unit) {
+        updateTileListeners.add(listener)
+    }
+
+    fun removeUpdateTileListeners(listener: (TileState) -> Unit) {
+        updateTileListeners.remove(listener)
     }
 }

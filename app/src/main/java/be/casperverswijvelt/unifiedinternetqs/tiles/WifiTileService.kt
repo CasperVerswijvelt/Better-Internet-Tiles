@@ -9,17 +9,13 @@ class WifiTileService : ReportingTileService() {
     }
 
     override fun onCreate() {
-        super.onCreate()
         log("Wi-Fi tile service created")
 
         tileBehaviour = WifiTileBehaviour(
             context = this,
             showDialog = { showDialog(it) },
-            unlockAndRun = { unlockAndRun(it) },
-            onRequestUpdate = {
-                syncTile()
-                requestUpdateTile()
-            }
+            unlockAndRun = { unlockAndRun(it) }
         )
+        super.onCreate()
     }
 }

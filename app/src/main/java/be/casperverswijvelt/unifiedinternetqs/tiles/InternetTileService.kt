@@ -9,17 +9,13 @@ class InternetTileService : ReportingTileService() {
     }
 
     override fun onCreate() {
-        super.onCreate()
         log("Internet tile service created")
 
         tileBehaviour = InternetTileBehaviour(
             context = this,
             showDialog = { showDialog(it) },
-            unlockAndRun = { unlockAndRun(it) },
-            onRequestUpdate = {
-                syncTile()
-                requestUpdateTile()
-            }
+            unlockAndRun = { unlockAndRun(it) }
         )
+        super.onCreate()
     }
 }

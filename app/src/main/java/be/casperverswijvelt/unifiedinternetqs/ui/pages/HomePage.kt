@@ -70,6 +70,7 @@ import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
 
@@ -148,60 +149,31 @@ fun HomePage() {
 
 @Composable
 fun TileOverview () {
-    var wifiTileState: TileState by remember { mutableStateOf(TileState()) }
-    var mobileDataTileState: TileState by remember { mutableStateOf(TileState()) }
-    var internetTileState: TileState by remember { mutableStateOf(TileState()) }
-    var nfcTileState: TileState by remember { mutableStateOf(TileState()) }
 
     val context = LocalContext.current
     val showDialog: (Dialog) -> Unit = {}
     val tileSpacing = 8.dp
 
-    val wifiTileBehaviour = remember {
-        var behaviour: WifiTileBehaviour? = null
-        behaviour = WifiTileBehaviour(
-            context = context,
-            onRequestUpdate = {
-                wifiTileState = behaviour!!.getTileState()
-            },
-            showDialog = showDialog
+    val tileBehaviours = remember {
+        listOf(
+            WifiTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            MobileDataTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            InternetTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            NFCTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            )
         )
-        behaviour
     }
-    val mobileDataTileBehaviour = remember {
-        var behaviour: MobileDataTileBehaviour? = null
-        behaviour = MobileDataTileBehaviour(
-            context = context,
-            onRequestUpdate = {
-                mobileDataTileState = behaviour!!.getTileState()
-            },
-            showDialog = showDialog
-        )
-        behaviour!!
-    }
-    val internetTileBehaviour = remember {
-        var behaviour: InternetTileBehaviour? = null
-        behaviour = InternetTileBehaviour(
-            context = context,
-            onRequestUpdate = {
-                internetTileState = behaviour!!.getTileState()
-            },
-            showDialog = showDialog
-        )
-        behaviour!!
-    }
-    val nfcTileBehaviour = remember {
-        var behaviour: NFCTileBehaviour? = null
-        behaviour = NFCTileBehaviour(
-            context = context,
-            onRequestUpdate = {
-                nfcTileState = behaviour!!.getTileState()
-            },
-            showDialog = showDialog
-        )
-        behaviour!!
-    }
-
 
     Column (
         modifier = Modifier.padding(16.dp),
@@ -212,13 +184,13 @@ fun TileOverview () {
         ) {
             LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
-                tileState = wifiTileState,
-                onClick = { wifiTileBehaviour.onClick() }
+                tileBehaviour = tileBehaviours[0],
+                onClick = { tileBehaviours[0].onClick() }
             )
             LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
-                tileState = mobileDataTileState,
-                onClick = { mobileDataTileBehaviour.onClick() }
+                tileBehaviour = tileBehaviours[1],
+                onClick = { tileBehaviours[1].onClick() }
             )
         }
         Row (
@@ -226,32 +198,14 @@ fun TileOverview () {
         ) {
             LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
-                tileState = internetTileState,
-                onClick = { internetTileBehaviour.onClick() }
+                tileBehaviour = tileBehaviours[2],
+                onClick = { tileBehaviours[2].onClick() }
             )
             LiveTileWithButtons(
                 modifier = Modifier.weight(.5f),
-                tileState = nfcTileState,
-                onClick = { nfcTileBehaviour.onClick() }
+                tileBehaviour = tileBehaviours[3],
+                onClick = { tileBehaviours[3].onClick() }
             )
-        }
-    }
-    DisposableEffect(Unit) {
-        wifiTileState = wifiTileBehaviour.getTileState()
-        mobileDataTileState = mobileDataTileBehaviour.getTileState()
-        internetTileState = internetTileBehaviour.getTileState()
-        nfcTileState = nfcTileBehaviour.getTileState()
-
-        TileSyncService.addBehaviourListener(wifiTileBehaviour)
-        TileSyncService.addBehaviourListener(mobileDataTileBehaviour)
-        TileSyncService.addBehaviourListener(internetTileBehaviour)
-        TileSyncService.addBehaviourListener(nfcTileBehaviour)
-
-        onDispose {
-            TileSyncService.removeBehaviourListener(wifiTileBehaviour)
-            TileSyncService.removeBehaviourListener(mobileDataTileBehaviour)
-            TileSyncService.removeBehaviourListener(internetTileBehaviour)
-            TileSyncService.removeBehaviourListener(nfcTileBehaviour)
         }
     }
 }
@@ -356,7 +310,7 @@ fun <T>QuickAddTile(
 @Composable
 fun LiveTileWithButtons(
     modifier: Modifier = Modifier,
-    tileState: TileState,
+    tileBehaviour: TileBehaviour,
     onClick: () -> Unit
 ) {
     Row(
@@ -365,7 +319,7 @@ fun LiveTileWithButtons(
     ) {
         LiveTile(
             modifier = Modifier.weight(1f),
-            tileState = tileState,
+            tileBehaviour = tileBehaviour,
             onClick = onClick
         )
         Column(
@@ -407,9 +361,13 @@ fun LiveTileExtraButton(
 @Composable
 fun LiveTile(
     modifier: Modifier = Modifier,
-    tileState: TileState,
+    tileBehaviour: TileBehaviour,
     onClick: () -> Unit
 ) {
+    var tileState by remember {
+        mutableStateOf(tileBehaviour.getTileState())
+    }
+
     Tile(
         modifier = modifier,
         iconId = tileState.icon,
@@ -420,6 +378,18 @@ fun LiveTile(
             onClick()
         }
     )
+
+    DisposableEffect(Unit) {
+
+        TileSyncService.addBehaviourListener(tileBehaviour)
+        val tileListener: (TileState) -> Unit = { tileState = it}
+        tileBehaviour.addUpdateTileListeners(tileListener)
+
+        onDispose {
+            TileSyncService.removeBehaviourListener(tileBehaviour)
+            tileBehaviour.removeUpdateTileListeners(tileListener)
+        }
+    }
 }
 
 val tileHeight = 80.dp
