@@ -55,6 +55,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -73,6 +74,8 @@ import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.ui.components.VerticalGrid
+import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -152,7 +155,7 @@ fun TileOverview () {
 
     val context = LocalContext.current
     val showDialog: (Dialog) -> Unit = {}
-    val tileSpacing = 8.dp
+    val localConfig = LocalConfiguration.current
 
     val tileBehaviours = remember {
         listOf(
@@ -175,39 +178,16 @@ fun TileOverview () {
         )
     }
 
-    Column (
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(tileSpacing)
-    ) {
-        Row (
-            horizontalArrangement = Arrangement.spacedBy(tileSpacing),
-        ) {
-            LiveTileWithButtons(
-                modifier = Modifier.weight(.5f),
-                tileBehaviour = tileBehaviours[0],
-                onClick = { tileBehaviours[0].onClick() }
-            )
-            LiveTileWithButtons(
-                modifier = Modifier.weight(.5f),
-                tileBehaviour = tileBehaviours[1],
-                onClick = { tileBehaviours[1].onClick() }
-            )
+    VerticalGrid(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        columns = floor(localConfig.screenWidthDp / 170f).toInt(),
+        spacing = 8.dp,
+        content = tileBehaviours.map {
+            { LiveTileWithButtons(tileBehaviour = it) }
         }
-        Row (
-            horizontalArrangement = Arrangement.spacedBy(tileSpacing)
-        ) {
-            LiveTileWithButtons(
-                modifier = Modifier.weight(.5f),
-                tileBehaviour = tileBehaviours[2],
-                onClick = { tileBehaviours[2].onClick() }
-            )
-            LiveTileWithButtons(
-                modifier = Modifier.weight(.5f),
-                tileBehaviour = tileBehaviours[3],
-                onClick = { tileBehaviours[3].onClick() }
-            )
-        }
-    }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -310,8 +290,7 @@ fun <T>QuickAddTile(
 @Composable
 fun LiveTileWithButtons(
     modifier: Modifier = Modifier,
-    tileBehaviour: TileBehaviour,
-    onClick: () -> Unit
+    tileBehaviour: TileBehaviour
 ) {
     Row(
         modifier = modifier.fillMaxHeight(),
@@ -319,8 +298,7 @@ fun LiveTileWithButtons(
     ) {
         LiveTile(
             modifier = Modifier.weight(1f),
-            tileBehaviour = tileBehaviour,
-            onClick = onClick
+            tileBehaviour = tileBehaviour
         )
         Column(
             modifier = Modifier
@@ -361,8 +339,7 @@ fun LiveTileExtraButton(
 @Composable
 fun LiveTile(
     modifier: Modifier = Modifier,
-    tileBehaviour: TileBehaviour,
-    onClick: () -> Unit
+    tileBehaviour: TileBehaviour
 ) {
     var tileState by remember {
         mutableStateOf(tileBehaviour.getTileState())
@@ -375,7 +352,7 @@ fun LiveTile(
         subTitle = tileState.subtitle,
         enabled = tileState.state == android.service.quicksettings.Tile.STATE_ACTIVE,
         onClick = {
-            onClick()
+            tileBehaviour.onClick()
         }
     )
 
