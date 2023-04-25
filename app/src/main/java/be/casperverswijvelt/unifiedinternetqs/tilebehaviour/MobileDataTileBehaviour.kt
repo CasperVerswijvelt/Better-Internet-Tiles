@@ -52,6 +52,7 @@ class MobileDataTileBehaviour(
 
                 tile.state = Tile.STATE_UNAVAILABLE
                 tile.subtitle = resources.getString(R.string.airplane_mode)
+                tile.icon = R.drawable.ic_baseline_mobile_data_24
 
             } else if ((dataEnabled && !TileSyncService.isTurningOffData) || TileSyncService.isTurningOnData) {
 

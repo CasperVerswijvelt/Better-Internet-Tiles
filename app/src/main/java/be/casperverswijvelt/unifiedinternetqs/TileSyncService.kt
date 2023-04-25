@@ -17,11 +17,13 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tiles.AirplaneModeTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -48,6 +50,9 @@ class TileSyncService: Service() {
 
         var isTurningOnNFC = false
         var isTurningOffNFC = false
+
+        var isTurningOnAirplaneMode = false
+        var isTurningOffAirplaneMode = false
 
         private val behaviourListeners = arrayListOf<TileBehaviour>()
 
@@ -90,6 +95,7 @@ class TileSyncService: Service() {
             if (intent?.action == Intent.ACTION_AIRPLANE_MODE_CHANGED) {
                 updateMobileDataTile()
                 updateInternetTile()
+                updateAirplaneModeTile()
             }
         }
     }
@@ -189,6 +195,11 @@ class TileSyncService: Service() {
     private fun updateNFCTile() {
         requestListeningState(NFCTileService::class.java)
         requestTileBehaviourUpdate(NFCTileBehaviour::class.java)
+    }
+
+    private fun updateAirplaneModeTile() {
+        requestListeningState(AirplaneModeTileService::class.java)
+        requestTileBehaviourUpdate(AirplaneModeTileBehaviour::class.java)
     }
 
     private fun <T>requestListeningState(cls: Class<T>) {

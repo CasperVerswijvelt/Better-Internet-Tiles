@@ -80,7 +80,7 @@ fun getNFCEnabled(context: Context): Boolean {
 
 fun getAirplaneModeEnabled(context: Context): Boolean {
 
-    return Settings.System.getInt(
+    return Settings.Global.getInt(
         context.contentResolver,
         Settings.Global.AIRPLANE_MODE_ON,
         0
