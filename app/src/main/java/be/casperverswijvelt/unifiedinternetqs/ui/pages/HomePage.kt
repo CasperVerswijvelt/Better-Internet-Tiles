@@ -10,6 +10,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -76,6 +78,7 @@ import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.ui.components.VerticalGrid
+import be.casperverswijvelt.unifiedinternetqs.ui.components.conditional
 import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -350,7 +353,8 @@ fun LiveTile(
         iconId = tileState.icon,
         title = tileState.label,
         subTitle = tileState.subtitle,
-        enabled = tileState.state == android.service.quicksettings.Tile.STATE_ACTIVE,
+        active = tileState.state == android.service.quicksettings.Tile.STATE_ACTIVE,
+        unavailable = tileState.state == android.service.quicksettings.Tile.STATE_UNAVAILABLE,
         onClick = {
             tileBehaviour.onClick()
         }
@@ -388,34 +392,42 @@ fun Tile(
     modifier: Modifier = Modifier,
     iconId: Int,
     title: String,
-    enabled: Boolean = true,
+    active: Boolean = true,
+    unavailable: Boolean = false,
     subTitle: String? = null,
     onClick: () -> Unit = {}
 ) {
     val darkTheme = isSystemInDarkTheme()
     val scheme = MaterialTheme.colorScheme
-    val animationSpec = tween<Color>(350, easing = EaseInOut)
+    val colorAnimationSpec = tween<Color>(350, easing = EaseInOut)
     val disabledBgColor by buttonBackgroundColor()
 
     val bgColor by animateColorAsState(
-        targetValue = if (enabled)
+        targetValue = if (active)
             if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
         else
             disabledBgColor,
-        animationSpec = animationSpec
+        animationSpec = colorAnimationSpec
     )
     val fgColor by animateColorAsState(
-        targetValue = if (enabled) Color.Black else if (darkTheme) Color.White else Color.Black,
-        animationSpec = animationSpec
+        targetValue = if (active) Color.Black else if (darkTheme) Color.White else Color.Black,
+        animationSpec = colorAnimationSpec
     )
     val fgColorLight = Color(fgColor.red, fgColor.green, fgColor.blue, .7f)
+    val alpha by animateFloatAsState(
+        targetValue = if (unavailable) .35f else 1f,
+        animationSpec = tween(350, easing = EaseInOut)
+    )
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(tileHeight)
             .clip(RoundedCornerShape(30.dp))
-            .clickable { onClick() }
+            .alpha(alpha)
+            .conditional(!unavailable) {
+                clickable { onClick() }
+            }
             .background(bgColor)
             .padding(start = 17.dp, end = 25.dp)
     ) {
