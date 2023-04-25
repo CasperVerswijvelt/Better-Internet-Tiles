@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -15,7 +16,8 @@ import androidx.compose.ui.unit.Dp
 fun VerticalGrid(
     modifier: Modifier = Modifier,
     columns: Int = 2,
-    spacing: Dp,
+    horizontalSpacing: Dp,
+    verticalSpacing: Dp,
     content: List<@Composable () -> Unit>
 ) {
     val splitComposables: State<List<List<@Composable () -> Unit>>> = remember {
@@ -24,16 +26,18 @@ fun VerticalGrid(
     Box(modifier) {
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(spacing)
+            verticalArrangement = Arrangement.spacedBy(verticalSpacing)
         ) {
             splitComposables.value.forEach {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(spacing)
+                    horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
                 ) {
+                    val weightModifier = Modifier.weight(1f / columns)
                     it.forEach {
-                        Box(Modifier.weight(1f / columns)) {
-                            it()
-                        }
+                        Box(weightModifier) { it() }
+                    }
+                    repeat(columns - it.size) {
+                        Spacer(weightModifier)
                     }
                 }
             }

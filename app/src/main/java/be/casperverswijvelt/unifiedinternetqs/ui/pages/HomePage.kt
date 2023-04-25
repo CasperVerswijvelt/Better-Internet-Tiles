@@ -141,9 +141,12 @@ fun HomePage() {
                 }
             }
             Text(
-                modifier = Modifier.padding(start = 32.dp, top = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 16.dp),
                 text = stringResource(id = R.string.available_tiles),
-
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
             )
             TileOverview()
         }
@@ -152,7 +155,6 @@ fun HomePage() {
 
 @Composable
 fun TileOverview () {
-
     val context = LocalContext.current
     val showDialog: (Dialog) -> Unit = {}
     val localConfig = LocalConfiguration.current
@@ -182,8 +184,9 @@ fun TileOverview () {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        columns = floor(localConfig.screenWidthDp / 170f).toInt(),
-        spacing = 8.dp,
+        columns = floor(localConfig.screenWidthDp / 200f).toInt(),
+        horizontalSpacing = 8.dp,
+        verticalSpacing = 20.dp,
         content = tileBehaviours.map {
             { LiveTileWithButtons(tileBehaviour = it) }
         }
@@ -201,21 +204,23 @@ fun LiveTileWithButtons(
     val tileAdded = stringResource(R.string.tile_added)
     val tileAlreadyAdded = stringResource(R.string.tile_already_added)
     var android13ModalOpen by remember { mutableStateOf(false) }
-    Row(
-        modifier = modifier.fillMaxHeight(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        LiveTile(
-            modifier = Modifier.weight(1f),
-            tileBehaviour = tileBehaviour
-        )
-        Column(
+        Row(
             modifier = Modifier
-                .height(tileHeight)
-                .wrapContentWidth(),
-            verticalArrangement = Arrangement.Bottom
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-
+            Text(
+                modifier = Modifier.weight(1f).padding(start = 16.dp),
+                text = tileBehaviour.tileName,
+                fontSize = 14.sp,
+                overflow = TextOverflow.Ellipsis,
+                softWrap = false
+            )
             LiveTileExtraButton(
                 onClick = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -260,9 +265,15 @@ fun LiveTileWithButtons(
                 },
                 icon = Icons.Filled.Add
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            LiveTileExtraButton(onClick = {}, icon = Icons.Filled.Settings)
+            LiveTileExtraButton(
+                onClick = {},
+                icon = Icons.Filled.Settings
+            )
         }
+
+        LiveTile(
+            tileBehaviour = tileBehaviour
+        )
     }
     if (android13ModalOpen) {
         AlertDialog(
@@ -356,11 +367,11 @@ val tileHeight = 80.dp
 @Composable
 fun buttonBackgroundColor(): State<Color> {
     val darkTheme = isSystemInDarkTheme()
-    val colorState = remember { mutableStateOf(Color(0x000000)) }
+    val colorState = remember { mutableStateOf(Color(0xFF000000)) }
     var color by colorState
 
     LaunchedEffect(darkTheme) {
-        color = Color(if (darkTheme) 0x11ffffff else 0x11000000)
+        color = Color(if (darkTheme) 0x18ffffff else 0x18000000)
     }
     return colorState
 }
