@@ -3,6 +3,7 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Icon
+import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
@@ -84,6 +85,20 @@ class InternetTileBehaviour(
             }
 
             return tile
+        }
+    override val onLongClickIntentAction: String
+        get() {
+            return when {
+                getDataEnabled(context) -> {
+                    Settings.ACTION_NETWORK_OPERATOR_SETTINGS
+                }
+                getWifiEnabled(context) -> {
+                    Settings.ACTION_WIFI_SETTINGS
+                }
+                else -> {
+                    Settings.ACTION_WIRELESS_SETTINGS
+                }
+            }
         }
 
     override fun onClick() {

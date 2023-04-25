@@ -17,7 +17,7 @@ class LongPressReceiverActivity : Activity() {
             intent?.getParcelableExtra(Intent.EXTRA_COMPONENT_NAME)
 
         val intent = Intent(
-            // TODO: Move logic to TileBehaviour implementations
+            // TODO: use 'onLongClickIntentAction' property on TileBehaviour
             when (qsTile?.className) {
                 InternetTileService::class.java.name -> {
                     when {

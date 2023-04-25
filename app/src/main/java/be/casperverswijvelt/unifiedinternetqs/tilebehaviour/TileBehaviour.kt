@@ -25,6 +25,7 @@ abstract class TileBehaviour(
     abstract val defaultIcon: Icon
     abstract val tileServiceClass: Class<TileService>
     abstract val tileState: TileState
+    abstract val onLongClickIntentAction: String
 
     abstract fun onClick()
 

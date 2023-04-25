@@ -3,6 +3,7 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Icon
+import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
@@ -61,6 +62,8 @@ class AirplaneModeTileBehaviour(
             }
             return tile
         }
+    override val onLongClickIntentAction: String
+        get() = Settings.ACTION_AIRPLANE_MODE_SETTINGS
 
     override fun onClick() {
         log("onClick")

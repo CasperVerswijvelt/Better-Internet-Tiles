@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.StatusBarManager
 import android.content.ComponentName
+import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -12,9 +13,11 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -347,6 +350,7 @@ fun LiveTile(
     tileBehaviour: TileBehaviour
 ) {
     var tileState by remember { mutableStateOf(tileBehaviour.tileState) }
+    val context = LocalContext.current
 
     Tile(
         modifier = modifier,
@@ -357,6 +361,9 @@ fun LiveTile(
         unavailable = tileState.state == android.service.quicksettings.Tile.STATE_UNAVAILABLE,
         onClick = {
             tileBehaviour.onClick()
+        },
+        onLongClick = {
+            context.startActivity(Intent(tileBehaviour.onLongClickIntentAction))
         }
     )
 
@@ -387,6 +394,7 @@ fun buttonBackgroundColor(): State<Color> {
     return colorState
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tile(
     modifier: Modifier = Modifier,
@@ -395,7 +403,8 @@ fun Tile(
     active: Boolean = true,
     unavailable: Boolean = false,
     subTitle: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {}
 ) {
     val darkTheme = isSystemInDarkTheme()
     val scheme = MaterialTheme.colorScheme
@@ -426,7 +435,10 @@ fun Tile(
             .clip(RoundedCornerShape(30.dp))
             .alpha(alpha)
             .conditional(!unavailable) {
-                clickable { onClick() }
+                combinedClickable(
+                    onClick = { onClick() },
+                    onLongClick = { onLongClick() }
+                )
             }
             .background(bgColor)
             .padding(start = 17.dp, end = 25.dp)
