@@ -73,13 +73,16 @@ abstract class ReportingTileService: TileService() {
         tileBehaviour.onClick()
     }
 
-    protected fun syncTile() {
+    private fun syncTile() {
         qsTile?.let {
-            val tileState = tileBehaviour.getTileState()
+            val tileState = tileBehaviour.tileState
             it.label = tileState.label
             it.subtitle = tileState.subtitle
             it.state = tileState.state
-            it.icon = Icon.createWithResource(applicationContext, tileState.icon)
+            it.icon = Icon.createWithResource(
+                applicationContext,
+                tileState.icon
+            )
             it.updateTile()
         }
     }

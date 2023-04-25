@@ -3,6 +3,8 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.drawable.Icon
+import android.service.quicksettings.TileService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.flow.first
@@ -14,22 +16,25 @@ abstract class TileBehaviour(
     protected val unlockAndRun: (Runnable) -> Unit = { it.run() }
 ) {
 
-    protected val preferences = BITPreferences(context)
+    private val preferences = BITPreferences(context)
     protected val resources: Resources = context.resources
 
     private val updateTileListeners = arrayListOf<(TileState) -> Unit>()
 
-    abstract fun onClick()
-    abstract fun getTileState() : TileState
+    abstract val tileName: String
+    abstract val defaultIcon: Icon
+    abstract val tileServiceClass: Class<TileService>
+    abstract val tileState: TileState
 
-    protected fun getRequiresUnlock(): Boolean {
-        return runBlocking {
+    abstract fun onClick()
+
+    val requiresUnlock: Boolean
+        get() = runBlocking {
             preferences.getRequireUnlock.first()
         }
-    }
 
     fun updateTile() {
-        updateTileListeners.forEach { it(getTileState()) }
+        updateTileListeners.forEach { it(tileState) }
     }
 
     fun addUpdateTileListeners(listener: (TileState) -> Unit) {

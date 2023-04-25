@@ -2,10 +2,13 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
+import android.service.quicksettings.TileService
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
+import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getNFCEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
@@ -22,6 +25,45 @@ class NFCTileBehaviour(
         private const val TAG = "NFCTileBehaviour"
     }
 
+    override val tileName: String
+        get() = resources.getString(R.string.nfc)
+    override val defaultIcon: Icon
+        get() = Icon.createWithResource(
+            context,
+            R.drawable.nfc_24
+        )
+    @Suppress("UNCHECKED_CAST")
+    override val tileServiceClass: Class<TileService>
+        get() = NFCTileService::class.java as Class<TileService>
+
+    override val tileState: TileState
+        get() {
+            val tile = TileState()
+            val nfcEnabled = getNFCEnabled(context)
+
+            tile.icon = R.drawable.nfc_24
+            tile.label = resources.getString(R.string.nfc)
+
+            if ((nfcEnabled && !TileSyncService.isTurningOffNFC) || TileSyncService.isTurningOnNFC) {
+
+                if (nfcEnabled) TileSyncService.isTurningOnNFC = false
+
+                tile.state = Tile.STATE_ACTIVE
+                tile.subtitle =
+                    if (TileSyncService.isTurningOnNFC) resources.getString(R.string.turning_on) else resources.getString(
+                        R.string.on
+                    )
+
+            } else {
+
+                if (!nfcEnabled) TileSyncService.isTurningOffNFC = false
+
+                tile.state = Tile.STATE_INACTIVE
+                tile.subtitle = resources.getString(R.string.off)
+            }
+            return tile
+        }
+
     override fun onClick() {
         log("onClick")
 
@@ -34,38 +76,11 @@ class NFCTileBehaviour(
             return
         }
 
-        if (getRequiresUnlock()) {
+        if (requiresUnlock) {
             unlockAndRun { toggleNFC() }
         } else {
             toggleNFC()
         }
-    }
-
-    override fun getTileState(): TileState {
-        val tile = TileState()
-        val nfcEnabled = getNFCEnabled(context)
-
-        tile.icon = R.drawable.nfc_24
-        tile.label = resources.getString(R.string.nfc)
-
-        if ((nfcEnabled && !TileSyncService.isTurningOffNFC) || TileSyncService.isTurningOnNFC) {
-
-            if (nfcEnabled) TileSyncService.isTurningOnNFC = false
-
-            tile.state = Tile.STATE_ACTIVE
-            tile.subtitle =
-                if (TileSyncService.isTurningOnNFC) resources.getString(R.string.turning_on) else resources.getString(
-                    R.string.on
-                )
-
-        } else {
-
-            if (!nfcEnabled) TileSyncService.isTurningOffNFC = false
-
-            tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = resources.getString(R.string.off)
-        }
-        return tile
     }
 
     private fun toggleNFC() {

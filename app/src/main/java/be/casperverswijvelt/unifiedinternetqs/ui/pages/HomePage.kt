@@ -192,67 +192,78 @@ fun TileOverview () {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T>QuickAddTile(
+fun LiveTileWithButtons(
     modifier: Modifier = Modifier,
-    iconId: Int,
-    title: String,
-    subTitle: String? = null,
-    enabled: Boolean,
-    serviceClass: Class<T>
+    tileBehaviour: TileBehaviour
 ) {
     val context = LocalContext.current
     val errorText = stringResource(R.string.tile_added_error)
     val tileAdded = stringResource(R.string.tile_added)
     val tileAlreadyAdded = stringResource(R.string.tile_already_added)
     var android13ModalOpen by remember { mutableStateOf(false) }
-    Tile(
-        modifier = modifier,
-        onClick = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                ContextCompat.getSystemService(
-                    context,
-                    StatusBarManager::class.java
-                )?.requestAddTileService(
-                    ComponentName(
-                        context,
-                        serviceClass,
-                    ),
-                    title,
-                    android.graphics.drawable.Icon.createWithResource(context, iconId),
-                    { Handler(Looper.getMainLooper()).post(it) },
-                    {
-                        val text = when(it) {
-                            StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ADDED -> {
-                                tileAdded
-                            }
-                            StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED -> {
-                                tileAlreadyAdded
-                            }
-                            StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_NOT_ADDED -> {
-                                ""
-                            }
-                            else -> {
-                                errorText
-                            }
-                        }
-                        if(text.isNotEmpty()) {
-                            Toast.makeText(
+    Row(
+        modifier = modifier.fillMaxHeight(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        LiveTile(
+            modifier = Modifier.weight(1f),
+            tileBehaviour = tileBehaviour
+        )
+        Column(
+            modifier = Modifier
+                .height(tileHeight)
+                .wrapContentWidth(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+
+            LiveTileExtraButton(
+                onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        ContextCompat.getSystemService(
+                            context,
+                            StatusBarManager::class.java
+                        )?.requestAddTileService(
+                            ComponentName(
                                 context,
-                                text,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                                tileBehaviour.tileServiceClass
+                            ),
+                            tileBehaviour.tileName,
+                            tileBehaviour.defaultIcon,
+                            { Handler(Looper.getMainLooper()).post(it) },
+                            {
+                                val text = when(it) {
+                                    StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ADDED -> {
+                                        tileAdded
+                                    }
+                                    StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED -> {
+                                        tileAlreadyAdded
+                                    }
+                                    StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_NOT_ADDED -> {
+                                        ""
+                                    }
+                                    else -> {
+                                        errorText
+                                    }
+                                }
+                                if(text.isNotEmpty()) {
+                                    Toast.makeText(
+                                        context,
+                                        text,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        )
+                    } else {
+                        android13ModalOpen = true
                     }
-                )
-            } else {
-                android13ModalOpen = true
-            }
-        },
-        iconId = iconId,
-        title = title,
-        subTitle = subTitle,
-        enabled = enabled
-    )
+                },
+                icon = Icons.Filled.Add
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            LiveTileExtraButton(onClick = {}, icon = Icons.Filled.Settings)
+        }
+    }
     if (android13ModalOpen) {
         AlertDialog(
             onDismissRequest = { android13ModalOpen = false }
@@ -288,33 +299,6 @@ fun <T>QuickAddTile(
 }
 
 @Composable
-fun LiveTileWithButtons(
-    modifier: Modifier = Modifier,
-    tileBehaviour: TileBehaviour
-) {
-    Row(
-        modifier = modifier.fillMaxHeight(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        LiveTile(
-            modifier = Modifier.weight(1f),
-            tileBehaviour = tileBehaviour
-        )
-        Column(
-            modifier = Modifier
-                .height(tileHeight)
-                .wrapContentWidth(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-
-            LiveTileExtraButton(onClick = {}, icon = Icons.Filled.Add)
-            Spacer(modifier = Modifier.height(4.dp))
-            LiveTileExtraButton(onClick = {}, icon = Icons.Filled.Settings)
-        }
-    }
-}
-
-@Composable
 fun LiveTileExtraButton(
     onClick: () -> Unit,
     icon: ImageVector
@@ -341,9 +325,7 @@ fun LiveTile(
     modifier: Modifier = Modifier,
     tileBehaviour: TileBehaviour
 ) {
-    var tileState by remember {
-        mutableStateOf(tileBehaviour.getTileState())
-    }
+    var tileState by remember { mutableStateOf(tileBehaviour.tileState) }
 
     Tile(
         modifier = modifier,
