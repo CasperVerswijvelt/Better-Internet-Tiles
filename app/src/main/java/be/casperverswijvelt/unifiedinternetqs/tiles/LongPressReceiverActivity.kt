@@ -17,6 +17,7 @@ class LongPressReceiverActivity : Activity() {
             intent?.getParcelableExtra(Intent.EXTRA_COMPONENT_NAME)
 
         val intent = Intent(
+            // TODO: Move logic to TileBehaviour implementations
             when (qsTile?.className) {
                 InternetTileService::class.java.name -> {
                     when {
@@ -39,6 +40,9 @@ class LongPressReceiverActivity : Activity() {
                 }
                 NFCTileService::class.java.name -> {
                     Settings.ACTION_NFC_SETTINGS
+                }
+                AirplaneModeTileService::class.java.name -> {
+                    Settings.ACTION_AIRPLANE_MODE_SETTINGS
                 }
                 else -> Settings.ACTION_WIRELESS_SETTINGS
             }
