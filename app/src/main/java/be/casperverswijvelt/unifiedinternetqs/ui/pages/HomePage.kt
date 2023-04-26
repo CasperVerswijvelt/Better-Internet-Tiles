@@ -385,13 +385,11 @@ val tileHeight = 80.dp
 @Composable
 fun buttonBackgroundColor(): State<Color> {
     val darkTheme = isSystemInDarkTheme()
-    val colorState = remember { mutableStateOf(Color(0xFF000000)) }
-    var color by colorState
+    return object : State<Color> {
+        override val value: Color
+            get() = Color(if (darkTheme) 0x18ffffff else 0x18000000)
 
-    LaunchedEffect(darkTheme) {
-        color = Color(if (darkTheme) 0x18ffffff else 0x18000000)
     }
-    return colorState
 }
 
 @OptIn(ExperimentalFoundationApi::class)
