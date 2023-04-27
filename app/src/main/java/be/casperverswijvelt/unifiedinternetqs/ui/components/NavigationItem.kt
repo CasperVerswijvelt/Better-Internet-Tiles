@@ -17,21 +17,29 @@ sealed class NavigationItem(
     var titleId: Int
     ) {
     object Home: NavigationItem(
-        "home",
+        NavRoute.Home.route,
         Icons.Outlined.Home,
         Icons.Filled.Home,
         R.string.home
     )
     object Settings: NavigationItem(
-        "settings",
+        NavRoute.SettingsBase.route,
         Icons.Outlined.Settings,
         Icons.Filled.Settings,
         R.string.settings
     )
     object Info: NavigationItem(
-        "about",
+        NavRoute.Info.route,
         Icons.Outlined.Info,
         Icons.Filled.Info,
         R.string.about
     )
+}
+
+enum class NavRoute(val route: String) {
+    Home("home"),
+    Settings("settings"),
+    SettingsBase("settings/base"),
+    SettingsShell("settings/shell"),
+    Info("info"),
 }

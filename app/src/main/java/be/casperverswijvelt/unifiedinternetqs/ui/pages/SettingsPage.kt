@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.pages
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
@@ -8,68 +7,38 @@ import android.os.Build
 import android.provider.Settings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
 import be.casperverswijvelt.unifiedinternetqs.ui.components.LargeTopBarPage
+import be.casperverswijvelt.unifiedinternetqs.ui.components.NavRoute
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.TogglePreferenceEntry
-import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
-import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@ExperimentalMaterial3Api
 @Composable
-fun SettingsPage() {
+fun SettingsPage(
+    navController: NavController
+) {
 
     val context = LocalContext.current
-    val dataStore = BITPreferences(context)
-    val shellMethod by dataStore.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
-    val coroutineScope = rememberCoroutineScope()
+    val preferences = BITPreferences(context)
+    val shellMethod by preferences.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
 
-    val navController = rememberNavController()
-    
-    NavHost(navController = navController, startDestination = "settings") {
-        composable("settings") {
-            BaseSettings (
-                shellMethod = shellMethod,
-                onShellMethodClicked = {
-                    navController.navigate("shell_method")
-                }
-            )
+    BaseSettings (
+        shellMethod = shellMethod,
+        onShellMethodClicked = {
+            navController.navigate(NavRoute.SettingsShell.route)
         }
-        composable("shell_method") {
-            ShellMethodPage (
-                shellMethod = shellMethod,
-                onShellMethodSelected = {
-                    coroutineScope.launch {
-                        dataStore.setShellMethod(it)
-                    }
-                    when (it) {
-                        ShellMethod.SHIZUKU -> {
-                            ShizukuUtil.requestShizukuPermission { }
-                        }
-                        ShellMethod.ROOT -> {
-                            Shell.getShell()
-                        }
-                        ShellMethod.AUTO -> { }
-                    }
-                },
-                onBackClicked = {
-                    navController.popBackStack()
-                }
-            )
-        }
-    }
+    )
 }
 
 @Composable

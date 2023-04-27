@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package be.casperverswijvelt.unifiedinternetqs.ui
 
 import android.annotation.SuppressLint
@@ -23,15 +21,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
+import be.casperverswijvelt.unifiedinternetqs.ui.components.NavRoute
 import be.casperverswijvelt.unifiedinternetqs.ui.components.NavigationItem
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.HomePage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.InfoPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.SettingsPage
+import be.casperverswijvelt.unifiedinternetqs.ui.pages.ShellMethodPage
 
 class MainActivity : ComponentActivity() {
 
@@ -97,17 +100,16 @@ fun App() {
         }) {
         Box(Modifier.padding(it)) {
             NavHost(
-                navController = navController, startDestination = NavigationItem.Home.route
+                navController = navController,
+                startDestination = NavRoute.Home.route
             ) {
-                composable(NavigationItem.Home.route) {
+                composable(NavRoute.Home.route) {
                     HomePage()
                 }
-                composable(NavigationItem.Settings.route) {
-                    SettingsPage()
-                }
-                composable(NavigationItem.Info.route) {
+                composable(NavRoute.Info.route) {
                     InfoPage()
                 }
+                settingsGraph(navController)
             }
         }
     }
@@ -127,7 +129,9 @@ fun BottomNavigationBar(
         val currentRoute = navBackStackEntry?.destination?.route
 
         items.forEach { item ->
-            val selected by derivedStateOf { currentRoute == item.route }
+            val selected by derivedStateOf {
+                currentRoute?.split("/")?.getOrNull(0) == item.route.split("/")?.getOrNull(0)
+            }
             val title = stringResource(item.titleId)
             NavigationBarItem(
                 icon = {
@@ -139,15 +143,32 @@ fun BottomNavigationBar(
                 label = { Text(title) },
                 selected = selected,
                 onClick = {
+                    println(item.route)
                     navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
                         launchSingleTop = true
                         restoreState = true
                     }
+                }
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.settingsGraph(navController: NavController) {
+    navigation(
+        route = NavRoute.Settings.route,
+        startDestination = NavRoute.SettingsBase.route
+    ) {
+        composable(NavRoute.SettingsBase.route) {
+            SettingsPage(navController)
+        }
+        composable(NavRoute.SettingsShell.route) {
+            ShellMethodPage (
+                onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }
