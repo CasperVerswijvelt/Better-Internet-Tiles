@@ -279,7 +279,13 @@ fun LiveTileWithButtons(
                 icon = Icons.Filled.Add
             )
             LiveTileExtraButton(
-                onClick = {},
+                onClick = {
+                    Toast.makeText(
+                        context,
+                        "Coming soon",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
                 icon = Icons.Filled.Settings
             )
         }
