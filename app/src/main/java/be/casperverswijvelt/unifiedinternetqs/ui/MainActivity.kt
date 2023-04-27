@@ -143,13 +143,14 @@ fun BottomNavigationBar(
                 label = { Text(title) },
                 selected = selected,
                 onClick = {
-                    println(item.route)
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    if (navController.currentDestination?.route != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
