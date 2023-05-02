@@ -3,6 +3,7 @@ package be.casperverswijvelt.unifiedinternetqs.util
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -46,36 +47,41 @@ const val TAG = "Util"
 
 fun getDataEnabled(context: Context): Boolean {
 
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE)
-                as ConnectivityManager
-
     var mobileDataEnabled = false
 
-    // Get mobile data enabled state
-    try {
-        val cmClass = Class.forName(connectivityManager.javaClass.name)
-        val method: Method = cmClass.getDeclaredMethod("getMobileDataEnabled")
-        method.isAccessible = true // Make the method callable
-        // get the setting for "mobile data"
-        mobileDataEnabled = method.invoke(connectivityManager) as Boolean
-    } catch (e: Exception) {
-        // Empty
+    (context.getSystemService(
+        Context.CONNECTIVITY_SERVICE
+    ) as? ConnectivityManager)?.let {
+        // Get mobile data enabled state
+        try {
+            val cmClass = Class.forName(it.javaClass.name)
+            val method: Method = cmClass.getDeclaredMethod("getMobileDataEnabled")
+            method.isAccessible = true // Make the method callable
+            // get the setting for "mobile data"
+            mobileDataEnabled = method.invoke(it) as Boolean
+        } catch (e: Exception) {
+            // Empty
+        }
     }
-
     return mobileDataEnabled
 }
 
 fun getWifiEnabled(context: Context): Boolean {
 
-    return (context.getSystemService(Context.WIFI_SERVICE) as WifiManager)
-        .isWifiEnabled
+    return (context.getSystemService(Context.WIFI_SERVICE) as? WifiManager)
+        ?.isWifiEnabled ?: false
 }
 
 fun getNFCEnabled(context: Context): Boolean {
 
-    return (context.getSystemService(Context.NFC_SERVICE) as NfcManager)
-        .defaultAdapter?.isEnabled ?: false
+    return (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)
+        ?.defaultAdapter?.isEnabled ?: false
+}
+
+fun getBluetoothEnabled(context: Context): Boolean {
+
+    return (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)
+        ?.adapter?.isEnabled ?: false
 }
 
 fun getAirplaneModeEnabled(context: Context): Boolean {

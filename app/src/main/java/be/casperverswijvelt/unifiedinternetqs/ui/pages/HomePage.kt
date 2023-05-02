@@ -74,6 +74,7 @@ import androidx.core.content.ContextCompat
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.BluetoothTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
@@ -185,6 +186,10 @@ fun TileOverview () {
                 showDialog = showDialog
             ),
             NFCTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            BluetoothTileBehaviour(
                 context = context,
                 showDialog = showDialog
             )

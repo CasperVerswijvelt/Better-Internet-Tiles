@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -18,12 +19,14 @@ import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.BluetoothTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tiles.AirplaneModeTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.BluetoothTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -53,6 +56,9 @@ class TileSyncService: Service() {
 
         var isTurningOnAirplaneMode = false
         var isTurningOffAirplaneMode = false
+
+        var isTurningOnBluetooth = false
+        var isTurningOffBluetooth = false
 
         private val behaviourListeners = arrayListOf<TileBehaviour>()
 
@@ -103,6 +109,13 @@ class TileSyncService: Service() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == NfcAdapter.ACTION_ADAPTER_STATE_CHANGED) {
                 updateNFCTile()
+            }
+        }
+    }
+    private val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
+                updateBluetoothTile()
             }
         }
     }
@@ -160,6 +173,10 @@ class TileSyncService: Service() {
             nfcReceiver,
             IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
         )
+        registerReceiver(
+            bluetoothReceiver,
+            IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        )
 
         updateWifiTile()
         updateMobileDataTile()
@@ -200,6 +217,11 @@ class TileSyncService: Service() {
     private fun updateAirplaneModeTile() {
         requestListeningState(AirplaneModeTileService::class.java)
         requestTileBehaviourUpdate(AirplaneModeTileBehaviour::class.java)
+    }
+
+    private fun updateBluetoothTile() {
+        requestListeningState(BluetoothTileService::class.java)
+        requestTileBehaviourUpdate(BluetoothTileBehaviour::class.java)
     }
 
     private fun <T>requestListeningState(cls: Class<T>) {

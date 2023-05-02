@@ -81,4 +81,5 @@
     <string name="root" translatable="false">Root</string>
     <string name="auto" translatable="false">Auto</string>
     <string name="ok">Ok</string>
+    <string name="bluetooth" translatable="false">Bluetooth</string>
 </resources>
