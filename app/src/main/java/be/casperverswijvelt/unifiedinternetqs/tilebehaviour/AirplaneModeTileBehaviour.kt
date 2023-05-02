@@ -43,12 +43,12 @@ class AirplaneModeTileBehaviour(
             val airplaneModeEnabled = getAirplaneModeEnabled(context)
 
             tile.label = resources.getString(R.string.airplane_mode)
+            tile.icon = R.drawable.baseline_airplanemode_active_24
 
             if ((airplaneModeEnabled && !TileSyncService.isTurningOffAirplaneMode) || TileSyncService.isTurningOnAirplaneMode) {
 
                 if (airplaneModeEnabled) TileSyncService.isTurningOnAirplaneMode = false
 
-                tile.icon = R.drawable.baseline_airplanemode_active_24
                 tile.state = Tile.STATE_ACTIVE
                 tile.subtitle = resources.getString(R.string.on)
 
@@ -56,7 +56,6 @@ class AirplaneModeTileBehaviour(
 
                 if (!airplaneModeEnabled) TileSyncService.isTurningOffAirplaneMode = false
 
-                tile.icon = R.drawable.baseline_airplanemode_inactive_24
                 tile.state = Tile.STATE_INACTIVE
                 tile.subtitle = resources.getString(R.string.off)
             }
