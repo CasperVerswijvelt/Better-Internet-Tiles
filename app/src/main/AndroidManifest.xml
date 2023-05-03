@@ -127,6 +127,19 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".tiles.BluetoothTileService"
+            android:icon="@drawable/baseline_bluetooth_24"
+            android:label="@string/bluetooth"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".tiles.LongPressReceiverActivity"
             android:excludeFromRecents="true"

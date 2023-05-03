@@ -44,6 +44,9 @@ class LongPressReceiverActivity : Activity() {
                 AirplaneModeTileService::class.java.name -> {
                     Settings.ACTION_AIRPLANE_MODE_SETTINGS
                 }
+                BluetoothTileService::class.java.name -> {
+                    Settings.ACTION_BLUETOOTH_SETTINGS
+                }
                 else -> Settings.ACTION_WIRELESS_SETTINGS
             }
         )
