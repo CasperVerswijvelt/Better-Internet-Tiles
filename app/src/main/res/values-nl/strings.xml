@@ -51,4 +51,5 @@
     <string name="language">Taal</string>
     <string name="tile_added">Tile toegevoegd</string>
     <string name="tile_already_added">Tile reeds toegevoegd</string>
+    <string name="battery">batterij</string>
 </resources>

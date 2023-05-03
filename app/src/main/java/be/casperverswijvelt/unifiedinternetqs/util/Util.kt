@@ -370,6 +370,14 @@ fun grantReadPhoneState(context: Context, callback: ((Shell.Result?) -> Unit)? =
     )
 }
 
+fun grantBluetoothConnect(context: Context, callback: ((Shell.Result?) -> Unit)? = {}) {
+    return executeShellCommandAsync(
+        context = context,
+        command = "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.BLUETOOTH_CONNECT}",
+        callback = callback,
+    )
+}
+
 // Analytics
 
 class Analytics {

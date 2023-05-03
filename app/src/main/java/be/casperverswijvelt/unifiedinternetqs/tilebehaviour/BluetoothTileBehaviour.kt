@@ -49,12 +49,20 @@ class BluetoothTileBehaviour(
 
                 if (bluetoothEnabled) TileSyncService.isTurningOnBluetooth = false
 
-                tile.state = Tile.STATE_ACTIVE
-                tile.subtitle =
-                    if (TileSyncService.isTurningOnBluetooth) resources.getString(R.string.turning_on) else resources.getString(
-                        R.string.on
-                    )
+                val connectedDevice = TileSyncService.connectedBluetoothName
 
+                tile.state = Tile.STATE_ACTIVE
+                tile.label = if (connectedDevice.isNullOrEmpty())
+                    resources.getString(R.string.bluetooth)
+                else
+                    connectedDevice
+                tile.subtitle =
+                    if (TileSyncService.isTurningOnBluetooth)
+                        resources.getString(R.string.turning_on)
+                    else
+                        resources.getString(R.string.on)
+                if (!connectedDevice.isNullOrEmpty())
+                    tile.icon = R.drawable.baseline_bluetooth_connected_24
             } else {
 
                 if (!bluetoothEnabled) TileSyncService.isTurningOffBluetooth = false

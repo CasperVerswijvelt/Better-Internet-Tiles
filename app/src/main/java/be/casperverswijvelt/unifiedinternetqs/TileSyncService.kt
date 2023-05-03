@@ -1,20 +1,27 @@
 package be.casperverswijvelt.unifiedinternetqs
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
+import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.TileService
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
@@ -35,6 +42,7 @@ import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import be.casperverswijvelt.unifiedinternetqs.util.getConnectedWifiSSID
 import be.casperverswijvelt.unifiedinternetqs.util.getLastConnectedWifi
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
+import be.casperverswijvelt.unifiedinternetqs.util.grantBluetoothConnect
 import be.casperverswijvelt.unifiedinternetqs.util.setLastConnectedWifi
 
 class TileSyncService: Service() {
@@ -59,6 +67,8 @@ class TileSyncService: Service() {
 
         var isTurningOnBluetooth = false
         var isTurningOffBluetooth = false
+
+        var connectedBluetoothName: String? = null
 
         private val behaviourListeners = arrayListOf<TileBehaviour>()
 
@@ -114,11 +124,20 @@ class TileSyncService: Service() {
     }
     private val bluetoothReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            when(intent?.action) {
+                BluetoothAdapter.ACTION_STATE_CHANGED,
+                BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
+                    syncConnectedBluetoothDevice()
+                    updateBluetoothTile()
+                }
+            }
             if (intent?.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
                 updateBluetoothTile()
             }
         }
     }
+
+    private var bluetoothProfile: BluetoothProfile? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         Log.d(TAG,"onBind")
@@ -173,15 +192,69 @@ class TileSyncService: Service() {
             nfcReceiver,
             IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
         )
+        val btIntentFilter = IntentFilter()
+        btIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        btIntentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
         registerReceiver(
             bluetoothReceiver,
-            IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+            btIntentFilter
         )
+
+        (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter.getProfileProxy(
+            applicationContext,
+            object : BluetoothProfile.ServiceListener {
+                override fun onServiceConnected(profile: Int, bluetoothProfile: BluetoothProfile?) {
+                    Log.d(TAG, "Bluetooth profile proxy connected")
+                    this@TileSyncService.bluetoothProfile = bluetoothProfile
+                    syncConnectedBluetoothDevice()
+                    updateBluetoothTile()
+                }
+
+                override fun onServiceDisconnected(p0: Int) {
+                    Log.d(TAG, "Bluetooth profile proxy disconnected")
+                    this@TileSyncService.bluetoothProfile = null
+                    syncConnectedBluetoothDevice()
+                    updateBluetoothTile()
+                }
+            },
+            BluetoothProfile.HEADSET
+        )
+
+        // If bluetooth connect permission is not granted, grant it using shell
+        //  command
+        if (
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.READ_PHONE_STATE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            grantBluetoothConnect(applicationContext)
+        }
 
         updateWifiTile()
         updateMobileDataTile()
         updateInternetTile()
         updateNFCTile()
+    }
+
+    fun syncConnectedBluetoothDevice() {
+        val hasBluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+        } else true
+
+        connectedBluetoothName = null
+
+        if (hasBluetoothPermission) {
+            bluetoothProfile?.connectedDevices?.getOrNull(0)?.let { device ->
+                connectedBluetoothName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    device.alias
+                else
+                    device.name
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -192,6 +265,7 @@ class TileSyncService: Service() {
         cellularChangeListener.stopListening(applicationContext)
         unregisterReceiver(airplaneModeReceiver)
         unregisterReceiver(nfcReceiver)
+        unregisterReceiver(bluetoothReceiver)
     }
 
     private fun updateWifiTile() {
