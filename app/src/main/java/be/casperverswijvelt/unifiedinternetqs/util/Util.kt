@@ -362,20 +362,20 @@ fun hasShellAccess(context: Context? = null): Boolean {
     return Shell.isAppGrantedRoot() == true || ShizukuUtil.hasShizukuPermission()
 }
 
-fun grantReadPhoneState(context: Context, callback: ((Shell.Result?) -> Unit)? = {}) {
+fun grantReadPhoneState(context: Context) {
     return executeShellCommandAsync(
         context = context,
-        command = "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}",
-        callback = callback,
+        command = "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.READ_PHONE_STATE}"
     )
 }
 
-fun grantBluetoothConnect(context: Context, callback: ((Shell.Result?) -> Unit)? = {}) {
-    return executeShellCommandAsync(
-        context = context,
-        command = "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.BLUETOOTH_CONNECT}",
-        callback = callback,
-    )
+fun grantBluetoothConnect(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        executeShellCommandAsync(
+            context = context,
+            command = "pm grant ${BuildConfig.APPLICATION_ID} ${Manifest.permission.BLUETOOTH_CONNECT}"
+        )
+    }
 }
 
 // Analytics
