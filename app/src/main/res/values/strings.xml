@@ -83,4 +83,6 @@
     <string name="ok">Ok</string>
     <string name="bluetooth" translatable="false">Bluetooth</string>
     <string name="battery">battery</string>
+    <string name="donate">Donate</string>
+    <string name="donate_summarry">Show your support via a donation</string>
 </resources>

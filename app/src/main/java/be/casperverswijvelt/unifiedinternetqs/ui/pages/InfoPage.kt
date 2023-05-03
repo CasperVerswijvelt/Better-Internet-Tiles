@@ -37,7 +37,7 @@ fun InfoPage() {
 
         PreferenceEntry(
             icon = {
-                DrawableIcon(R.drawable.ic_baseline_feedback_24)
+                DrawableIcon(R.drawable.feedback)
             },
             title = stringResource(R.string.feedback_title)
         ) {
@@ -46,7 +46,7 @@ fun InfoPage() {
 
         PreferenceEntry(
             icon = {
-                DrawableIcon(R.drawable.github_24)
+                DrawableIcon(R.drawable.github)
             },
             title = stringResource(R.string.github_title)
         ) {
@@ -80,6 +80,16 @@ fun InfoPage() {
             subTitle = stringResource(R.string.restart_app_summary)
         ) {
             ProcessPhoenix.triggerRebirth(context)
+        }
+
+        PreferenceEntry(
+            icon = {
+                DrawableIcon(R.drawable.donate)
+            },
+            title = stringResource(R.string.donate),
+            subTitle = stringResource(R.string.donate_summarry)
+        ) {
+            uriHandler.openUri("https://ko-fi.com/casperverswijvelt")
         }
 
         PreferenceEntry(

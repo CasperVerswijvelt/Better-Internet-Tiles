@@ -52,4 +52,6 @@
     <string name="tile_added">Tile toegevoegd</string>
     <string name="tile_already_added">Tile reeds toegevoegd</string>
     <string name="battery">batterij</string>
+    <string name="donate">Doneer</string>
+    <string name="donate_summarry">Toon je steun via een vrijblijvende donatie</string>
 </resources>
