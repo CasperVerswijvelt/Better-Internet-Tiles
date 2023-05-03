@@ -87,6 +87,9 @@ fun BaseSettings(
             }
         }
         PreferenceEntry(
+            icon = {
+                DrawableIcon(R.drawable.terminal)
+            },
             title = stringResource(R.string.shell_method),
             subTitle = when (shellMethod) {
                 ShellMethod.SHIZUKU -> stringResource(id = R.string.shizuku)

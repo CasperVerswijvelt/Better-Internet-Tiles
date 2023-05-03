@@ -47,7 +47,7 @@ fun ShellMethodPage(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MediumTopAppBar(
-                title = { Text("Shell method") },
+                title = { Text(stringResource(id = R.string.shell_method)) },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = {
