@@ -85,4 +85,17 @@
     <string name="battery">battery</string>
     <string name="donate">Donate</string>
     <string name="donate_summarry">Show your support via a donation</string>
+
+    <string name="missing_permissions">Missing permissions</string>
+    <string name="missing_permissions_description">Some things might not work as expected. Expand for more info.</string>
+    <string name="shell" translatable="false">Shell</string>
+    <string name="shell_description">Shell access is needed to enable/disable certain system features, as well as reading out the current Wi-Fi SSID. You can use either root or Shizuku to do this.</string>
+    <string name="read_phone_state">Read phone state</string>
+    <string name="read_phone_state_description">The \'read phone state\' permission is required to read the mobile data connection info.</string>
+    <string name="bluetooth_connect">Bluetooth connect</string>
+    <string name="bluetooth_connect_description" >The \'bluetooth connect\' permission is required to read out the connected bluetooth device name.</string>
+    <plurals name="used_for_tiles">
+        <item quantity="one">Used for %1$s tile</item>
+        <item quantity="other">Used for %1$s tiles</item>
+    </plurals>
 </resources>

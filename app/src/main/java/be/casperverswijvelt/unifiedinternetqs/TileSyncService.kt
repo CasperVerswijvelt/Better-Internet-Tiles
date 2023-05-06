@@ -225,7 +225,7 @@ class TileSyncService: Service() {
         if (
             ContextCompat.checkSelfPermission(
                 applicationContext,
-                Manifest.permission.READ_PHONE_STATE
+                Manifest.permission.BLUETOOTH_CONNECT
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             grantBluetoothConnect(applicationContext)

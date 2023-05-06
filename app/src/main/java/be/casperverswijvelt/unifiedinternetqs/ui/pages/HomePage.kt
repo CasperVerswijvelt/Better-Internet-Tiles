@@ -22,7 +22,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -33,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
@@ -45,7 +45,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -81,6 +80,7 @@ import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.ui.components.PermissionVisualizer
 import be.casperverswijvelt.unifiedinternetqs.ui.components.VerticalGrid
 import be.casperverswijvelt.unifiedinternetqs.ui.components.conditional
 import kotlin.math.floor
@@ -110,44 +110,11 @@ fun HomePage() {
                 )
                 .verticalScroll(rememberScrollState())
         ) {
-            ElevatedCard(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.error
-                ),
+            PermissionVisualizer(
                 modifier = Modifier
-                    .padding(16.dp)
                     .fillMaxWidth()
-            ) {
-                Column (Modifier.padding(16.dp)) {
-
-                    Text(
-                        modifier = Modifier.padding(PaddingValues(bottom = 16.dp)),
-                        text = stringResource(R.string.about),
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(R.string.app_description_about)
-                    )
-                }
-            }
-            OutlinedCard(
-                Modifier
                     .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Column (Modifier.padding(16.dp)) {
-
-                    Text(
-                        modifier = Modifier.padding(PaddingValues(bottom = 16.dp)),
-                        text = stringResource(R.string.about),
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(R.string.app_description_about)
-                    )
-                }
-            }
+            )
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,13 +123,17 @@ fun HomePage() {
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
             )
-            TileOverview()
+            TileOverview(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
         }
     }
 }
 
 @Composable
-fun TileOverview () {
+fun TileOverview (modifier: Modifier) {
     val context = LocalContext.current
     val showDialog: (Dialog) -> Unit = {}
     val localConfig = LocalConfiguration.current
@@ -197,9 +168,7 @@ fun TileOverview () {
     }
 
     VerticalGrid(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = modifier,
         columns = floor(localConfig.screenWidthDp / 200f).toInt(),
         horizontalSpacing = 8.dp,
         verticalSpacing = 20.dp,

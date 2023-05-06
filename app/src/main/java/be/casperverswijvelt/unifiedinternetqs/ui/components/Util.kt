@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import be.casperverswijvelt.unifiedinternetqs.R
 
 @Composable
 fun PreferenceEntry(
@@ -176,8 +177,6 @@ fun ColorPalette () {
         MaterialTheme.colorScheme.outline,
         MaterialTheme.colorScheme.outlineVariant,
         MaterialTheme.colorScheme.scrim
-
-
     )
     colors.forEach {color ->
         Box(modifier = Modifier
@@ -185,4 +184,45 @@ fun ColorPalette () {
             .height(30.dp)
             .background(color))
     }
+}
+
+sealed class PermissionInfo (
+    val tileResourceId: Int,
+    val descriptionResourceId: Int,
+    val tiles: Array<Int> = arrayOf()
+) {
+    object Shell: PermissionInfo(
+        R.string.shell,
+        R.string.shell_description,
+        arrayOf(
+            R.string.wifi,
+            R.string.mobile_data,
+            R.string.internet,
+            R.string.airplane_mode,
+            R.string.nfc,
+            R.string.bluetooth,
+        )
+    )
+    object ReadPhoneState: PermissionInfo(
+        R.string.read_phone_state,
+        R.string.read_phone_state_description,
+        arrayOf(
+            R.string.mobile_data,
+            R.string.internet,
+        )
+    )
+    object BluetoothConnect: PermissionInfo(
+        R.string.bluetooth_connect,
+        R.string.bluetooth_connect_description,
+        arrayOf(
+            R.string.bluetooth
+        )
+    )
+}
+
+fun joinToString(texts: List<String>): String {
+    if (texts.isEmpty()) return ""
+    if (texts.size == 1) return texts[0]
+
+    return "${texts.dropLast(1).joinToString(separator = ", ")} and ${texts.last()}"
 }
