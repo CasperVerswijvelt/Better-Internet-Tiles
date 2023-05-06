@@ -11,6 +11,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -56,9 +58,9 @@ fun PermissionVisualizer (
     val context = LocalContext.current
 
     val errorBgColor = MaterialTheme.colorScheme.errorContainer
-    val errorContentColor = MaterialTheme.colorScheme.error
-    val successBgColor = MaterialTheme.colorScheme.tertiaryContainer
-    val successContentColor = MaterialTheme.colorScheme.onTertiaryContainer
+    val errorContentColor = MaterialTheme.colorScheme.onErrorContainer
+    val successBgColor = if (isSystemInDarkTheme()) Color(0xFF365F32) else Color(0xFFCCEECC)
+    val successContentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
     val rounding = 15.dp
     val contentPadding = 18.dp
 
