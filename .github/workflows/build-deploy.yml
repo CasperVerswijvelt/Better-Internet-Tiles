@@ -7,6 +7,7 @@ on:
 
 env:
   BUILD_TOOLS_VERSION: 33.0.0
+  PRE_RELEASE: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
 
 jobs:
   build-playstore:
@@ -97,4 +98,5 @@ jobs:
           asset_name: app-release-github.apk
           tag: ${{ github.ref }}
           overwrite: true
+          prerelease: ${{ env.PRE_RELEASE }}
           body: "Automatically released using GitHub actions. Release-notes will follow later."
