@@ -104,7 +104,7 @@ fun App() {
                 startDestination = NavRoute.Home.route
             ) {
                 composable(NavRoute.Home.route) {
-                    HomePage()
+                    HomePage(navController)
                 }
                 composable(NavRoute.Info.route) {
                     InfoPage()

@@ -192,8 +192,8 @@ sealed class PermissionInfo (
     val tiles: Array<Int> = arrayOf()
 ) {
     object Shell: PermissionInfo(
-        R.string.shell,
-        R.string.shell_description,
+        R.string.shell_access,
+        R.string.shell_access_description,
         arrayOf(
             R.string.wifi,
             R.string.mobile_data,

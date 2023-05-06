@@ -21,7 +21,6 @@ import android.os.IBinder
 import android.service.quicksettings.TileService
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
@@ -42,7 +41,6 @@ import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import be.casperverswijvelt.unifiedinternetqs.util.getConnectedWifiSSID
 import be.casperverswijvelt.unifiedinternetqs.util.getLastConnectedWifi
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.grantBluetoothConnect
 import be.casperverswijvelt.unifiedinternetqs.util.setLastConnectedWifi
 
 class TileSyncService: Service() {
@@ -219,17 +217,6 @@ class TileSyncService: Service() {
             },
             BluetoothProfile.HEADSET
         )
-
-        // If bluetooth connect permission is not granted, grant it using shell
-        //  command
-        if (
-            ContextCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            grantBluetoothConnect(applicationContext)
-        }
 
         updateWifiTile()
         updateMobileDataTile()

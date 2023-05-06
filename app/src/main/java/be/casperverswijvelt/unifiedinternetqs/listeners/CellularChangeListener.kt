@@ -1,16 +1,12 @@
 package be.casperverswijvelt.unifiedinternetqs.listeners
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import android.telephony.*
-import androidx.core.content.ContextCompat
-import be.casperverswijvelt.unifiedinternetqs.util.grantReadPhoneState
 
 class CellularChangeListener(private val callback: (type: NetworkChangeType?) -> Unit) {
 
@@ -81,17 +77,6 @@ class CellularChangeListener(private val callback: (type: NetworkChangeType?) ->
                 phoneStateListener,
                 PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
             )
-        }
-
-        // If read phone state permission is not granted, grant it using shell
-        //  command
-        if (
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_PHONE_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            grantReadPhoneState(context)
         }
 
         isListening = true
