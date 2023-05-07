@@ -85,6 +85,15 @@ fun PermissionVisualizer (
         if (
             ActivityCompat.checkSelfPermission(
                 context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
+            tempPermissionWarnings.add(PermissionInfo.Location)
+        }
+
+        if (
+            ActivityCompat.checkSelfPermission(
+                context,
                 Manifest.permission.READ_PHONE_STATE
             ) == PackageManager.PERMISSION_DENIED
         ) {
@@ -180,6 +189,9 @@ fun PermissionVisualizer (
                                 when (it) {
                                     PermissionInfo.Shell -> {
                                         navController.navigate(NavRoute.SettingsShell.route)
+                                    }
+                                    PermissionInfo.Location -> {
+                                        launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                                     }
                                     PermissionInfo.BluetoothConnect -> {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

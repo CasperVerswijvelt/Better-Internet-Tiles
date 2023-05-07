@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Make sure AD_ID permission is not added by dependencies -->
@@ -34,12 +36,8 @@
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
         <service
-            android:name=".ShizukuDetectService"
-            android:enabled="true"
-            android:exported="false" />
-
-        <service
             android:name=".TileSyncService"
+            android:foregroundServiceType="location"
             android:enabled="true"
             android:exported="false"/>
 

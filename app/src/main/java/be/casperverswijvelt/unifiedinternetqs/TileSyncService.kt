@@ -83,12 +83,7 @@ class TileSyncService: Service() {
             }
             NetworkChangeType.NETWORK_AVAILABLE -> {
                 wifiConnected = true
-                getConnectedWifiSSID(applicationContext) { ssid ->
-                    wifiSSID = ssid
-
-                    updateWifiTile()
-                    updateInternetTile()
-                }
+                wifiSSID = getConnectedWifiSSID(applicationContext)
             }
             else -> {}
         }
