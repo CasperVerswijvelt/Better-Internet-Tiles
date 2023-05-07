@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Icon
 import android.provider.Settings
@@ -11,6 +10,7 @@ import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
@@ -23,7 +23,7 @@ import kotlinx.coroutines.Runnable
 
 class InternetTileBehaviour(
     context: Context,
-    showDialog: (Dialog) -> Unit,
+    showDialog: (AlertDialogData) -> Unit,
     unlockAndRun: (Runnable) -> Unit = { it.run() }
 ): TileBehaviour(context, showDialog, unlockAndRun) {
 
@@ -31,6 +31,8 @@ class InternetTileBehaviour(
         private const val TAG = "InternetDataTileBehaviour"
     }
 
+    override val type: TileType
+        get() = TileType.Internet
     override val tileName: String
         get() = resources.getString(R.string.internet)
     override val defaultIcon: Icon

@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Icon
 import android.provider.Settings
@@ -10,6 +9,7 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
@@ -19,7 +19,7 @@ import kotlinx.coroutines.Runnable
 
 class WifiTileBehaviour(
     context: Context,
-    showDialog: (Dialog) -> Unit = {},
+    showDialog: (AlertDialogData) -> Unit = {},
     unlockAndRun: (Runnable) -> Unit = { it.run() }
 ): TileBehaviour(context, showDialog, unlockAndRun) {
 
@@ -27,6 +27,8 @@ class WifiTileBehaviour(
         private const val TAG = "WifiTileBehaviour"
     }
 
+    override val type: TileType
+        get() = TileType.WiFi
     override val tileName: String
         get() = resources.getString(R.string.wifi)
     override val defaultIcon: Icon

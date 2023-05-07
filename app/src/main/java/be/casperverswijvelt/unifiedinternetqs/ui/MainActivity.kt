@@ -14,6 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -23,18 +26,29 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.BluetoothTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.ui.components.NavRoute
 import be.casperverswijvelt.unifiedinternetqs.ui.components.NavigationItem
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.HomePage
+import be.casperverswijvelt.unifiedinternetqs.ui.pages.IndividualSettingsPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.InfoPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.SettingsPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.ShellMethodPage
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 
 class MainActivity : ComponentActivity() {
 
@@ -86,6 +100,42 @@ fun App() {
 
     val navController = rememberNavController()
     val context = LocalContext.current
+    var alertDialog: AlertDialogData? by remember {
+        mutableStateOf(null)
+    }
+
+    val showDialog: (AlertDialogData) -> Unit = {
+        alertDialog = it
+    }
+
+    val tileBehaviours = remember {
+        listOf(
+            WifiTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            MobileDataTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            InternetTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            AirplaneModeTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            NFCTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            ),
+            BluetoothTileBehaviour(
+                context = context,
+                showDialog = showDialog
+            )
+        )
+    }
 
     Scaffold(contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         bottomBar = {
@@ -103,15 +153,33 @@ fun App() {
                 navController = navController,
                 startDestination = NavRoute.Home.route
             ) {
-                composable(NavRoute.Home.route) {
-                    HomePage(navController)
-                }
+                homeGraph(
+                    navController = navController,
+                    tileBehaviours = tileBehaviours
+                )
+                settingsGraph(navController)
                 composable(NavRoute.Info.route) {
                     InfoPage()
                 }
-                settingsGraph(navController)
             }
         }
+    }
+
+    alertDialog?.let {
+        AlertDialog(
+            onDismissRequest = { alertDialog = null},
+            title = { Text(stringResource(it.titleResource)) },
+            text = { Text(stringResource(it.messageResource)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    it.onPositiveButtonClicked()
+                    alertDialog = null
+                }) {
+                    Text(stringResource(it.positiveButtonResource))
+                }
+            }
+
+        )
     }
 
     LaunchedEffect(Unit) {
@@ -130,7 +198,12 @@ fun BottomNavigationBar(
 
         items.forEach { item ->
             val selected by derivedStateOf {
-                currentRoute?.split("/")?.getOrNull(0) == item.route.split("/")?.getOrNull(0)
+                currentRoute
+                    ?.split("/")
+                    ?.getOrNull(0) ==
+                item.route
+                    .split("/")
+                    .getOrNull(0)
             }
             val title = stringResource(item.titleId)
             NavigationBarItem(
@@ -145,13 +218,46 @@ fun BottomNavigationBar(
                 onClick = {
                     if (navController.currentDestination?.route != item.route) {
                         navController.navigate(item.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
+                            popUpTo(navController.graph.findStartDestination().id)
                             launchSingleTop = true
                             restoreState = true
                         }
                     }
+                }
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.homeGraph(
+    navController: NavController,
+    tileBehaviours: List<TileBehaviour>
+) {
+    navigation(
+        route = NavRoute.Home.route,
+        startDestination = NavRoute.HomeBase.route
+    ) {
+        composable(
+            route= NavRoute.HomeBase.route
+        ) {
+            HomePage(
+                navController = navController,
+                tileBehaviours = tileBehaviours
+            )
+        }
+        val tileNavArgument = "tile"
+        composable(
+            route = "${NavRoute.HomeTileSettings.route}/{${tileNavArgument}}",
+            arguments = listOf(navArgument(tileNavArgument) {
+                type = NavType.IntType
+            })
+        ) { backstackEntry ->
+            IndividualSettingsPage (
+                onBackClicked = {
+                    navController.popBackStack()
+                },
+                tileBehaviour = tileBehaviours.first {
+                    it.type.value == backstackEntry.arguments?.getInt(tileNavArgument)
                 }
             )
         }

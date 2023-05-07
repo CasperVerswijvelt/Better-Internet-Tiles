@@ -17,7 +17,7 @@ sealed class NavigationItem(
     var titleId: Int
     ) {
     object Home: NavigationItem(
-        NavRoute.Home.route,
+        NavRoute.HomeBase.route,
         Icons.Outlined.Home,
         Icons.Filled.Home,
         R.string.home
@@ -38,6 +38,8 @@ sealed class NavigationItem(
 
 enum class NavRoute(val route: String) {
     Home("home"),
+    HomeBase("home/base"),
+    HomeTileSettings("home/tile"),
     Settings("settings"),
     SettingsBase("settings/base"),
     SettingsShell("settings/shell"),

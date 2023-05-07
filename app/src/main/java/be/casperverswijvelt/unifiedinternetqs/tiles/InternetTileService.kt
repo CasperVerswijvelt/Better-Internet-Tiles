@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.util.toDialog
 
 class InternetTileService : ReportingTileService() {
 
@@ -13,7 +14,7 @@ class InternetTileService : ReportingTileService() {
 
         tileBehaviour = InternetTileBehaviour(
             context = this,
-            showDialog = { showDialog(it) },
+            showDialog = { showDialog(it.toDialog(applicationContext)) },
             unlockAndRun = { unlockAndRun(it) }
         )
         super.onCreate()

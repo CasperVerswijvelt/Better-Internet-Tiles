@@ -79,8 +79,11 @@
     <string name="version">version</string>
     <string name="shizuku" translatable="false">Shizuku</string>
     <string name="root" translatable="false">Root</string>
-    <string name="auto" translatable="false">Auto</string>
+    <string name="auto">Auto</string>
     <string name="ok">Ok</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="use_default">Use default</string>
     <string name="bluetooth" translatable="false">Bluetooth</string>
     <string name="battery">battery</string>
     <string name="donate">Donate</string>

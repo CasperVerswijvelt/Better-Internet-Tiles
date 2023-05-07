@@ -39,9 +39,6 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import be.casperverswijvelt.unifiedinternetqs.util.getConnectedWifiSSID
-import be.casperverswijvelt.unifiedinternetqs.util.getLastConnectedWifi
-import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.setLastConnectedWifi
 
 class TileSyncService: Service() {
 
@@ -83,13 +80,11 @@ class TileSyncService: Service() {
             NetworkChangeType.NETWORK_LOST -> {
                 wifiConnected = false
                 wifiSSID = null
-                setLastConnectedWifi(applicationContext, wifiSSID)
             }
             NetworkChangeType.NETWORK_AVAILABLE -> {
                 wifiConnected = true
                 getConnectedWifiSSID(applicationContext) { ssid ->
                     wifiSSID = ssid
-                    setLastConnectedWifi(applicationContext, wifiSSID)
 
                     updateWifiTile()
                     updateInternetTile()
@@ -172,13 +167,6 @@ class TileSyncService: Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
-
-        if (getWifiEnabled(this)) {
-            // Wi-Fi SSID is retrieved async using shell commands, visualise
-            //  last connected Wi-Fi SSID until actual SSID is known.
-            // TODO: Get Wi-Fi SSID synchronously using location permission
-            wifiSSID = getLastConnectedWifi(this)
-        }
 
         wifiChangeListener.startListening(applicationContext)
         cellularChangeListener.startListening(applicationContext)

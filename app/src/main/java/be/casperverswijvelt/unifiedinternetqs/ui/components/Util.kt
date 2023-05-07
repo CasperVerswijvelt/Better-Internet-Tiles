@@ -2,15 +2,16 @@ package be.casperverswijvelt.unifiedinternetqs.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,13 +23,13 @@ fun PreferenceEntry(
     title: String,
     subTitle: String? = null,
     checked: Boolean? = null,
-    onClicked: () -> Unit = {}
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable { onClicked() }
+            .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -67,19 +68,17 @@ fun PreferenceEntry(
 
 @Composable
 fun RadioEntry(
+    modifier: Modifier = Modifier,
     title: String,
     enabled: Boolean = false,
-    onClicked: () -> Unit = {}
+    onClick: () -> Unit = {}
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) { onClicked() }
-            .padding(16.dp),
+            .clickable{ onClick() }
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -88,7 +87,7 @@ fun RadioEntry(
                 .width(50.dp),
             contentAlignment = Alignment.CenterStart
         ) {
-            RadioButton(selected = enabled, onClick = { onClicked() })
+            RadioButton(selected = enabled, onClick = { onClick() })
         }
         Text(
             modifier = Modifier.padding(bottom = 4.dp).weight(1f),
@@ -111,7 +110,7 @@ fun TogglePreferenceEntry(
         title = title,
         subTitle = subTitle,
         checked = checked,
-        onClicked = {
+        onClick = {
             onToggled(!checked)
         }
     )
@@ -140,6 +139,16 @@ fun LargeTopBarPage(
                 .verticalScroll(rememberScrollState()),
             content = content
         )
+    }
+}
+
+@Composable
+fun buttonBackgroundColor(): State<Color> {
+    val darkTheme = isSystemInDarkTheme()
+    return object : State<Color> {
+        override val value: Color
+            get() = Color(if (darkTheme) 0x18ffffff else 0x18000000)
+
     }
 }
 

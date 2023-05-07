@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Icon
 import android.provider.Settings
@@ -10,6 +9,7 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getNFCEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
@@ -18,7 +18,7 @@ import kotlinx.coroutines.Runnable
 
 class NFCTileBehaviour(
     context: Context,
-    showDialog: (Dialog) -> Unit,
+    showDialog: (AlertDialogData) -> Unit,
     unlockAndRun: (Runnable) -> Unit = { it.run() }
 ): TileBehaviour(context, showDialog, unlockAndRun) {
 
@@ -26,6 +26,8 @@ class NFCTileBehaviour(
         private const val TAG = "NFCTileBehaviour"
     }
 
+    override val type: TileType
+        get() = TileType.NFC
     override val tileName: String
         get() = resources.getString(R.string.nfc)
     override val defaultIcon: Icon

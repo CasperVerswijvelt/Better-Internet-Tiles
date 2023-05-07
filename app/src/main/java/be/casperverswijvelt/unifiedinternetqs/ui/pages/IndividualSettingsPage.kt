@@ -1,103 +1,150 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.pages
 
-import android.content.Intent
-import android.content.res.Resources
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
-import be.casperverswijvelt.unifiedinternetqs.ui.components.LargeTopBarPage
-import be.casperverswijvelt.unifiedinternetqs.ui.components.NavRoute
+import be.casperverswijvelt.unifiedinternetqs.data.RequireUnlockSetting
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.ui.components.LiveTile
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
-import be.casperverswijvelt.unifiedinternetqs.ui.components.TogglePreferenceEntry
+import be.casperverswijvelt.unifiedinternetqs.ui.components.RadioEntry
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsPage(
-    navController: NavController
+fun IndividualSettingsPage(
+    onBackClicked: () -> Unit,
+    tileBehaviour: TileBehaviour
 ) {
-
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val context = LocalContext.current
     val preferences = BITPreferences(context)
-    val shellMethod by preferences.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
-
-    BaseSettings (
-        shellMethod = shellMethod,
-        onShellMethodClicked = {
-            navController.navigate(NavRoute.SettingsShell.route)
-        }
-    )
-}
-
-@Composable
-fun BaseSettings(
-    onShellMethodClicked: () -> Unit,
-    shellMethod: ShellMethod
-) {
-    val context = LocalContext.current
-    val dataStore = BITPreferences(context)
     val coroutineScope = rememberCoroutineScope()
-    LargeTopBarPage(
-        title = stringResource(R.string.settings)
-    ) {
-
-        val toggled by dataStore.getRequireUnlock.collectAsState(initial = true)
-        TogglePreferenceEntry(
-            icon = {
-                Icon(Icons.Outlined.Lock, "lock")
-            },
-            title = stringResource(R.string.require_unlock_title),
-            subTitle = stringResource(R.string.require_unlock_summary),
-            toggled
-        ) {
-            coroutineScope.launch {
-                dataStore.setRequireUnlock(it)
-            }
+    val requireUnlock by preferences
+        .getRequireUnlock(tileBehaviour.type)
+        .collectAsState(initial = RequireUnlockSetting.FOLLOW)
+    val setRequireUnlock: (RequireUnlockSetting) -> Unit = {
+        coroutineScope.launch {
+            preferences.setRequireUnlock(tileBehaviour.type, it)
         }
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    var requireUnlockDialogOpen by remember { mutableStateOf(false) }
 
-            PreferenceEntry(
-                icon = {
-                    DrawableIcon(R.drawable.baseline_translate_24)
+    Scaffold(
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            MediumTopAppBar(
+                title = { Text(tileBehaviour.tileName) },
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(onClick = {
+                        onBackClicked()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = ""
+                        )
+                    }
                 },
-                title = stringResource(R.string.language),
-                subTitle = Resources.getSystem().configuration.locales[0].displayLanguage
-            ) {
-                val intent =
-                    Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
-                intent.data =
-                    Uri.fromParts("package", context.packageName, null)
-                intent.flags =
-                    Intent.FLAG_ACTIVITY_NO_HISTORY or
-                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                context.startActivity(intent)
-            }
-        }
-        PreferenceEntry(
-            icon = {
-                DrawableIcon(R.drawable.terminal)
-            },
-            title = stringResource(R.string.shell_method),
-            subTitle = when (shellMethod) {
-                ShellMethod.SHIZUKU -> stringResource(id = R.string.shizuku)
-                ShellMethod.ROOT -> stringResource(id = R.string.root)
-                ShellMethod.AUTO -> stringResource(id = R.string.auto)
-            }
+            )
+        },
+    ) {
+        Column (
+            modifier = Modifier
+                .padding(top = it.calculateTopPadding())
+                .verticalScroll(rememberScrollState()),
         ) {
-            onShellMethodClicked()
+            LiveTile(
+                modifier = Modifier
+                    .width(220.dp)
+                    .padding(vertical = 64.dp)
+                    .align(Alignment.CenterHorizontally),
+                tileBehaviour = tileBehaviour
+            )
+            PreferenceEntry(
+                title = stringResource(R.string.require_unlock_title),
+                subTitle = stringResource(requireUnlock.stringResource),
+                icon = {
+                    Icon(Icons.Outlined.Lock, "")
+                },
+                onClick = {
+                    requireUnlockDialogOpen = true
+                }
+            )
+        }
+    }
+
+    if (requireUnlockDialogOpen) {
+        val padding = 16.dp
+
+        AlertDialog(onDismissRequest = {
+            requireUnlockDialogOpen = false
+        }) {
+            Surface(shape = AlertDialogDefaults.shape) {
+                Column(modifier = Modifier.padding(vertical = padding)) {
+                    Text(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.require_unlock_title),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    )
+                    listOf(
+                        RequireUnlockSetting.FOLLOW,
+                        RequireUnlockSetting.YES,
+                        RequireUnlockSetting.NO
+                    ).forEach {
+                        RadioEntry(
+                            modifier = Modifier.height(50.dp),
+                            title = stringResource(it.stringResource),
+                            enabled = requireUnlock == it,
+                            onClick = {
+                                setRequireUnlock(it)
+                                requireUnlockDialogOpen = false
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }

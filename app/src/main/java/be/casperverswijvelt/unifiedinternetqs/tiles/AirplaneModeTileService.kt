@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.tiles
 
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.util.toDialog
 
 class AirplaneModeTileService : ReportingTileService() {
 
@@ -13,7 +14,7 @@ class AirplaneModeTileService : ReportingTileService() {
 
         tileBehaviour = AirplaneModeTileBehaviour(
             context = this,
-            showDialog = { showDialog(it) },
+            showDialog = { showDialog(it.toDialog(applicationContext)) },
             unlockAndRun = { unlockAndRun(it) }
         )
         super.onCreate()

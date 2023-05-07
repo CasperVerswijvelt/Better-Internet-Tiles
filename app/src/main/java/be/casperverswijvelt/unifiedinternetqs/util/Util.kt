@@ -259,37 +259,47 @@ private fun getNetworkClassString(networkType: Int): String? {
     }
 }
 
-fun setLastConnectedWifi(context: Context, ssid: String?) = runBlocking  {
-    BITPreferences(context).setLastConnectedSSID(ssid)
-}
-
-fun getLastConnectedWifi(context: Context): String? = runBlocking {
-    BITPreferences(context).getLastConnectedSSID.first()
-}
-
 // Shell access
 
-fun getShellAccessRequiredDialog(context: Context): Dialog {
+fun getShellAccessRequiredDialog(context: Context): AlertDialogData {
 
     val intent = Intent(context, MainActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-    return AlertDialog.Builder(context)
-        .setTitle(R.string.shell_access_required)
-        .setMessage(R.string.shell_access_not_set_up)
-        .setPositiveButton(android.R.string.ok) { _, _ ->
+    return AlertDialogData(
+        titleResource = R.string.shell_access_required,
+        messageResource = R.string.shell_access_not_set_up,
+        positiveButtonResource = R.string.ok,
+        onPositiveButtonClicked = {
             if (ShizukuUtil.shizukuAvailable) {
                 ShizukuUtil.requestShizukuPermission { }
             } else {
                 context.startActivity(intent)
             }
         }
+    )
+}
+
+data class AlertDialogData(
+    val titleResource: Int,
+    val messageResource: Int,
+    val positiveButtonResource: Int,
+    val onPositiveButtonClicked: () -> Unit
+)
+
+fun AlertDialogData.toDialog(context: Context): Dialog {
+    return AlertDialog.Builder(context)
+        .setTitle(titleResource)
+        .setMessage(messageResource)
+        .setPositiveButton(positiveButtonResource) { _, _ ->
+            onPositiveButtonClicked()
+        }
         .setCancelable(true)
         .create()
 }
 
 fun executeShellCommand(command: String, context: Context): Shell.Result? {
-    val preferences = BITPreferences(context = context)
+    val preferences = BITPreferences(context)
     val shellMethod = runBlocking {
          preferences.getShellMethod.first()
     }
@@ -357,9 +367,20 @@ fun executeShellCommandAsync(
  * Check if app has shell access (either root or shizuku).
  * If shell access is detected, the shizuku detection service is automatically stopped
  */
-fun hasShellAccess(context: Context? = null): Boolean {
+fun hasShellAccess(context: Context): Boolean {
 
-    return Shell.isAppGrantedRoot() == true || ShizukuUtil.hasShizukuPermission()
+    val preferences = BITPreferences(context)
+    val shellMethod = runBlocking {
+        preferences.getShellMethod.first()
+    }
+
+    return when (shellMethod) {
+        ShellMethod.ROOT -> Shell.isAppGrantedRoot() == true
+        ShellMethod.SHIZUKU -> ShizukuUtil.hasShizukuPermission()
+        ShellMethod.AUTO -> {
+            Shell.isAppGrantedRoot() == true || ShizukuUtil.hasShizukuPermission()
+        }
+    }
 }
 
 // Analytics

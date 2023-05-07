@@ -2,11 +2,15 @@ package be.casperverswijvelt.unifiedinternetqs.data
 
 import android.content.Context
 import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
+import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileType
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -26,9 +30,7 @@ class BITPreferences(private val context: Context) {
         )
 
         private val KEY_REQUIRE_UNLOCK = booleanPreferencesKey("require_unlock")
-        private val KEY_LAST_CONNECTED_SSID = stringPreferencesKey(
-            "last_connected_wifi"
-        )
+
         // All caps because legacy
         private val KEY_INSTALLATION_ID = stringPreferencesKey(
             "INSTALLATION_ID"
@@ -52,23 +54,6 @@ class BITPreferences(private val context: Context) {
     suspend fun setRequireUnlock(requireUnlock: Boolean) {
         context.dataStore.edit {
             it[KEY_REQUIRE_UNLOCK] = requireUnlock
-        }
-    }
-
-    // Last Connected Wi-Fi SSID
-
-    val getLastConnectedSSID: kotlinx.coroutines.flow.Flow<String?> = context
-        .dataStore.data.map {
-            it[KEY_LAST_CONNECTED_SSID]
-        }
-
-    suspend fun setLastConnectedSSID(ssid: String?) {
-        context.dataStore.edit {
-            ssid?.let {nonNullSsid ->
-                it[KEY_LAST_CONNECTED_SSID] = nonNullSsid
-            } ?: run {
-                it.remove(KEY_LAST_CONNECTED_SSID)
-            }
         }
     }
 
@@ -99,14 +84,45 @@ class BITPreferences(private val context: Context) {
             it[KEY_SHELL_METHOD] = shellMethod.method
         }
     }
+
+    // Require unlock (tile specific)
+
+    private fun getRequireUnlockKey(tileType: TileType): Preferences.Key<String> {
+        return stringPreferencesKey("require_unlock/${tileType.value}")
+    }
+
+    suspend fun setRequireUnlock(tileType: TileType, setting: RequireUnlockSetting) {
+        context.dataStore.edit {
+            it[getRequireUnlockKey(tileType)] = setting.value
+        }
+    }
+
+    fun getRequireUnlock(tileType: TileType): Flow<RequireUnlockSetting> {
+        return context.dataStore.data.map {
+            it[getRequireUnlockKey(tileType)]?.let { value ->
+                RequireUnlockSetting.getByValue(value)
+            } ?: RequireUnlockSetting.FOLLOW
+        }
+    }
 }
-enum class ShellMethod(val method: String) {
-    ROOT("root"),
-    SHIZUKU("shizuku"),
-    AUTO("auto");
+enum class ShellMethod(val method: String, val stringResource: Int) {
+    ROOT("root", R.string.root),
+    SHIZUKU("shizuku", R.string.shizuku),
+    AUTO("auto", R.string.auto);
     companion object {
         infix fun getByValue(value: String): ShellMethod {
-            return ShellMethod.values().firstOrNull() { it.method == value } ?: AUTO
+            return ShellMethod.values().firstOrNull { it.method == value } ?: AUTO
+        }
+    }
+}
+enum class RequireUnlockSetting(val value: String, val stringResource: Int) {
+    FOLLOW("follow", R.string.use_default),
+    YES("yes", R.string.yes),
+    NO("no", R.string.no);
+
+    companion object {
+        infix fun getByValue(value: String): RequireUnlockSetting {
+            return RequireUnlockSetting.values().firstOrNull { it.value == value } ?: FOLLOW
         }
     }
 }

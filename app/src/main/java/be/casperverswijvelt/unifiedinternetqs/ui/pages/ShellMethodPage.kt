@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.pages
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
@@ -67,17 +69,17 @@ fun ShellMethodPage(
                 .padding(top = it.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
         ) {
-            RadioEntry(
-                title = stringResource(id = R.string.root),
-                enabled = shellMethod === ShellMethod.ROOT
-            ) {
-                setShellMethod(ShellMethod.ROOT)
-            }
-            RadioEntry(
-                title = stringResource(id = R.string.shizuku),
-                enabled = shellMethod === ShellMethod.SHIZUKU
-            ) {
-                setShellMethod(ShellMethod.SHIZUKU)
+            listOf(
+                ShellMethod.ROOT,
+                ShellMethod.SHIZUKU
+            ).forEach { method ->
+                RadioEntry(
+                    modifier = Modifier.height(60.dp),
+                    title = stringResource(method.stringResource),
+                    enabled = shellMethod === method
+                ) {
+                    setShellMethod(method)
+                }
             }
         }
     }

@@ -1,68 +1,41 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.pages
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.app.StatusBarManager
 import android.content.ComponentName
-import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
@@ -71,24 +44,21 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import be.casperverswijvelt.unifiedinternetqs.R
-import be.casperverswijvelt.unifiedinternetqs.TileSyncService
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.BluetoothTileBehaviour
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.InternetTileBehaviour
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehaviour
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileState
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.ui.components.LiveTile
+import be.casperverswijvelt.unifiedinternetqs.ui.components.NavRoute
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PermissionVisualizer
 import be.casperverswijvelt.unifiedinternetqs.ui.components.VerticalGrid
-import be.casperverswijvelt.unifiedinternetqs.ui.components.conditional
+import be.casperverswijvelt.unifiedinternetqs.ui.components.buttonBackgroundColor
 import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomePage(navController: NavController) {
+fun HomePage(
+    navController: NavController,
+    tileBehaviours: List<TileBehaviour>
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -127,46 +97,22 @@ fun HomePage(navController: NavController) {
             TileOverview(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                navController = navController,
+                tileBehaviours = tileBehaviours
             )
         }
     }
 }
 
 @Composable
-fun TileOverview (modifier: Modifier) {
-    val context = LocalContext.current
-    val showDialog: (Dialog) -> Unit = {}
+fun TileOverview (
+    modifier: Modifier,
+    tileBehaviours: List<TileBehaviour>,
+    navController: NavController
+) {
     val localConfig = LocalConfiguration.current
 
-    val tileBehaviours = remember {
-        listOf(
-            WifiTileBehaviour(
-                context = context,
-                showDialog = showDialog
-            ),
-            MobileDataTileBehaviour(
-                context = context,
-                showDialog = showDialog
-            ),
-            InternetTileBehaviour(
-                context = context,
-                showDialog = showDialog
-            ),
-            AirplaneModeTileBehaviour(
-                context = context,
-                showDialog = showDialog
-            ),
-            NFCTileBehaviour(
-                context = context,
-                showDialog = showDialog
-            ),
-            BluetoothTileBehaviour(
-                context = context,
-                showDialog = showDialog
-            )
-        )
-    }
 
     VerticalGrid(
         modifier = modifier,
@@ -174,7 +120,10 @@ fun TileOverview (modifier: Modifier) {
         horizontalSpacing = 8.dp,
         verticalSpacing = 20.dp,
         content = tileBehaviours.map {
-            { LiveTileWithButtons(tileBehaviour = it) }
+            { LiveTileWithButtons(
+                tileBehaviour = it,
+                navController = navController
+            ) }
         }
     )
 }
@@ -183,13 +132,14 @@ fun TileOverview (modifier: Modifier) {
 @Composable
 fun LiveTileWithButtons(
     modifier: Modifier = Modifier,
-    tileBehaviour: TileBehaviour
+    tileBehaviour: TileBehaviour,
+    navController: NavController
 ) {
     val context = LocalContext.current
     val errorText = stringResource(R.string.tile_added_error)
     val tileAdded = stringResource(R.string.tile_added)
     val tileAlreadyAdded = stringResource(R.string.tile_already_added)
-    var android13ModalOpen by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -209,9 +159,9 @@ fun LiveTileWithButtons(
                 overflow = TextOverflow.Ellipsis,
                 softWrap = false
             )
-            LiveTileExtraButton(
-                onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                LiveTileExtraButton(
+                    onClick = {
                         ContextCompat.getSystemService(
                             context,
                             StatusBarManager::class.java
@@ -247,19 +197,13 @@ fun LiveTileWithButtons(
                                 }
                             }
                         )
-                    } else {
-                        android13ModalOpen = true
-                    }
-                },
-                icon = Icons.Filled.Add
-            )
+                    },
+                    icon = Icons.Filled.Add
+                )
+            }
             LiveTileExtraButton(
                 onClick = {
-                    Toast.makeText(
-                        context,
-                        "Coming soon",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    navController.navigate("${NavRoute.HomeTileSettings.route}/${tileBehaviour.type.value}")
                 },
                 icon = Icons.Filled.Settings
             )
@@ -268,38 +212,6 @@ fun LiveTileWithButtons(
         LiveTile(
             tileBehaviour = tileBehaviour
         )
-    }
-    if (android13ModalOpen) {
-        AlertDialog(
-            onDismissRequest = { android13ModalOpen = false }
-        ) {
-            Surface(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight(),
-                shape = MaterialTheme.shapes.large
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(id = R.string.require_android_13),
-                        fontSize = 22.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(26.dp))
-                    Text(
-                        text = stringResource(id = R.string.require_android_13_description),
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextButton(
-                        onClick = { android13ModalOpen = false },
-                        modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Text(stringResource(id = R.string.ok))
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -322,138 +234,5 @@ fun LiveTileExtraButton(
             imageVector = icon,
             contentDescription = ""
         )
-    }
-}
-
-@Composable
-fun LiveTile(
-    modifier: Modifier = Modifier,
-    tileBehaviour: TileBehaviour
-) {
-    var tileState by remember { mutableStateOf(tileBehaviour.tileState) }
-    val context = LocalContext.current
-
-    Tile(
-        modifier = modifier,
-        iconId = tileState.icon,
-        title = tileState.label,
-        subTitle = tileState.subtitle,
-        active = tileState.state == android.service.quicksettings.Tile.STATE_ACTIVE,
-        unavailable = tileState.state == android.service.quicksettings.Tile.STATE_UNAVAILABLE,
-        onClick = {
-            tileBehaviour.onClick()
-        },
-        onLongClick = {
-            context.startActivity(Intent(tileBehaviour.onLongClickIntentAction))
-        }
-    )
-
-    DisposableEffect(Unit) {
-
-        TileSyncService.addBehaviourListener(tileBehaviour)
-        val tileListener: (TileState) -> Unit = { tileState = it}
-        tileBehaviour.addUpdateTileListeners(tileListener)
-
-        onDispose {
-            TileSyncService.removeBehaviourListener(tileBehaviour)
-            tileBehaviour.removeUpdateTileListeners(tileListener)
-        }
-    }
-}
-
-val tileHeight = 80.dp
-
-@Composable
-fun buttonBackgroundColor(): State<Color> {
-    val darkTheme = isSystemInDarkTheme()
-    return object : State<Color> {
-        override val value: Color
-            get() = Color(if (darkTheme) 0x18ffffff else 0x18000000)
-
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun Tile(
-    modifier: Modifier = Modifier,
-    iconId: Int,
-    title: String,
-    active: Boolean = true,
-    unavailable: Boolean = false,
-    subTitle: String? = null,
-    onClick: () -> Unit = {},
-    onLongClick: () -> Unit = {}
-) {
-    val darkTheme = isSystemInDarkTheme()
-    val scheme = MaterialTheme.colorScheme
-    val colorAnimationSpec = tween<Color>(350, easing = EaseInOut)
-    val disabledBgColor by buttonBackgroundColor()
-
-    val bgColor by animateColorAsState(
-        targetValue = if (active)
-            if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
-        else
-            disabledBgColor,
-        animationSpec = colorAnimationSpec
-    )
-    val fgColor by animateColorAsState(
-        targetValue = if (active) Color.Black else if (darkTheme) Color.White else Color.Black,
-        animationSpec = colorAnimationSpec
-    )
-    val fgColorLight = Color(fgColor.red, fgColor.green, fgColor.blue, .7f)
-    val alpha by animateFloatAsState(
-        targetValue = if (unavailable) .35f else 1f,
-        animationSpec = tween(350, easing = EaseInOut)
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(tileHeight)
-            .clip(RoundedCornerShape(30.dp))
-            .alpha(alpha)
-            .conditional(!unavailable) {
-                combinedClickable(
-                    onClick = { onClick() },
-                    onLongClick = { onLongClick() }
-                )
-            }
-            .background(bgColor)
-            .padding(start = 17.dp, end = 25.dp)
-    ) {
-        Row (verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                modifier = Modifier.size(20.dp),
-                painter = painterResource(iconId),
-                contentDescription = "",
-                contentScale = ContentScale.FillBounds,
-                colorFilter = ColorFilter.tint(fgColor)
-            )
-            Column (
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(start = 10.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = title,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    color = fgColor,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp
-                )
-                subTitle?.let {
-                    Text(
-                        text = subTitle,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
-                        color = fgColorLight,
-                        fontSize = 14.sp
-                    )
-                }
-            }
-        }
     }
 }

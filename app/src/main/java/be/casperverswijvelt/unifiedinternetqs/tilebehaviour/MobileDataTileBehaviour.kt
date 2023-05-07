@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Icon
 import android.provider.Settings
@@ -11,6 +10,7 @@ import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getAirplaneModeEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
@@ -22,7 +22,7 @@ import kotlinx.coroutines.Runnable
 
 class MobileDataTileBehaviour(
     context: Context,
-    showDialog: (Dialog) -> Unit,
+    showDialog: (AlertDialogData) -> Unit,
     unlockAndRun: (Runnable) -> Unit = { it.run() }
 ): TileBehaviour(context, showDialog, unlockAndRun) {
 
@@ -30,6 +30,8 @@ class MobileDataTileBehaviour(
         private const val TAG = "MobileDataTileBehaviour"
     }
 
+    override val type: TileType
+        get() = TileType.MobileData
     override val tileName: String
         get() = resources.getString(R.string.mobile_data)
     override val defaultIcon: Icon
