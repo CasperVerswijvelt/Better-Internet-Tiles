@@ -27,6 +27,7 @@ import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
 import be.casperverswijvelt.unifiedinternetqs.ui.components.RadioEntry
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +41,9 @@ fun ShellMethodPage(
     val coroutineScope = rememberCoroutineScope()
     val shellMethod by preferences.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
     val setShellMethod: (ShellMethod) -> Unit = {
+        if (it == ShellMethod.SHIZUKU) {
+            ShizukuUtil.requestShizukuPermission {}
+        }
         coroutineScope.launch {
             preferences.setShellMethod(it)
         }
