@@ -47,5 +47,4 @@
     <string name="help_translate">このアプリの翻訳を手伝ってください！</string>
     <string name="require_android_13_description">クイック設定メニューから手動でタイルを追加してください</string>
     <string name="airplane_mode">機内モード</string>
-    <string name="require_unlock_summary">端末がロックされている時に、ネットワークモードを変更できないようにします。</string>
 </resources>

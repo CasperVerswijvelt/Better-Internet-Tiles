@@ -17,7 +17,6 @@
     <string name="app_description_shell_access">Encender y apagar Wi-Fi y datos móviles, así como leer la información de la red Wi-Fi actual, requiere acceso shell. Shizuku puede encargarse de esto sin necesidad de root.</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Datos móviles</string>
-    <string name="require_unlock_summary">No permite cambiar el tipo de conexión cuando la pantalla está bloqueada.</string>
     <string name="request_shizuku_access_title">Solicitar acceso a Shizuku</string>
     <string name="restart_app_summary">Intenta reiniciar la app en caso de que algo funcione mal.</string>
     <string name="feedback_title">Retroalimentación/reportar un bug</string>

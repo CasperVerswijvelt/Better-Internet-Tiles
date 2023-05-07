@@ -8,7 +8,6 @@
     <string name="turning_on">Włączanie...</string>
     <string name="not_connected">Nie połączono</string>
     <string name="require_unlock_title">Wymagaj odblokowywania</string>
-    <string name="require_unlock_summary">Zapobiegaj przełączaniu trybów sieci kiedy jesteś w ekranie blokady.</string>
     <string name="request_shizuku_access_summary">Użyj Shizuku do zezwolenia dostępu do powłoki</string>
     <string name="request_shizuku_access_title">Zażądaj dostępu poprzez Shizuku</string>
     <string name="restart_app_title">Zrestartuj aplikację</string>

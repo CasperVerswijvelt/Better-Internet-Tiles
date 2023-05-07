@@ -5,7 +5,6 @@
     <string name="turning_on">正在连接...</string>
     <string name="not_connected">未连接</string>
     <string name="require_unlock_title">需要解锁</string>
-    <string name="require_unlock_summary">防止在锁屏状态下切换网络模式。</string>
     <string name="on">已开启</string>
     <string name="off">已关闭</string>
     <string name="request_shizuku_access_summary">使用Shizuku来授予Shell访问权限</string>

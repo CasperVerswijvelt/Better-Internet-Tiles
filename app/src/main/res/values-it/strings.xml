@@ -12,7 +12,6 @@
     <string name="app_description_shell_access">L\'attivazione/disattivazione del Wi-Fi e dei dati mobili e la lettura del nome della rete Wi-Fi richiedono l\'accesso alla shell. Shizuku può occuparsene anche senza richiedere l\'accesso root.</string>
     <string name="nfc">NFC</string>
     <string name="request_shizuku_access_summary">Usa Shizuku per concedere l\'accesso alla shell</string>
-    <string name="require_unlock_summary">Impedisce la commutazione delle modalità di rete quando sei sulla schermata di blocco.</string>
     <string name="mobile_data">Dati mobili</string>
     <string name="wifi">Wi-Fi</string>
     <string name="on">On</string>

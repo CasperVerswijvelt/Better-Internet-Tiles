@@ -9,7 +9,6 @@
     <string name="app_description_shell_access">Wi-Fi ve mobil veriyi açıp kapatmak ve mevcut Wi-Fi ağ adını okumak için kabuk erişimi gerekir. Shizuku, root erişimi gerektirmeden bu işi halledebilir.</string>
     <string name="app_description_about">Birleşik ve gerçekten kullanışlı bir internet hızlı ayarlar kutucuğu (Android 12\'den farklı olarak).</string>
     <string name="off">Kapalı</string>
-    <string name="require_unlock_summary">Kilit ekranındayken ağ modları arasında geçiş yapmayı önleyin.</string>
     <string name="app_description_usage">Wi-Fi ve mobil veri arasında geçiş yapmak için yeni İnternet kutucuğuna dokunun. Android 12 öncesinde olduğu gibi ilgili kutucuklar da mevcuttur.</string>
     <string name="mobile_data">Mobil veri</string>
     <string name="turning_on">Açılıyor...</string>

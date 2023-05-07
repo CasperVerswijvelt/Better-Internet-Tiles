@@ -41,7 +41,6 @@
     <string name="about">Om</string>
     <string name="other">Annet</string>
     <string name="root_access_granted">Rot-tilgang innvilget.</string>
-    <string name="require_unlock_summary">Enheten din må være låst opp før du kan veksle mellom Internett-tilganger.</string>
     <string name="feedback_title">Tilbakemelding/rapporter en feil</string>
     <string name="root_access_denied_description" tools:ignore="Typos">Gå til ditt rot-tildelingsprogram (f-eks. Magisk) og innvilg tilgang til «Better Internet Tiles»-programmet.</string>
     <string name="shell_access_not_set_up">Du trenger rot-tilgang eller Shizuku v 11+ for å bruke dette programmet. Forsikre deg om at du har installert Shizuku-programmet og at Shizuku kjører. Deretter må du innvilge denne tilgangen for dette programmet. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>

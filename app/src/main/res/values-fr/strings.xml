@@ -5,7 +5,6 @@
     <string name="off">Désactivé</string>
     <string name="app_description_usage">Appuyez sur la nouvelle tuile Internet pour basculer entre le Wi-Fi et les données mobiles. Les tuiles respectives sont également disponibles, comme c\'était le cas avant Android 12.</string>
     <string name="not_connected">Déconnecté</string>
-    <string name="require_unlock_summary">Empêchez le changement des modes réseau sur l\'écran de verrouillage.</string>
     <string name="request_shizuku_access_title">Demande d’accès à Shizuku</string>
     <string name="xda_title">Fil de discussion sur XDA Developers</string>
     <string name="settings">Paramètres</string>

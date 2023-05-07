@@ -18,7 +18,7 @@
     <string name="not_connected">Not connected</string>
     <string name="require_unlock_key" translatable="false">require_unlock</string>
     <string name="require_unlock_title">Require unlock</string>
-    <string name="require_unlock_summary">Prevent toggling network modes when on the lockscreen.</string>
+    <string name="require_unlock_summary">Prevent tile actions when on the lockscreen</string>
     <string name="request_shizuku_access_key" translatable="false">request_shizuku_access</string>
     <string name="request_shizuku_access_title">Request Shizuku access</string>
     <string name="request_shizuku_access_summary">Use Shizuku to grant Shell access</string>

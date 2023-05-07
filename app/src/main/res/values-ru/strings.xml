@@ -5,7 +5,6 @@
     <string name="turning_on">Включение...</string>
     <string name="not_connected">Не подключено</string>
     <string name="app_description_usage">Новый переключатель \'Интернет\' позволяет быстро переключаться между Wi-Fi и мобильным интернетом. Отдельные переключатели так же доступны, как это было до Android 12.</string>
-    <string name="require_unlock_summary">Запретить переключение сетевых режимов на экране блокировки.</string>
     <string name="require_unlock_title">Требуется разблокировка экрана</string>
     <string name="request_shizuku_access_title">Запросить доступ к Shizuku</string>
     <string name="github_title">GitHub репозиторий</string>
