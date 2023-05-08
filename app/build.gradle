@@ -96,8 +96,8 @@ dependencies {
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 
     // Firebase Analytics
-    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.3.6"
-    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.3.6"
+    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.3.7"
+    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.3.7"
 }
 
 configurations {
