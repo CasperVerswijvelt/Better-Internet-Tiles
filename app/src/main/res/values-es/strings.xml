@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="turning_on">Encendiendo...</string>
+    <string name="turning_on">Encendiendo…</string>
     <string name="hide_service_title">Ocultame!</string>
     <string name="no_service">Sin servicio</string>
     <string name="off">Apagado</string>

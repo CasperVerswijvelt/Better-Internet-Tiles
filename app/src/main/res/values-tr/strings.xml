@@ -11,7 +11,7 @@
     <string name="off">Kapalı</string>
     <string name="app_description_usage">Wi-Fi ve mobil veri arasında geçiş yapmak için yeni İnternet kutucuğuna dokunun. Android 12 öncesinde olduğu gibi ilgili kutucuklar da mevcuttur.</string>
     <string name="mobile_data">Mobil veri</string>
-    <string name="turning_on">Açılıyor...</string>
+    <string name="turning_on">Açılıyor…</string>
     <string name="request_shizuku_access_title">Shizuku\'ya erişim talep et</string>
     <string name="request_shizuku_access_summary">Shell erişimi vermek için Shizuku\'yu kullanın</string>
     <string name="not_connected">Bağlı değil</string>

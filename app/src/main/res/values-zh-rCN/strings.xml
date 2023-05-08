@@ -2,7 +2,7 @@
 <resources>
     <string name="mobile_data">移动数据</string>
     <string name="nfc">NFC</string>
-    <string name="turning_on">正在连接...</string>
+    <string name="turning_on">正在连接…</string>
     <string name="not_connected">未连接</string>
     <string name="require_unlock_title">需要解锁</string>
     <string name="on">已开启</string>

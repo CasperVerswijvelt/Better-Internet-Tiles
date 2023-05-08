@@ -7,7 +7,7 @@
     <string name="not_connected">Nicht verbunden</string>
     <string name="require_unlock_title">Auf dem Sperrbildschirm deaktivieren</string>
     <string name="off">Aus</string>
-    <string name="turning_on">Wird aktiviert...</string>
+    <string name="turning_on">Wird aktiviert…</string>
     <string name="request_shizuku_access_title">Shizuku-Zugriff anfordern</string>
     <string name="restart_app_summary">Versuche zuerst die App neu zu starten, falls etwas nicht funktioniert.</string>
     <string name="request_shizuku_access_summary">Shizuku benutzen um den Shell-Zugriff zu ermöglichen</string>

@@ -5,7 +5,7 @@
     <string name="mobile_data">Dane mobilne</string>
     <string name="nfc">NFC</string>
     <string name="on">Włącz</string>
-    <string name="turning_on">Włączanie...</string>
+    <string name="turning_on">Włączanie…</string>
     <string name="not_connected">Nie połączono</string>
     <string name="require_unlock_title">Wymagaj odblokowywania</string>
     <string name="request_shizuku_access_summary">Użyj Shizuku do zezwolenia dostępu do powłoki</string>

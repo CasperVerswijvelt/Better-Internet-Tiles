@@ -45,7 +45,7 @@
     <string name="help_translate">Aiuta a tradurre questa app!</string>
     <string name="language">Lingua</string>
     <string name="off">Off</string>
-    <string name="turning_on">Accendendo...</string>
+    <string name="turning_on">Accendendo…</string>
     <string name="internet">Internet</string>
     <string name="shell_access_not_set_up">È necessario l\'accesso root o Shizuku 11+ installato e in esecuzione con l\'autorizzazione concessa per questa app. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
 </resources>

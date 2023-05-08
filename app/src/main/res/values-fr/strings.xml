@@ -39,7 +39,7 @@
     <string name="require_android_13">Nécessite Android 13+</string>
     <string name="add_wifi_tile">Ajouter la tuile Wi-Fi</string>
     <string name="wifi">Wi-Fi</string>
-    <string name="turning_on">Activation...</string>
+    <string name="turning_on">Activation…</string>
     <string name="mobile_data">Données mobiles</string>
     <string name="require_unlock_title">Exiger le déverrouillage</string>
     <string name="shell_access_not_set_up">Vous avez soit besoin d\'un accès root, soit de Shizuku 11+ installé et fonctionnant avec une permission accordée pour cette application. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
