@@ -3,6 +3,7 @@ package be.casperverswijvelt.unifiedinternetqs.ui.pages
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -42,8 +44,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -198,6 +206,54 @@ fun ShellMethodPage(
                             else -> {}
                         }
                     }
+                }
+                Spacer(Modifier.height(60.dp))
+                Row (
+                    modifier = Modifier.alpha(.65f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val annotatedLinkString: AnnotatedString = buildAnnotatedString {
+                        val description = stringResource(R.string.auto_start_shizuku_description)
+                        val linkIndicator = "$$"
+                        val descriptionReplaced = description.replace(linkIndicator, "")
+                        val startIndex = description.indexOf(linkIndicator)
+                        val endIndex = description.lastIndexOf(linkIndicator) - linkIndicator.length
+                        append(descriptionReplaced)
+                        addStyle(
+                            style = SpanStyle(
+                                color = Color(0xff64B5F6),
+                                textDecoration = TextDecoration.Underline
+                            ), start = startIndex, end = endIndex
+                        )
+
+                        // attach a string annotation that stores a URL to the text "link"
+                        addStringAnnotation(
+                            tag = "URL",
+                            annotation = "https://www.reddit.com/r/Android/comments/128eak8/you_can_start_shizuku_automatically_on_boot/",
+                            start = startIndex,
+                            end = endIndex
+                        )
+                    }
+                    val uriHandler = LocalUriHandler.current
+
+                    DrawableIcon(R.drawable.ic_outline_info_24)
+                    Spacer(Modifier.width(16.dp))
+                    ClickableText(
+                        modifier = Modifier.weight(1f),
+                        style = TextStyle(
+                            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                            fontSize = 14.sp,
+                            lineHeight = 24.sp
+                        ),
+                        text = annotatedLinkString,
+                        onClick = { index ->
+                            annotatedLinkString
+                                .getStringAnnotations("URL", index, index)
+                                .firstOrNull()?.let { stringAnnotation ->
+                                    uriHandler.openUri(stringAnnotation.item)
+                                }
+                        }
+                    )
                 }
             }
         }
