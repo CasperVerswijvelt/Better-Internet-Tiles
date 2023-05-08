@@ -45,7 +45,7 @@
     <string name="app_description_shell_access">Het aan- en uitzetten van Wi-Fi en mobiele data, zowel als het uitlezen van het huidige Wi-Fi netwerk, vereist toegang tot de shell. Shizuku kan dit regelen zonder root-toegang.</string>
     <string name="app_description_about">Een betere versie van de \'Internet\' quick-settings tile die in Android 12 geïntroduceerd werd.</string>
     <string name="on">Aan</string>
-    <string name="shell_access_not_set_up">Je hebt ofwel root-toegang nodig, of Shizuku 11+ werkende hebben om deze app te gebruiken. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="shell_access_not_set_up">Je hebt ofwel root of Shizuku nodig om deze tegel te gebruiek</a></string>
     <string name="airplane_mode">Vliegtuigmodus</string>
     <string name="help_translate">Help met het vertalen van deze app!</string>
     <string name="language">Taal</string>

@@ -42,7 +42,6 @@
     <string name="turning_on">Activation…</string>
     <string name="mobile_data">Données mobiles</string>
     <string name="require_unlock_title">Exiger le déverrouillage</string>
-    <string name="shell_access_not_set_up">Vous avez soit besoin d\'un accès root, soit de Shizuku 11+ installé et fonctionnant avec une permission accordée pour cette application. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="add_tiles_description">Ajoutez ces tuiles en utilisant les boutons de raccourci ci-dessous ! Sous Android 12 et moins, vous devez le faire manuellement depuis les réglages rapides.</string>
     <string name="require_android_13_description">Ajoutez manuellement la tuile en ouvrant le menu des réglages rapides</string>
     <string name="help_translate">Aidez-nous à traduire cette application !</string>

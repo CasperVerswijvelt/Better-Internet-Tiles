@@ -42,7 +42,6 @@
     <string name="add_wifi_tile">WLAN Schnelleinstellungstaste hinzufügen</string>
     <string name="hide_service_title">Versteck\' mich!</string>
     <string name="shell_access_required">Diese App benötigt Shell-Zugriff</string>
-    <string name="shell_access_not_set_up">Du benötigst entweder Root-Zugriff oder Shizuku 11+ (installiert und laufend), um diese App zu nutzen. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="root_access_denied_description">Gewähre dieser App (Better Internet Tiles) manuell den Root Zugriff über eine App (wie z.B. Magisk Manager).</string>
     <string name="root_access_denied">Konnte keinen Root-Zugriff gewähren</string>
     <string name="on">An</string>

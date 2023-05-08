@@ -45,7 +45,6 @@
     <string name="request_root_access_title">Zażądaj dostępu do roota</string>
     <string name="shizuku_access_granted">Dostęp poprzez Shizuku zezwolony.</string>
     <string name="add_nfc_tile">Dodaj kafelkę NFC</string>
-    <string name="shell_access_not_set_up">Musisz albo potrzebować dostępu do roota, albo zainstalowanego i działającego Shizuku 11+ z zezwolonym uprawnieniem dla tej aplikacji. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="add_internet_tile">Dodaj kafelkę Internetu</string>
     <string name="add_tiles_title">Dodaj kafelki</string>
 </resources>

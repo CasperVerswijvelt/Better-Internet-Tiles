@@ -41,7 +41,7 @@
     <string name="root_access_granted">Root access granted.</string>
     <string name="root_access_denied">Could not grant root access</string>
     <string name="root_access_denied_description">Manually grant root access to \'Better Internet Tiles\' from your root management app (e.g Magisk manager).</string>
-    <string name="shell_access_not_set_up">You need either root access, or Shizuku 11+ installed and running with a granted permission for this app. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
+    <string name="shell_access_not_set_up">Either root or Shizuku is needed to toggle this tile</string>
     <string name="shell_access_required">Shell access required</string>
     <string name="hide_service_title">Hide me!</string>
     <string name="hide_service_description">This notification ensures the tiles work correctly with Shizuku. Feel free to hide it.</string>

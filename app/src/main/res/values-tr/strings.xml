@@ -34,7 +34,6 @@
     <string name="hide_service_description">Bu bildirim, blokların Shizuku ile düzgün çalışmasını sağlar. Gizlemekten çekinmeyin.</string>
     <string name="hide_service_title">Beni gizle!</string>
     <string name="shell_access_required">Shell erişimi gerekli</string>
-    <string name="shell_access_not_set_up">Bu uygulama için ya root erişimine ya da Shizuku 11+\'nın yüklü ve izinli olarak çalışıyor olmasına ihtiyacınız vardır. <a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="root_access_denied_description">Root yönetim uygulamanızdan (örneğin Magisk yöneticisi) \'Daha İyi İnternet Kutucukları\' için root erişimini el ile verin.</string>
     <string name="root_access_denied">Root erişim izni verilemedi</string>
     <string name="no_service">Hizmet yok</string>

@@ -12,7 +12,6 @@
     <string name="permissions">権限</string>
     <string name="about">アプリ情報</string>
     <string name="other">その他</string>
-    <string name="shell_access_not_set_up">このアプリを使用するには、Shizuku 11+が動作しているか、rootアクセスが必要です。<a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="shell_access_required">シェルアクセスが必要</string>
     <string name="hide_service_description">Shizukuを使用してタイルを正常に動作させるための通知です。隠してもかまいません。</string>
     <string name="add_wifi_tile">Wi-Fiタイルを追加</string>

@@ -41,7 +41,6 @@
     <string name="permissions">权限</string>
     <string name="about">关于</string>
     <string name="other">其他</string>
-    <string name="shell_access_not_set_up">您需要拥有Root权限, 或者安装、运行Shizuku 11+并获得该应用的许可。<a href="https://shizuku.rikka.app">https://shizuku.rikka.app</a></string>
     <string name="add_mobile_data_tile">添加移动数据磁贴</string>
     <string name="require_android_13_description">打开快速设置编辑菜单以手动添加磁贴</string>
     <string name="internet">互联网</string>
