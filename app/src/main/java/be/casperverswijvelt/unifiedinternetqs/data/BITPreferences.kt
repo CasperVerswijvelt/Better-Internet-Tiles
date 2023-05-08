@@ -105,10 +105,21 @@ class BITPreferences(private val context: Context) {
         }
     }
 }
-enum class ShellMethod(val method: String, val stringResource: Int) {
-    ROOT("root", R.string.root),
-    SHIZUKU("shizuku", R.string.shizuku),
-    AUTO("auto", R.string.auto);
+enum class ShellMethod(val method: String, val nameResource: Int, val descriptionResource: Int? = null) {
+    ROOT(
+        "root",
+        R.string.root,
+        R.string.root_description
+    ),
+    SHIZUKU(
+        "shizuku",
+        R.string.shizuku,
+        R.string.shizuku_description
+    ),
+    AUTO(
+        "auto",
+        R.string.auto
+    );
     companion object {
         infix fun getByValue(value: String): ShellMethod {
             return ShellMethod.values().firstOrNull { it.method == value } ?: AUTO

@@ -175,8 +175,6 @@ fun ColorPalette () {
         MaterialTheme.colorScheme.surfaceVariant,
         MaterialTheme.colorScheme.onSurfaceVariant,
         MaterialTheme.colorScheme.surfaceTint,
-        MaterialTheme.colorScheme.surfaceTint,
-        MaterialTheme.colorScheme.surfaceTint,
         MaterialTheme.colorScheme.inverseSurface,
         MaterialTheme.colorScheme.inverseOnSurface,
         MaterialTheme.colorScheme.error,

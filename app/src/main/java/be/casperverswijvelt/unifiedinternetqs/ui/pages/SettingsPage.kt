@@ -91,7 +91,7 @@ fun BaseSettings(
                 DrawableIcon(R.drawable.terminal)
             },
             title = stringResource(R.string.shell_method),
-            subTitle = stringResource(shellMethod.stringResource)
+            subTitle = stringResource(shellMethod.nameResource)
         ) {
             onShellMethodClicked()
         }

@@ -78,7 +78,9 @@
     <string name="app_info">App Info</string>
     <string name="version">version</string>
     <string name="shizuku" translatable="false">Shizuku</string>
+    <string name="shizuku_description">Shizuku allows normal apps to use system APIs directly with elevated privileges using ADB on non-rooted devices</string>
     <string name="root" translatable="false">Root</string>
+    <string name="root_description">The simplest way to retrieve shell-level access when your phone is rooted</string>
     <string name="auto">Auto</string>
     <string name="ok">Ok</string>
     <string name="yes">Yes</string>
