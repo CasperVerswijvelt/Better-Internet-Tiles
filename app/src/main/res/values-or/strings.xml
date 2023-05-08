@@ -2,8 +2,6 @@
 <resources>
     <string name="off">ବନ୍ଦ ଅଛି</string>
     <string name="on">ଚାଲୁ ଅଛି</string>
-    <string name="permissions">ଅନୁମତି</string>
     <string name="about">ଵିଷୟରେ</string>
-    <string name="other">ଅନ୍ୟ</string>
     <string name="settings">ସେଟିଂ</string>
 </resources>
