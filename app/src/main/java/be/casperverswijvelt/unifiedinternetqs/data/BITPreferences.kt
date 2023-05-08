@@ -10,10 +10,13 @@ import androidx.datastore.preferences.preferencesDataStore
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileType
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import com.topjohnwu.superuser.Shell
 
 class BITPreferences(private val context: Context) {
 
@@ -105,20 +108,44 @@ class BITPreferences(private val context: Context) {
         }
     }
 }
-enum class ShellMethod(val method: String, val nameResource: Int, val descriptionResource: Int? = null) {
+enum class ShellMethod(
+    val method: String,
+    val nameResource: Int,
+    val descriptionResource: Int? = null,
+    val isGranted: () -> Boolean = { false },
+    val alertDialog: AlertDialogData? = null
+) {
     ROOT(
-        "root",
-        R.string.root,
-        R.string.root_description
+        method = "root",
+        nameResource = R.string.root,
+        descriptionResource = R.string.root_description,
+        isGranted = { Shell.isAppGrantedRoot() == true },
+        alertDialog = AlertDialogData(
+            iconResource = R.drawable.baseline_block_24,
+            titleResource = R.string.allow_root_access,
+            messageResource = R.string.allow_root_access_description,
+            positiveButtonResource = R.string.ok
+        )
     ),
     SHIZUKU(
-        "shizuku",
-        R.string.shizuku,
-        R.string.shizuku_description
+        method = "shizuku",
+        nameResource = R.string.shizuku,
+        descriptionResource = R.string.shizuku_description,
+        isGranted = { ShizukuUtil.hasShizukuPermission() },
+        alertDialog = AlertDialogData(
+            iconResource = R.drawable.baseline_block_24,
+            titleResource = R.string.allow_shizuku_access,
+            messageResource = R.string.allow_shizuku_access_description,
+            positiveButtonResource = R.string.ok
+        )
     ),
     AUTO(
-        "auto",
-        R.string.auto
+        method = "auto",
+        nameResource = R.string.auto,
+        isGranted = {
+            Shell.isAppGrantedRoot() == true ||
+            ShizukuUtil.hasShizukuPermission()
+        }
     );
     companion object {
         infix fun getByValue(value: String): ShellMethod {

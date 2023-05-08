@@ -13,9 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.ui.pages.DrawableIcon
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 
 @Composable
 fun PreferenceEntry(
@@ -191,6 +194,28 @@ fun ColorPalette () {
             .height(30.dp)
             .background(color))
     }
+}
+
+@Composable
+fun AlertDialog(
+    alertDialogData: AlertDialogData,
+    onDismissRequest: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        icon = alertDialogData.iconResource?.let { { DrawableIcon(it) } },
+        title = { Text(stringResource(alertDialogData.titleResource)) },
+        text = { Text(stringResource(alertDialogData.messageResource)) },
+        confirmButton = {
+            TextButton(onClick = {
+                alertDialogData.onPositiveButtonClicked()
+                onDismissRequest()
+            }) {
+                Text(stringResource(alertDialogData.positiveButtonResource))
+            }
+        }
+
+    )
 }
 
 sealed class PermissionInfo (

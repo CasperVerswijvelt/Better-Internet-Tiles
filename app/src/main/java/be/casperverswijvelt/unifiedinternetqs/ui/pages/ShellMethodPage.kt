@@ -1,6 +1,7 @@
 package be.casperverswijvelt.unifiedinternetqs.ui.pages
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,10 +31,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -41,11 +46,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
+import be.casperverswijvelt.unifiedinternetqs.ui.components.AlertDialog
+import be.casperverswijvelt.unifiedinternetqs.ui.components.OnLifecycleEvent
+import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
+import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,15 +67,20 @@ fun ShellMethodPage(
     val context = LocalContext.current
     val preferences = BITPreferences(context)
     val coroutineScope = rememberCoroutineScope()
-    val shellMethod by preferences.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
-    val setShellMethod: (ShellMethod) -> Unit = {
-        if (it == ShellMethod.SHIZUKU) {
-            ShizukuUtil.requestShizukuPermission {}
-        }
-        coroutineScope.launch {
-            preferences.setShellMethod(it)
+
+    val selectedShellMethod by preferences.getShellMethod.collectAsState(initial = ShellMethod.AUTO)
+    var alertDialog by remember { mutableStateOf<AlertDialogData?>(null) }
+
+    val afterPermissionRequested: (ShellMethod) -> Unit = { method ->
+        if (method.isGranted()) {
+            coroutineScope.launch {
+                preferences.setShellMethod(method)
+            }
+        } else {
+            alertDialog = method.alertDialog
         }
     }
+
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -92,7 +108,9 @@ fun ShellMethodPage(
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -100,17 +118,30 @@ fun ShellMethodPage(
                     ShellMethod.ROOT,
                     ShellMethod.SHIZUKU
                 ).forEach { method ->
-
+                    val selected = method == selectedShellMethod
+                    var granted by remember { mutableStateOf(method.isGranted()) }
+                    val selectedAndGranted = selected && granted
                     val checkAlpha by animateFloatAsState(
-                        targetValue = if (shellMethod === method)
-                            1f
-                        else
-                            0f
+                        targetValue = if (selectedAndGranted) 1f else 0f
                     )
 
                     OutlinedCard(
-                        onClick = { setShellMethod(method) },
-                        colors = if (shellMethod === method)
+                        onClick = {
+                            when (method) {
+                                ShellMethod.ROOT -> {
+                                    Shell.getShell {
+                                        afterPermissionRequested(method)
+                                    }
+                                }
+                                ShellMethod.SHIZUKU -> {
+                                    ShizukuUtil.requestShizukuPermission {
+                                        afterPermissionRequested(method)
+                                    }
+                                }
+                                else -> {}
+                            }
+                        },
+                        colors = if (selectedAndGranted)
                             CardDefaults.outlinedCardColors(
                                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = .15f)
                             )
@@ -140,23 +171,44 @@ fun ShellMethodPage(
                             }
                             Surface(
                                 shape = CircleShape,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .alpha(checkAlpha)
+                                color = if (selectedAndGranted)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    Color.Transparent,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = .2f)),
+                                modifier = Modifier.size(24.dp)
                             ) {
                                 Image(
                                     painter = painterResource(R.drawable.baseline_check_24),
                                     contentDescription = "",
                                     contentScale = ContentScale.Inside,
                                     colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
-                                    modifier = Modifier.padding(2.dp)
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .alpha(checkAlpha)
                                 )
                             }
+                        }
+                    }
+                    OnLifecycleEvent { _, event ->
+                        when(event) {
+                            Lifecycle.Event.ON_RESUME -> {
+                                granted = method.isGranted()
+                            }
+                            else -> {}
                         }
                     }
                 }
             }
         }
+    }
+
+    alertDialog?.let {
+        AlertDialog(
+            alertDialogData = it,
+            onDismissRequest = {
+                alertDialog = null
+            }
+        )
     }
 }

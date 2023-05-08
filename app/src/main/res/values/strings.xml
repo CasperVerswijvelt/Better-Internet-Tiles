@@ -108,4 +108,9 @@
         <item quantity="one">Used for %1$s tile</item>
         <item quantity="other">Used for %1$s tiles</item>
     </plurals>
+    <string name="allow_root_access">Allow root access</string>
+    <string name="allow_root_access_description">Please allow root access for the \'Better Internet Tiles\' application in your root management application (e.g. Magisk Manager)</string>
+    <string name="allow_shizuku_access">Allow Shizuku access</string>
+    <string name="allow_shizuku_access_description">Please make sure that the \'Better Internet Tiles\' is granted access to the Shizuku application and that the Shizuku process is running</string>
+
 </resources>

@@ -37,17 +37,20 @@ object ShizukuUtil {
      * @param callback invoked when the permission grant result is received.
      */
     fun requestShizukuPermission(callback: (granted: Boolean) -> Unit) {
-        Shizuku.addRequestPermissionResultListener(object :
-            Shizuku.OnRequestPermissionResultListener {
-            override fun onRequestPermissionResult(
-                requestCode: Int,
-                grantResult: Int
-            ) {
-                Shizuku.removeRequestPermissionResultListener(this)
-                callback(grantResult == PackageManager.PERMISSION_GRANTED)
-            }
-        })
-        Shizuku.requestPermission(69101)
+        if (Shizuku.pingBinder()) {
+            Shizuku.addRequestPermissionResultListener(object :
+                Shizuku.OnRequestPermissionResultListener {
+                override fun onRequestPermissionResult(
+                    requestCode: Int,
+                    grantResult: Int
+                ) {
+                    Shizuku.removeRequestPermissionResultListener(this)
+                    callback(grantResult == PackageManager.PERMISSION_GRANTED)
+                }
+            })
+            Shizuku.requestPermission(69101)
+        }
+        callback(false)
     }
 
     fun executeCommand(command: String): Process {

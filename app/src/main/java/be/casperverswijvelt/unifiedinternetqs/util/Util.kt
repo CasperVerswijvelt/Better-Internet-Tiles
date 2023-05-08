@@ -264,21 +264,25 @@ fun getShellAccessRequiredDialog(context: Context): AlertDialogData {
 }
 
 data class AlertDialogData(
+    val iconResource: Int? = null,
     val titleResource: Int,
     val messageResource: Int,
     val positiveButtonResource: Int,
-    val onPositiveButtonClicked: () -> Unit
+    val onPositiveButtonClicked: () -> Unit = {}
 )
 
 fun AlertDialogData.toDialog(context: Context): Dialog {
-    return AlertDialog.Builder(context)
+    val dialog = AlertDialog.Builder(context)
         .setTitle(titleResource)
         .setMessage(messageResource)
         .setPositiveButton(positiveButtonResource) { _, _ ->
             onPositiveButtonClicked()
         }
         .setCancelable(true)
-        .create()
+    iconResource?.let {
+        dialog.setIcon(it)
+    }
+    return dialog.create()
 }
 
 fun executeShellCommand(command: String, context: Context): Shell.Result? {

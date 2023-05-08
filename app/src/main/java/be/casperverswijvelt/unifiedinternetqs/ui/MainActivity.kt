@@ -49,6 +49,7 @@ import be.casperverswijvelt.unifiedinternetqs.ui.pages.InfoPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.SettingsPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.ShellMethodPage
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
+import be.casperverswijvelt.unifiedinternetqs.ui.components.AlertDialog
 
 class MainActivity : ComponentActivity() {
 
@@ -167,18 +168,10 @@ fun App() {
 
     alertDialog?.let {
         AlertDialog(
-            onDismissRequest = { alertDialog = null},
-            title = { Text(stringResource(it.titleResource)) },
-            text = { Text(stringResource(it.messageResource)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    it.onPositiveButtonClicked()
-                    alertDialog = null
-                }) {
-                    Text(stringResource(it.positiveButtonResource))
-                }
+            alertDialogData = it,
+            onDismissRequest = {
+                alertDialog = null
             }
-
         )
     }
 
