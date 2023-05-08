@@ -49,7 +49,7 @@ class BITPreferences(private val context: Context) {
 
     // Require unlock
 
-    val getRequireUnlock: kotlinx.coroutines.flow.Flow<Boolean> = context
+    val getRequireUnlock: Flow<Boolean> = context
         .dataStore.data.map {
             it[KEY_REQUIRE_UNLOCK] ?: true
         }
@@ -62,7 +62,7 @@ class BITPreferences(private val context: Context) {
 
     // Installation ID
 
-    val getInstallationId: kotlinx.coroutines.flow.Flow<String?> = context
+    val getInstallationId: Flow<String?> = context
         .dataStore.data.map {
             it[KEY_INSTALLATION_ID]
         }
@@ -75,7 +75,7 @@ class BITPreferences(private val context: Context) {
 
     // Shell method
 
-    val getShellMethod: kotlinx.coroutines.flow.Flow<ShellMethod> = context
+    val getShellMethod: Flow<ShellMethod> = context
         .dataStore.data.map {
             it[KEY_SHELL_METHOD]?.let {methodString ->
                 ShellMethod.getByValue(methodString)
