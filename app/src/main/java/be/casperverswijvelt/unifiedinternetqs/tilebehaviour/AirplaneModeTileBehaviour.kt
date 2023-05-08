@@ -69,14 +69,7 @@ class AirplaneModeTileBehaviour(
     override fun onClick() {
         log("onClick")
 
-        if (!hasShellAccess(context)) {
-
-            // Either root or Shizuku access is needed to enable/disable AirplaneMode.
-            //  There is currently no other way to do this, so this functionality will not work
-            //  without root Shizuku access.
-            showDialog(getShellAccessRequiredDialog(context))
-            return
-        }
+        if (!checkShellAccess()) return
 
         if (requiresUnlock) {
             unlockAndRun { toggleAirplaneMode() }
