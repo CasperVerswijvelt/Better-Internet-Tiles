@@ -181,7 +181,7 @@ class TileSyncService: Service() {
             btIntentFilter
         )
 
-        (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter.getProfileProxy(
+        (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter?.getProfileProxy(
             applicationContext,
             object : BluetoothProfile.ServiceListener {
                 override fun onServiceConnected(profile: Int, bluetoothProfile: BluetoothProfile?) {
