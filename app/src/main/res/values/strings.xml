@@ -57,7 +57,7 @@
     <string name="shell_access">Shell access</string>
     <string name="shell_access_description">Shell access is needed to enable/disable certain system features. You can use either root or Shizuku to do this.</string>
     <string name="location">Location</string>
-    <string name="location_description">The \'exact location\' permission is required to read out the name of the current connected Wi-Fi network</string>
+    <string name="location_description">The \'exact location\' permission is required to read out the name of the current connected Wi-Fi network.</string>
     <string name="read_phone_state">Read phone state</string>
     <string name="read_phone_state_description">The \'read phone state\' permission is required to read the mobile data connection info.</string>
     <string name="bluetooth_connect">Bluetooth connect</string>

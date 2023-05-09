@@ -49,8 +49,10 @@ object ShizukuUtil {
                 }
             })
             Shizuku.requestPermission(69101)
+        } else {
+            callback(false)
         }
-        callback(false)
+
     }
 
     fun executeCommand(command: String): Process {

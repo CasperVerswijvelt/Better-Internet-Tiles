@@ -115,6 +115,7 @@ fun ShellMethodPage(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
+            Spacer(modifier = Modifier.height(48.dp))
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -207,7 +208,7 @@ fun ShellMethodPage(
                         }
                     }
                 }
-                Spacer(Modifier.height(60.dp))
+                Spacer(Modifier.height(32.dp))
                 Row (
                     modifier = Modifier.alpha(.65f),
                     verticalAlignment = Alignment.CenterVertically

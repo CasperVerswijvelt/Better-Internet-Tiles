@@ -128,12 +128,11 @@ fun IndividualSettingsPage(
                 Column(modifier = Modifier.padding(vertical = padding)) {
                     Text(
                         modifier = Modifier
-                            .padding(padding)
+                            .padding(horizontal = padding * 2, vertical = padding)
                             .fillMaxWidth(),
                         text = stringResource(R.string.require_unlock_title),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center
+                        fontSize = 26.sp,
+                        lineHeight = 36.sp
                     )
                     listOf(
                         RequireUnlockSetting.FOLLOW,

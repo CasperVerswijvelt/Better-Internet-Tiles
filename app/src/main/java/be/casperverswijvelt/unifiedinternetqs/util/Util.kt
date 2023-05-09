@@ -9,7 +9,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.net.wifi.WifiInfo
+import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.nfc.NfcManager
 import android.os.Build
@@ -25,6 +25,8 @@ import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
+import be.casperverswijvelt.unifiedinternetqs.tiles.AirplaneModeTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.BluetoothTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -103,8 +105,12 @@ fun getConnectedWifiSSID(context: Context): String? {
 fun getWifiIcon(context: Context): Int {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    val rssi = cm.activeNetwork?.let {
-        (cm.getNetworkCapabilities(it)?.transportInfo as? WifiInfo)?.rssi
+    var rssi: Int? = null
+    cm.activeNetwork?.let {
+        cm.getNetworkCapabilities(it)?.let { cap ->
+            if (cap.hasTransport(NetworkCapabilities.TRANSPORT_WIFI))
+                rssi = cap.signalStrength
+        }
     }
     val signalStrength = rssi?.let {
         // We use 5 levels for our icon visualisation, so we use this deprecated
@@ -471,6 +477,20 @@ fun reportToAnalytics(context: Context) {
                             "nfc",
                             wasTileUsedInLastXHours(
                                 NFCTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "airplaneMode",
+                            wasTileUsedInLastXHours(
+                                AirplaneModeTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "bluetooth",
+                            wasTileUsedInLastXHours(
+                                BluetoothTileService::class.java,
                                 sharedPref
                             )
                         )
