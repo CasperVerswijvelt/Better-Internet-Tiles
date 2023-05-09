@@ -25,6 +25,8 @@ import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
+import be.casperverswijvelt.unifiedinternetqs.tiles.AirplaneModeTileService
+import be.casperverswijvelt.unifiedinternetqs.tiles.BluetoothTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -471,6 +473,20 @@ fun reportToAnalytics(context: Context) {
                             "nfc",
                             wasTileUsedInLastXHours(
                                 NFCTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "airplaneMode",
+                            wasTileUsedInLastXHours(
+                                AirplaneModeTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "bluetooth",
+                            wasTileUsedInLastXHours(
+                                BluetoothTileService::class.java,
                                 sharedPref
                             )
                         )
