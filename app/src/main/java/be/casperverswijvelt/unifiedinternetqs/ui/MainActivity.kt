@@ -57,12 +57,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Display edge to edge
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val edgeToEdge = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
+        if (edgeToEdge) {
+            // Display edge to edge
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+        }
 
         setContent {
             val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
