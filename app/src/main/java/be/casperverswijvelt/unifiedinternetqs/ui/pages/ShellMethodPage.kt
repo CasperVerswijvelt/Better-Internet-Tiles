@@ -6,8 +6,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -80,12 +83,11 @@ fun ShellMethodPage(
     var alertDialog by remember { mutableStateOf<AlertDialogData?>(null) }
 
     val afterPermissionRequested: (ShellMethod) -> Unit = { method ->
-        if (method.isGranted()) {
-            coroutineScope.launch {
-                preferences.setShellMethod(method)
-            }
-        } else {
+        if (!method.isGranted()) {
             alertDialog = method.alertDialog
+        }
+        coroutineScope.launch {
+            preferences.setShellMethod(method)
         }
     }
 
@@ -129,9 +131,11 @@ fun ShellMethodPage(
                 ).forEach { method ->
                     val selected = method == selectedShellMethod
                     var granted by remember { mutableStateOf(method.isGranted()) }
-                    val selectedAndGranted = selected && granted
                     val checkAlpha by animateFloatAsState(
-                        targetValue = if (selectedAndGranted) 1f else 0f
+                        targetValue = if (selected) 1f else 0f
+                    )
+                    val warningAlpha by animateFloatAsState(
+                        targetValue = if (selected && !granted) 1f else 0f
                     )
 
                     OutlinedCard(
@@ -150,7 +154,7 @@ fun ShellMethodPage(
                                 else -> {}
                             }
                         },
-                        colors = if (selectedAndGranted)
+                        colors = if (selected)
                             CardDefaults.outlinedCardColors(
                                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = .15f)
                             )
@@ -159,7 +163,10 @@ fun ShellMethodPage(
                         modifier = Modifier.width(300.dp)
                     ) {
                         Row(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min)
                         ) {
                             Column(
                                 modifier = Modifier.weight(1F)
@@ -178,23 +185,39 @@ fun ShellMethodPage(
                                     )
                                 }
                             }
-                            Surface(
-                                shape = CircleShape,
-                                color = if (selectedAndGranted)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    Color.Transparent,
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = .2f)),
-                                modifier = Modifier.size(24.dp)
+                            Column (
+                                modifier = Modifier.fillMaxHeight(),
+                                verticalArrangement = Arrangement.SpaceBetween,
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = if (selected)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        Color.Transparent,
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = .2f)),
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Image(
+                                        painter = painterResource(R.drawable.baseline_check_24),
+                                        contentDescription = "",
+                                        contentScale = ContentScale.Inside,
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+                                        modifier = Modifier
+                                            .padding(2.dp)
+                                            .alpha(checkAlpha)
+                                    )
+                                }
+
                                 Image(
-                                    painter = painterResource(R.drawable.baseline_check_24),
+                                    painter = painterResource(R.drawable.baseline_warning_amber_24),
                                     contentDescription = "",
-                                    contentScale = ContentScale.Inside,
-                                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
                                     modifier = Modifier
                                         .padding(2.dp)
-                                        .alpha(checkAlpha)
+                                        .size(20.dp)
+                                        .alpha(warningAlpha)
                                 )
                             }
                         }
