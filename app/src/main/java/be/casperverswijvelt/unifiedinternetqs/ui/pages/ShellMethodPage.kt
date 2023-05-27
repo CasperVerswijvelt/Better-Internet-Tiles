@@ -209,9 +209,8 @@ fun ShellMethodPage(
                     }
                 }
                 Spacer(Modifier.height(32.dp))
-                Row (
-                    modifier = Modifier.alpha(.65f),
-                    verticalAlignment = Alignment.CenterVertically
+                Column (
+                    modifier = Modifier.alpha(.65f)
                 ) {
                     val annotatedLinkString: AnnotatedString = buildAnnotatedString {
                         val description = stringResource(R.string.auto_start_shizuku_description)
@@ -238,13 +237,12 @@ fun ShellMethodPage(
                     val uriHandler = LocalUriHandler.current
 
                     DrawableIcon(R.drawable.ic_outline_info_24)
-                    Spacer(Modifier.width(16.dp))
+                    Spacer(Modifier.height(18.dp))
                     ClickableText(
-                        modifier = Modifier.weight(1f),
                         style = TextStyle(
                             color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                             fontSize = 14.sp,
-                            lineHeight = 24.sp
+                            lineHeight = 18.sp
                         ),
                         text = annotatedLinkString,
                         onClick = { index ->
