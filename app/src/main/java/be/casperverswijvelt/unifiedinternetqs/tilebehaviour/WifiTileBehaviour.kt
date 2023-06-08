@@ -52,7 +52,10 @@ class WifiTileBehaviour(
                 tile.label = (if (TileSyncService.wifiConnected) TileSyncService.wifiSSID else null)
                     ?: resources.getString(R.string.wifi)
                 tile.state = Tile.STATE_ACTIVE
-                tile.icon = getWifiIcon(context)
+                tile.icon = if (TileSyncService.wifiConnected)
+                    getWifiIcon(context)
+                else
+                    R.drawable.ic_baseline_signal_wifi_0_bar_24
                 tile.subtitle =
                     if (TileSyncService.isTurningOnWifi) resources.getString(R.string.turning_on) else resources.getString(
                         R.string.on

@@ -58,7 +58,10 @@ class InternetTileBehaviour(
                     }
 
                     tile.state = Tile.STATE_ACTIVE
-                    tile.icon = getWifiIcon(context)
+                    tile.icon = if (TileSyncService.wifiConnected)
+                        getWifiIcon(context)
+                    else
+                        R.drawable.ic_baseline_signal_wifi_0_bar_24
                     tile.label = if (TileSyncService.isTurningOnWifi)
                         resources.getString(R.string.turning_on)
                     else
