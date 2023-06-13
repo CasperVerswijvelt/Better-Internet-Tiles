@@ -188,7 +188,7 @@ fun LiveTileWithButtons(
                                         errorText
                                     }
                                 }
-                                if(text.isNotEmpty()) {
+                                if (text.isNotEmpty()) {
                                     Toast.makeText(
                                         context,
                                         text,
