@@ -5,6 +5,7 @@ import android.graphics.drawable.Icon
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import android.telephony.ServiceState
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
@@ -15,10 +16,8 @@ import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
 import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiIcon
-import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.Runnable
 
 class InternetTileBehaviour(
@@ -75,11 +74,20 @@ class InternetTileBehaviour(
                     }
 
                     tile.state = Tile.STATE_ACTIVE
-                    tile.icon = getCellularNetworkIcon(context)
-                    tile.label = getCellularNetworkText(
-                        context,
-                        CellularChangeListener.currentTelephonyDisplayInfo
-                    )
+                    if (
+                        TileSyncService.serviceState?.let {
+                            it.state != ServiceState.STATE_IN_SERVICE
+                        } == true
+                    ) {
+                        tile.icon = R.drawable.ic_baseline_signal_cellular_0_bar
+                        tile.label = resources.getString(R.string.sim_not_available)
+                    } else {
+                        tile.icon = getCellularNetworkIcon(context)
+                        tile.label = getCellularNetworkText(
+                            context,
+                            CellularChangeListener.currentTelephonyDisplayInfo
+                        )
+                    }
                 }
                 else -> {
 

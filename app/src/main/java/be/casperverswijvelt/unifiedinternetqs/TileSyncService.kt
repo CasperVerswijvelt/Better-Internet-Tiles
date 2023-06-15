@@ -1,6 +1,5 @@
 package be.casperverswijvelt.unifiedinternetqs
 
-import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -15,13 +14,11 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
-import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.TileService
+import android.telephony.ServiceState
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
@@ -55,6 +52,7 @@ class TileSyncService: Service() {
 
         var isTurningOnData = false
         var isTurningOffData = false
+        var serviceState: ServiceState? = null
 
         var isTurningOnWifi = false
         var isTurningOffWifi = false
@@ -98,7 +96,15 @@ class TileSyncService: Service() {
         updateWifiTile()
         updateInternetTile()
     }
-    private val cellularChangeListener: CellularChangeListener = CellularChangeListener {
+    private val cellularChangeListener: CellularChangeListener = CellularChangeListener { type, data ->
+        when(type) {
+            NetworkChangeType.SERVICE_STATE -> {
+                (data?.firstOrNull() as? ServiceState)?.let {
+                    serviceState = it
+                }
+            }
+            else -> {}
+        }
         updateMobileDataTile()
         updateInternetTile()
     }
@@ -174,6 +180,7 @@ class TileSyncService: Service() {
         super.onCreate()
         Log.d(TAG, "onCreate")
 
+        // Wi-Fi
         wifiChangeListener.startListening(applicationContext)
         cellularChangeListener.startListening(applicationContext)
         registerReceiver(
