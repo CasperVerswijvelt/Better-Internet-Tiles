@@ -21,7 +21,6 @@
     <string name="donate_summarry">Hỗ trợ chúng tôi bằng cách donate</string>
     <string name="good_to_go_description">Các quyền cần thiết đã được cấp, hãy xem các ô có sẵn phía dưới.</string>
     <string name="missing_permissions">Các quyền còn thiếu</string>
-    <string name="good_to_go"></string>
     <string name="xda_title">XDA Developers thread</string>
     <string name="settings">Cài đặt</string>
     <string name="about">Về ứng dụng này</string>
@@ -37,7 +36,6 @@
     <string name="home">Home</string>
     <string name="app_info">Thông tin ứng dụng</string>
     <string name="version">Phiên bản</string>
-    <string name="shell_method"></string>
     <string name="auto">Tự động</string>
     <string name="ok">OK</string>
     <string name="yes">Có</string>
@@ -60,5 +58,4 @@
     <string name="allow_shizuku_access_description">Hãy đảm bảo rằng \'Better Internet Tiles\' được cấp quyền truy cập vào Shizuku và tiến trình Shizuku đang chạy</string>
     <string name="shizuku_description">Shizuku cho phép các ứng dụng bình thường sử dụng API hệ thống với các dặc quyền nâng cao bằng cách sử dụng ADB trên những thiết bị chưa được root</string>
     <string name="root_description">Cách đơn giản nhất để truy xuất shell-level khi thiết bị của bạn đã được root</string>
-    <string name="github_title"></string>
 </resources>
