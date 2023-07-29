@@ -58,4 +58,5 @@
     <string name="allow_shizuku_access_description">Hãy đảm bảo rằng \'Better Internet Tiles\' được cấp quyền truy cập vào Shizuku và tiến trình Shizuku đang chạy</string>
     <string name="shizuku_description">Shizuku cho phép các ứng dụng bình thường sử dụng API hệ thống với các dặc quyền nâng cao bằng cách sử dụng ADB trên những thiết bị chưa được root</string>
     <string name="root_description">Cách đơn giản nhất để truy xuất shell-level khi thiết bị của bạn đã được root</string>
+    <string name="github_title">GitHub repository</string>
 </resources>
