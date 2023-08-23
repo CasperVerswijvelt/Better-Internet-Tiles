@@ -52,18 +52,18 @@ class MobileDataTileBehaviour(
             tile.label = resources.getString(R.string.mobile_data)
             tile.icon = R.drawable.ic_baseline_mobile_data_24
 
-            if (
+            if (airplaneModeEnabled) {
+
+                tile.state = Tile.STATE_UNAVAILABLE
+                tile.subtitle = resources.getString(R.string.airplane_mode)
+
+            } else if (
                 TileSyncService.serviceState?.let {
                     it.state != ServiceState.STATE_IN_SERVICE
                 } == true
             ) {
                 tile.state = Tile.STATE_UNAVAILABLE
                 tile.subtitle = resources.getString(R.string.sim_not_available)
-
-            } else if (airplaneModeEnabled) {
-
-                tile.state = Tile.STATE_UNAVAILABLE
-                tile.subtitle = resources.getString(R.string.airplane_mode)
 
             } else if ((dataEnabled && !TileSyncService.isTurningOffData) || TileSyncService.isTurningOnData) {
 
