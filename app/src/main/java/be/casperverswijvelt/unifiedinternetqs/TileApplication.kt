@@ -71,7 +71,7 @@ class TileApplication : Application() {
     }
     private fun startTileSyncService() {
         try {
-            println("Start tile sync service!")
+            Log.d(TAG, "Starting tile sync service!")
             startForegroundService(
                 Intent(
                     this,
