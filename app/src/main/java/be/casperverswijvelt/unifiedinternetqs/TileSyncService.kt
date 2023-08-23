@@ -14,6 +14,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Network
 import android.nfc.NfcAdapter
 import android.os.IBinder
 import android.service.quicksettings.TileService
@@ -47,6 +48,7 @@ class TileSyncService: Service() {
     companion object {
         const val TAG = "TileSyncService"
 
+        private var latestAvailableWifiNetwork: Network? = null
         var wifiConnected = false
         var wifiSSID: String? = null
 
@@ -81,18 +83,24 @@ class TileSyncService: Service() {
         }
     }
 
-    private val wifiChangeListener: WifiChangeListener = WifiChangeListener {
-        when(it) {
+    private val wifiChangeListener: WifiChangeListener = WifiChangeListener { type, network ->
+        when(type) {
             NetworkChangeType.NETWORK_LOST -> {
-                wifiConnected = false
-                wifiSSID = null
+                // If the network that is lost is not the latest
+                //  network that became available, we are still
+                //  connected.
+                wifiConnected = latestAvailableWifiNetwork != network
             }
             NetworkChangeType.NETWORK_AVAILABLE -> {
+                latestAvailableWifiNetwork = network
                 wifiConnected = true
-                wifiSSID = getConnectedWifiSSID(applicationContext)
             }
             else -> {}
         }
+        wifiSSID = if (wifiConnected)
+            getConnectedWifiSSID(applicationContext)
+        else
+            null
         updateWifiTile()
         updateInternetTile()
     }
