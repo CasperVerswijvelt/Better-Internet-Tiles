@@ -1,12 +1,12 @@
 package be.casperverswijvelt.unifiedinternetqs
 
-import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
@@ -14,13 +14,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
+import android.net.Network
 import android.nfc.NfcAdapter
-import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.TileService
+import android.telephony.ServiceState
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
 import be.casperverswijvelt.unifiedinternetqs.listeners.NetworkChangeType
 import be.casperverswijvelt.unifiedinternetqs.listeners.WifiChangeListener
@@ -40,16 +39,22 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.ui.MainActivity
 import be.casperverswijvelt.unifiedinternetqs.util.getConnectedWifiSSID
 
+
+const val ACT_BATTERY_LEVEL_CHANGED = "android.bluetooth.device.action.BATTERY_LEVEL_CHANGED"
+const val EXTRA_BATTERY_LEVEL = "android.bluetooth.device.extra.BATTERY_LEVEL"
+
 class TileSyncService: Service() {
 
     companion object {
         const val TAG = "TileSyncService"
 
+        private var latestAvailableWifiNetwork: Network? = null
         var wifiConnected = false
         var wifiSSID: String? = null
 
         var isTurningOnData = false
         var isTurningOffData = false
+        var serviceState: ServiceState? = null
 
         var isTurningOnWifi = false
         var isTurningOffWifi = false
@@ -63,7 +68,10 @@ class TileSyncService: Service() {
         var isTurningOnBluetooth = false
         var isTurningOffBluetooth = false
 
-        var connectedBluetoothName: String? = null
+        val bluetoothConnectionState: MutableMap<String, Int> = mutableMapOf()
+        val bluetoothBatteryLevel: MutableMap<String, Int> = mutableMapOf()
+
+        var bluetoothProfile: BluetoothProfile? = null
 
         private val behaviourListeners = arrayListOf<TileBehaviour>()
 
@@ -75,22 +83,36 @@ class TileSyncService: Service() {
         }
     }
 
-    private val wifiChangeListener: WifiChangeListener = WifiChangeListener {
-        when(it) {
+    private val wifiChangeListener: WifiChangeListener = WifiChangeListener { type, network ->
+        when(type) {
             NetworkChangeType.NETWORK_LOST -> {
-                wifiConnected = false
-                wifiSSID = null
+                // If the network that is lost is not the latest
+                //  network that became available, we are still
+                //  connected.
+                wifiConnected = latestAvailableWifiNetwork != network
             }
             NetworkChangeType.NETWORK_AVAILABLE -> {
+                latestAvailableWifiNetwork = network
                 wifiConnected = true
-                wifiSSID = getConnectedWifiSSID(applicationContext)
             }
             else -> {}
         }
+        wifiSSID = if (wifiConnected)
+            getConnectedWifiSSID(applicationContext)
+        else
+            null
         updateWifiTile()
         updateInternetTile()
     }
-    private val cellularChangeListener: CellularChangeListener = CellularChangeListener {
+    private val cellularChangeListener: CellularChangeListener = CellularChangeListener { type, data ->
+        when(type) {
+            NetworkChangeType.SERVICE_STATE -> {
+                (data?.firstOrNull() as? ServiceState)?.let {
+                    serviceState = it
+                }
+            }
+            else -> {}
+        }
         updateMobileDataTile()
         updateInternetTile()
     }
@@ -112,20 +134,23 @@ class TileSyncService: Service() {
     }
     private val bluetoothReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            when(intent?.action) {
-                BluetoothAdapter.ACTION_STATE_CHANGED,
-                BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
-                    syncConnectedBluetoothDevice()
-                    updateBluetoothTile()
+            intent?.let {
+                val device = it.extras?.get(BluetoothDevice.EXTRA_DEVICE) as? BluetoothDevice
+                when (it.action) {
+                    BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
+                        val state = it.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, -1)
+                        device?.let { bluetoothConnectionState[device.address] = state }
+                    }
+                    ACT_BATTERY_LEVEL_CHANGED -> {
+                        val batteryLevel = intent.getIntExtra(EXTRA_BATTERY_LEVEL, -1)
+                        device?.let { bluetoothBatteryLevel[device.address] = batteryLevel }
+                    }
+                    else -> {}
                 }
             }
-            if (intent?.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
-                updateBluetoothTile()
-            }
+            updateBluetoothTile()
         }
     }
-
-    private var bluetoothProfile: BluetoothProfile? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         Log.d(TAG,"onBind")
@@ -163,6 +188,7 @@ class TileSyncService: Service() {
         super.onCreate()
         Log.d(TAG, "onCreate")
 
+        // Wi-Fi
         wifiChangeListener.startListening(applicationContext)
         cellularChangeListener.startListening(applicationContext)
         registerReceiver(
@@ -176,6 +202,7 @@ class TileSyncService: Service() {
         val btIntentFilter = IntentFilter()
         btIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
         btIntentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
+        btIntentFilter.addAction(ACT_BATTERY_LEVEL_CHANGED)
         registerReceiver(
             bluetoothReceiver,
             btIntentFilter
@@ -186,15 +213,13 @@ class TileSyncService: Service() {
             object : BluetoothProfile.ServiceListener {
                 override fun onServiceConnected(profile: Int, bluetoothProfile: BluetoothProfile?) {
                     Log.d(TAG, "Bluetooth profile proxy connected")
-                    this@TileSyncService.bluetoothProfile = bluetoothProfile
-                    syncConnectedBluetoothDevice()
+                    TileSyncService.bluetoothProfile = bluetoothProfile
                     updateBluetoothTile()
                 }
 
                 override fun onServiceDisconnected(p0: Int) {
                     Log.d(TAG, "Bluetooth profile proxy disconnected")
-                    this@TileSyncService.bluetoothProfile = null
-                    syncConnectedBluetoothDevice()
+                    bluetoothProfile = null
                     updateBluetoothTile()
                 }
             },
@@ -205,26 +230,6 @@ class TileSyncService: Service() {
         updateMobileDataTile()
         updateInternetTile()
         updateNFCTile()
-    }
-
-    fun syncConnectedBluetoothDevice() {
-        val hasBluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) == PackageManager.PERMISSION_GRANTED
-        } else true
-
-        connectedBluetoothName = null
-
-        if (hasBluetoothPermission) {
-            bluetoothProfile?.connectedDevices?.getOrNull(0)?.let { device ->
-                connectedBluetoothName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    device.alias
-                else
-                    device.name
-            }
-        }
     }
 
     override fun onDestroy() {

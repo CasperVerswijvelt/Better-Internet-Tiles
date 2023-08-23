@@ -5,6 +5,7 @@ import android.graphics.drawable.Icon
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import android.telephony.ServiceState
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
@@ -16,9 +17,8 @@ import be.casperverswijvelt.unifiedinternetqs.util.getAirplaneModeEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkIcon
 import be.casperverswijvelt.unifiedinternetqs.util.getCellularNetworkText
 import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
-import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.Runnable
+
 
 class MobileDataTileBehaviour(
     context: Context,
@@ -50,12 +50,20 @@ class MobileDataTileBehaviour(
             val dataEnabled = getDataEnabled(context)
 
             tile.label = resources.getString(R.string.mobile_data)
+            tile.icon = R.drawable.ic_baseline_mobile_data_24
 
             if (airplaneModeEnabled) {
 
                 tile.state = Tile.STATE_UNAVAILABLE
                 tile.subtitle = resources.getString(R.string.airplane_mode)
-                tile.icon = R.drawable.ic_baseline_mobile_data_24
+
+            } else if (
+                TileSyncService.serviceState?.let {
+                    it.state != ServiceState.STATE_IN_SERVICE
+                } == true
+            ) {
+                tile.state = Tile.STATE_UNAVAILABLE
+                tile.subtitle = resources.getString(R.string.sim_not_available)
 
             } else if ((dataEnabled && !TileSyncService.isTurningOffData) || TileSyncService.isTurningOnData) {
 
@@ -73,7 +81,6 @@ class MobileDataTileBehaviour(
                 if (!dataEnabled) TileSyncService.isTurningOffData = false
 
                 tile.state = Tile.STATE_INACTIVE
-                tile.icon = R.drawable.ic_baseline_mobile_data_24
                 tile.subtitle = resources.getString(R.string.off)
             }
 

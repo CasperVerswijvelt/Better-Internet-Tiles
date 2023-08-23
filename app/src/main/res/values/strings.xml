@@ -71,5 +71,7 @@
     <string name="allow_shizuku_access">Allow Shizuku access</string>
     <string name="allow_shizuku_access_description">Please make sure that the \'Better Internet Tiles\' is granted access to the Shizuku application and that the Shizuku process is running</string>
     <string name="auto_start_shizuku_description">Did you know you can automatically start Shizuku when your device boots up, no root required? Check out $$this reddit thread$$ for more information on how to set this up.</string>
-
+    <string name="sim_not_available">SIM not available</string>
+    <string name="battery_level">battery</string>
+    <string name="connecting">"Connecting…"</string>
 </resources>

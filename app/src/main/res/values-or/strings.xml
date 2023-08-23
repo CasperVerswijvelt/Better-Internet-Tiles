@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="off">ବନ୍ଦ ଅଛି</string>
+    <string name="on">ଚାଲୁ ଅଛି</string>
+    <string name="about">ଵିଷୟରେ</string>
+    <string name="settings">ସେଟିଂ</string>
+</resources>
