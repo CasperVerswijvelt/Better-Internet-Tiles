@@ -26,4 +26,8 @@
     <string name="network_not_available">Red no disponible</string>
     <string name="airplane_mode">Modo avión</string>
     <string name="help_translate">Ayuda a traducir la app!</string>
+    <string name="shell_access_not_set_up">Necesitas root o Shizuku para usar este mosaico</string>
+    <string name="require_unlock_summary">Evitar el uso de mosaicos en la pantalla de bloqueo</string>
+    <string name="tile_added">Azulejo agregado</string>
+    <string name="tile_already_added">Azulejo ya añadido</string>
 </resources>
