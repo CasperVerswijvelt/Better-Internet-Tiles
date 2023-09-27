@@ -55,4 +55,18 @@
     <string name="read_phone_state">Leer el estado del teléfono</string>
     <string name="donate_summarry">Muestra tu apoyo mediante una donación</string>
     <string name="missing_permissions_description">Es posible que algunas cosas no funcionen como se espera. Amplía para obtener más información.</string>
+    <string name="allow_root_access_description">Por favor, permite el acceso root a la aplicación \"Better Internet Tiles\" en tu aplicación de gestión root (por ejemplo, Magisk Manager)</string>
+    <plurals name="used_for_tiles">
+        <item quantity="one">Utilizado para la tesela %1$s</item>
+        <item quantity="many">Utilizados para las teselas %1$s</item>
+        <item quantity="other">Utilizados para las teselas %1$s</item>
+    </plurals>
+    <string name="connecting">Conectando…</string>
+    <string name="allow_root_access">Permitir el acceso root</string>
+    <string name="sim_not_available">La tarjeta SIM no está disponible</string>
+    <string name="allow_shizuku_access_description">Por favor, asegúrate de que \"Better Internet Tiles\" tiene acceso a la aplicación Shizuku y de que el proceso Shizuku se está ejecutando</string>
+    <string name="available_tiles">Tesela disponible</string>
+    <string name="auto_start_shizuku_description">¿Sabías que puedes iniciar automáticamente Shizuku cuando se inicia el dispositivo, sin necesidad de root\? Echa un vistazo a $$este hilo de reddit$$ para obtener más información sobre cómo configurarlo.</string>
+    <string name="battery_level">batería</string>
+    <string name="allow_shizuku_access">Permitir el acceso a Shizuku</string>
 </resources>
