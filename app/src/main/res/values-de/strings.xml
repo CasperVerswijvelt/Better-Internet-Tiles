@@ -26,4 +26,16 @@
     <string name="hide_service_title">Versteck\' mich!</string>
     <string name="shell_access_required">Diese App benötigt Shell-Zugriff</string>
     <string name="on">An</string>
+    <string name="no">Nein</string>
+    <string name="use_default">Standard verwenden</string>
+    <string name="shizuku_description">Shizuku erlaubt normalen Apps das direkte nutzen von Schnittstellen mit erhöhten Privilegien mithilfe der Nutzung von ADB auf nicht-gerooteten Geräten</string>
+    <string name="yes">Ja</string>
+    <string name="ok">Ok</string>
+    <string name="missing_permissions">Fehlende Berechtigungen</string>
+    <string name="read_phone_state_description">Die Berechtigung \"Telefonstatus lesen\" wird benötigt um Verbindungsinformationen der Mobilen Daten auszulesen.</string>
+    <string name="location_description">Die Berechtigung \"exakter Standort\" wird benötigt um den WLAN-Name des aktuell verbundenen Netzwerks auszulesen.</string>
+    <string name="home">Startseite</string>
+    <string name="donate">Spenden</string>
+    <string name="read_phone_state">Telefonstatus auslesen</string>
+    <string name="donate_summarry">Zeige deine Unterstützung mit einer Spende</string>
 </resources>
