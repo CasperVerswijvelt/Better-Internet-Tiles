@@ -61,7 +61,7 @@
     <string name="shell_method">Shell methode</string>
     <string name="missing_permissions_description">Einige Dinge funktionieren möglicherweise nicht wie erwartet. Für weitere Informationen ausklappen.</string>
     <string name="allow_shizuku_access">Shizuku Zugang erlauben</string>
-    <string name="app_info">App Info</string>
+    <string name="app_info">App Infos</string>
     <string name="version">Version</string>
     <string name="tile_already_added">Kachel bereits hinzugefügt</string>
     <string name="available_tiles">Verfügbare Kacheln</string>
