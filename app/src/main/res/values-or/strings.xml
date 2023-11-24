@@ -2,7 +2,7 @@
 <resources>
     <string name="off">ବନ୍ଦ ଅଛି</string>
     <string name="on">ଚାଲୁ ଅଛି</string>
-    <string name="about">ଵିଷୟରେ</string>
+    <string name="about">ସମ୍ବନ୍ଧରେ</string>
     <string name="settings">ସେଟିଂ</string>
     <string name="no_service">କୌଣସି ସେବା ନାହିଁ</string>
     <string name="help_translate">ଏହି ଆପ୍ ଅନୁବାଦ କରିବାରେ ସାହାଯ୍ୟ କରନ୍ତୁ!</string>
