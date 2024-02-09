@@ -58,7 +58,7 @@
     <string name="allow_shizuku_access">Autoriser l\'accès Shizuku</string>
     <string name="allow_shizuku_access_description">Assurez-vous que \"Better Internet Tiles\" a accès à l\'application Shizuku et que le processus Shizuku est en marche</string>
     <string name="auto_start_shizuku_description">Savez-vous que vous pouvez lancer Shizuku automatiquement au démarrage de l\'appareil, sans accès root ? Lisez $$ce fil Reddit$$ pour en savoir plus.</string>
-    <string name="require_unlock_summary">Empêcher l\'action des tuiles sur l\'écran de verrouillage.</string>
+    <string name="require_unlock_summary">Empêcher l\'action des tuiles sur l\'écran de verrouillage</string>
     <string name="root_description">La façon la plus simple d\'obtenir l\'accès au shell sur un téléphone rooté</string>
     <string name="missing_permissions_description">Certaines choses peuvent ne pas fonctionner. Dépliez pour plus de détails.</string>
     <string name="shell_access_description">L\'accès shell est nécessaire pour activer/désactiver certaines fonctionnalités du système. Vous pouvez utiliser le root ou Shizuku pour cela.</string>
