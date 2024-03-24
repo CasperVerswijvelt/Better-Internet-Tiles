@@ -61,7 +61,7 @@ fun PermissionVisualizer (
     val errorContentColor = MaterialTheme.colorScheme.onErrorContainer
     val successBgColor = if (isSystemInDarkTheme()) Color(0xFF365F32) else Color(0xFFCCEECC)
     val successContentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    val rounding = 15.dp
+    val rounding = 25.dp
     val contentPadding = 18.dp
 
     var permissionWarnings by remember {
