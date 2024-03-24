@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mobile_data">Mobilæ datæ</string>
-    <string name="nfc">Near field communication</string>
-    <string name="wifi">wireless fidelity</string>
-</resources>
