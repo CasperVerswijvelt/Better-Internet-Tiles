@@ -6,7 +6,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+**'
 
 env:
-  BUILD_TOOLS_VERSION: 33.0.0
+  BUILD_TOOLS_VERSION: 34.0.0
   PRE_RELEASE: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
 
 jobs:
