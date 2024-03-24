@@ -71,9 +71,13 @@ fun PermissionVisualizer (
     var expanded by remember { mutableStateOf(false) }
     val dynamicRounding by animateDpAsState(
         targetValue = if (expanded && permissionWarnings.isNotEmpty()) 0.dp else rounding,
-        animationSpec = tween(durationMillis = 400, easing = EaseOut)
+        animationSpec = tween(durationMillis = 400, easing = EaseOut),
+        label = "dynamic rounding"
     )
-    val expandIconRotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
+    val expandIconRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "expand icon rotation"
+    )
 
     val syncPermissionWarnings = {
         val tempPermissionWarnings = arrayListOf<PermissionInfo>()

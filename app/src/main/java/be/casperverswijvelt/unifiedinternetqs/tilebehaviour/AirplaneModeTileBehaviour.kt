@@ -12,8 +12,6 @@ import be.casperverswijvelt.unifiedinternetqs.tiles.AirplaneModeTileService
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
 import be.casperverswijvelt.unifiedinternetqs.util.getAirplaneModeEnabled
-import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
-import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
 import kotlinx.coroutines.Runnable
 
 class AirplaneModeTileBehaviour(

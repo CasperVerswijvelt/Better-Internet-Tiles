@@ -20,7 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -103,7 +103,7 @@ fun ShellMethodPage(
                         onBackClicked()
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = ""
                         )
                     }
@@ -132,10 +132,12 @@ fun ShellMethodPage(
                     val selected = method == selectedShellMethod
                     var granted by remember { mutableStateOf(method.isGranted()) }
                     val checkAlpha by animateFloatAsState(
-                        targetValue = if (selected) 1f else 0f
+                        targetValue = if (selected) 1f else 0f,
+                        label = "checkmark alpha"
                     )
                     val warningAlpha by animateFloatAsState(
-                        targetValue = if (selected && !granted) 1f else 0f
+                        targetValue = if (selected && !granted) 1f else 0f,
+                        label = "warning alpha"
                     )
 
                     OutlinedCard(

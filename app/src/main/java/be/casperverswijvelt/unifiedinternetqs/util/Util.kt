@@ -9,14 +9,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.nfc.NfcManager
 import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.TileService
-import android.telephony.ServiceState
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyDisplayInfo

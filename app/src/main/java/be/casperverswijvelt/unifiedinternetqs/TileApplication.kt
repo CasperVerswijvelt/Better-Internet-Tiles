@@ -6,13 +6,16 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.ShellMethod
-import be.casperverswijvelt.unifiedinternetqs.util.*
+import be.casperverswijvelt.unifiedinternetqs.util.ExecutorServiceSingleton
+import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
+import be.casperverswijvelt.unifiedinternetqs.util.getInstallId
+import be.casperverswijvelt.unifiedinternetqs.util.initializeFirebase
+import be.casperverswijvelt.unifiedinternetqs.util.reportException
+import be.casperverswijvelt.unifiedinternetqs.util.reportToAnalytics
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 
 class TileApplication : Application() {

@@ -223,7 +223,7 @@ sealed class PermissionInfo (
     val descriptionResourceId: Int,
     val tiles: Array<Int> = arrayOf()
 ) {
-    object Shell: PermissionInfo(
+    data object Shell: PermissionInfo(
         R.string.shell_access,
         R.string.shell_access_description,
         arrayOf(
@@ -235,12 +235,12 @@ sealed class PermissionInfo (
             R.string.bluetooth,
         )
     )
-    object Location: PermissionInfo(
+    data object Location: PermissionInfo(
         R.string.location,
         R.string.location_description,
         arrayOf(R.string.wifi)
     )
-    object ReadPhoneState: PermissionInfo(
+    data object ReadPhoneState: PermissionInfo(
         R.string.read_phone_state,
         R.string.read_phone_state_description,
         arrayOf(
@@ -248,7 +248,7 @@ sealed class PermissionInfo (
             R.string.internet,
         )
     )
-    object BluetoothConnect: PermissionInfo(
+    data object BluetoothConnect: PermissionInfo(
         R.string.bluetooth_connect,
         R.string.bluetooth_connect_description,
         arrayOf(
