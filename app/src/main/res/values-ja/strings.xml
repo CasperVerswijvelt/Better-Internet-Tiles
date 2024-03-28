@@ -46,4 +46,7 @@
     <string name="allow_shizuku_access">Shizuku アクセスを許可</string>
     <string name="available_tiles">利用可能なタイル</string>
     <string name="require_unlock_summary">ロック画面でのタイルのアクションを防止します</string>
+    <string name="sim_not_available">SIMが挿入されていません</string>
+    <string name="use_default">デフォルトを使用</string>
+    <string name="location">位置情報</string>
 </resources>
