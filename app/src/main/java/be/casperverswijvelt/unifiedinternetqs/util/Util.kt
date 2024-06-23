@@ -3,6 +3,7 @@ package be.casperverswijvelt.unifiedinternetqs.util
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -23,6 +24,7 @@ import androidx.preference.PreferenceManager
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.ShizukuDetectService
+import be.casperverswijvelt.unifiedinternetqs.tiles.BluetoothTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -71,6 +73,10 @@ fun getNFCEnabled(context: Context): Boolean {
 
     return (context.getSystemService(Context.NFC_SERVICE) as NfcManager)
         .defaultAdapter?.isEnabled ?: false
+}
+
+fun getBluetoothEnabled(context: Context): Boolean {
+    return (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter?.isEnabled ?: false
 }
 
 fun getAirplaneModeEnabled(context: Context): Boolean {
@@ -459,6 +465,13 @@ fun reportToAnalytics(context: Context) {
                             "nfc",
                             wasTileUsedInLastXHours(
                                 NFCTileService::class.java,
+                                sharedPref
+                            )
+                        )
+                        tiles.put(
+                            "bluetooth",
+                            wasTileUsedInLastXHours(
+                                BluetoothTileService::class.java,
                                 sharedPref
                             )
                         )

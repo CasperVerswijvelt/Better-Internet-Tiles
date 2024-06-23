@@ -18,6 +18,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.tiles.BluetoothTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -151,6 +152,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         NFCTileService::class.java,
                         R.string.nfc,
                         R.drawable.nfc_24
+                    )
+                }
+                resources.getString(R.string.add_bluetooth_tile_key) -> {
+                    addTile(
+                        context,
+                        BluetoothTileService::class.java,
+                        R.string.bluetooth,
+                        R.drawable.bluetooth_24
                     )
                 }
                 resources.getString(R.string.language_key) -> {

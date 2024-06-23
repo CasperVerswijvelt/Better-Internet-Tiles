@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import be.casperverswijvelt.unifiedinternetqs.tiles.BluetoothTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.MobileDataTileService
 import be.casperverswijvelt.unifiedinternetqs.tiles.NFCTileService
@@ -43,6 +44,9 @@ class LongPressReceiverActivity : Activity() {
                 }
                 NFCTileService::class.java.name -> {
                     Settings.ACTION_NFC_SETTINGS
+                }
+                BluetoothTileService::class.java.name -> {
+                    Settings.ACTION_BLUETOOTH_SETTINGS
                 }
                 else -> Settings.ACTION_WIRELESS_SETTINGS
             }

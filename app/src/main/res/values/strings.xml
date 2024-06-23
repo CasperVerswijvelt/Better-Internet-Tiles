@@ -9,6 +9,7 @@
     <string name="app_description_shell_access">
         Turning Wi-Fi and mobile data on/off and reading the current Wi-Fi network name requires shell access. Shizuku can take care of this without also requiring root access.
     </string>
+    <string name="bluetooth">Bluetooth</string>
     <string name="wifi">Wi-Fi</string>
     <string name="mobile_data">Mobile data</string>
     <string name="nfc">NFC</string>
@@ -32,6 +33,7 @@
     <string name="feedback_title">Feedback/report a bug</string>
     <string name="github_title">GitHub repository</string>
     <string name="xda_title">XDA Developers thread</string>
+    <string name="last_connected_bluetooth_devices_key" translatable="false">last_connected_bluetooth_devices</string>
     <string name="last_connected_wifi_key" translatable="false">last_connected_wifi</string>
     <string name="settings">Settings</string>
     <string name="permissions">Permissions</string>
@@ -54,6 +56,8 @@
     <string name="add_internet_tile_key" translatable="false">add_internet_tile_key</string>
     <string name="add_nfc_tile">Add NFC tile</string>
     <string name="add_nfc_tile_key" translatable="false">add_nfc_tile_key</string>
+    <string name="add_bluetooth_tile">Add Bluetooth tile</string>
+    <string name="add_bluetooth_tile_key" translatable="false">add_bluetooth_tile_key</string>
     <string name="add_tiles_title">Add tiles</string>
     <string name="add_tiles_description">Add these tiles by using the shortcut buttons below! On Android 12 and below you have to do so manually from the quick-settings.</string>
     <string name="tile_added_error">Could not add the tile</string>
