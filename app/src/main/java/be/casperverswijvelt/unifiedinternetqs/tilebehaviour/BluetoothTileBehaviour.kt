@@ -2,6 +2,7 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
@@ -23,7 +24,7 @@ class BluetoothTileBehaviour(
     context: Context,
     showDialog: (AlertDialogData) -> Unit,
     unlockAndRun: (Runnable) -> Unit = { it.run() }
-): TileBehaviour(context, showDialog, unlockAndRun) {
+) : TileBehaviour(context, showDialog, unlockAndRun) {
 
     companion object {
         private const val TAG = "BluetoothTileBehaviour"
@@ -38,6 +39,7 @@ class BluetoothTileBehaviour(
             context,
             R.drawable.baseline_bluetooth_24
         )
+
     @Suppress("UNCHECKED_CAST")
     override val tileServiceClass: Class<TileService>
         get() = BluetoothTileService::class.java as Class<TileService>
@@ -53,21 +55,29 @@ class BluetoothTileBehaviour(
                     Manifest.permission.BLUETOOTH_CONNECT
                 ) == PackageManager.PERMISSION_GRANTED
             } else true
-            val connectedBluetoothDevice = TileSyncService.bluetoothProfile?.connectedDevices?.getOrNull(0)
-            val bluetoothName = if (hasBluetoothPermission)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+
+            var bluetoothName: String? = null
+            var connectedBluetoothBattery = -1
+            var connectingBluetoothDevice: BluetoothDevice? = null
+
+            if (hasBluetoothPermission) {
+
+                val connectedBluetoothDevice =
+                    TileSyncService.bluetoothProfile?.connectedDevices?.getOrNull(0)
+                bluetoothName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                     connectedBluetoothDevice?.alias
                 else
                     connectedBluetoothDevice?.name
-            else
-                ""
-            val connectedBluetoothBattery = connectedBluetoothDevice?.let {
-                TileSyncService.bluetoothBatteryLevel[it.address]
-            } ?: -1
 
-            val connectingBluetoothDevice = TileSyncService.bluetoothProfile?.getDevicesMatchingConnectionStates(
-                intArrayOf(BluetoothAdapter.STATE_CONNECTING)
-            )?.firstOrNull()
+                connectedBluetoothBattery = connectedBluetoothDevice?.let {
+                    TileSyncService.bluetoothBatteryLevel[it.address]
+                } ?: -1
+
+                connectingBluetoothDevice =
+                    TileSyncService.bluetoothProfile?.getDevicesMatchingConnectionStates(
+                        intArrayOf(BluetoothAdapter.STATE_CONNECTING)
+                    )?.firstOrNull()
+            }
 
             tile.icon = R.drawable.baseline_bluetooth_24
             tile.label = resources.getString(R.string.bluetooth)
