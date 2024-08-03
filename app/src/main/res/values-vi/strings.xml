@@ -40,7 +40,7 @@
     <string name="ok">OK</string>
     <string name="yes">Có</string>
     <string name="no">Không</string>
-    <string name="use_default">Sử dụng mặc định</string>
+    <string name="use_default">Mặc định</string>
     <string name="donate">Donate</string>
     <string name="missing_permissions_description">Một vài chức năng có thể hoạt động không như mong muốn. Mở rộng để biết thêm chi tiết.</string>
     <string name="shell_access">Truy cập shell</string>
