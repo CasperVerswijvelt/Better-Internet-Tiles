@@ -1,9 +1,12 @@
 package be.casperverswijvelt.unifiedinternetqs.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -33,6 +36,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.TileApplication
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.AirplaneModeTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.BluetoothTileBehaviour
@@ -50,9 +56,13 @@ import be.casperverswijvelt.unifiedinternetqs.ui.pages.SettingsPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.ShellMethodPage
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.ui.components.AlertDialog
+import be.casperverswijvelt.unifiedinternetqs.util.reportException
 
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        const val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +98,35 @@ class MainActivity : ComponentActivity() {
                 ) {}
                 App()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.d(TAG, "Resumed, starting tile sync service!")
+        if (TileSyncService.isRunning) return
+        try {
+            startForegroundService(
+                Intent(
+                    this,
+                    TileSyncService::class.java
+                )
+            )
+        } catch (e: Throwable) {
+            Log.w(
+                TileApplication.TAG,
+                "Failed to start tile sync foreground service", e
+            )
+            reportException(e)
+
+            // Not sure what the cause of the 'ForegroundServiceStartNotAllowedException'
+            //  is or how to solve it.
+            Toast.makeText(
+                applicationContext,
+                R.string.toast_foreground_service_error,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

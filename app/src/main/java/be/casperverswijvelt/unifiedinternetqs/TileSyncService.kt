@@ -48,6 +48,10 @@ class TileSyncService: Service() {
     companion object {
         const val TAG = "TileSyncService"
 
+        private var instance: TileSyncService? = null
+        val isRunning
+            get() = instance != null
+
         private var latestAvailableWifiNetwork: Network? = null
         var wifiConnected = false
         var wifiSSID: String? = null
@@ -188,6 +192,8 @@ class TileSyncService: Service() {
         super.onCreate()
         Log.d(TAG, "onCreate")
 
+        instance = this
+
         // Wi-Fi
         wifiChangeListener.startListening(applicationContext)
         cellularChangeListener.startListening(applicationContext)
@@ -226,21 +232,31 @@ class TileSyncService: Service() {
             BluetoothProfile.HEADSET
         )
 
-        updateWifiTile()
-        updateMobileDataTile()
-        updateInternetTile()
-        updateNFCTile()
+        updateAllTiles()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy")
 
+        instance = null
+
         wifiChangeListener.stopListening(applicationContext)
         cellularChangeListener.stopListening(applicationContext)
         unregisterReceiver(airplaneModeReceiver)
         unregisterReceiver(nfcReceiver)
         unregisterReceiver(bluetoothReceiver)
+
+        updateAllTiles()
+    }
+
+    private fun updateAllTiles() {
+        updateWifiTile()
+        updateMobileDataTile()
+        updateInternetTile()
+        updateNFCTile()
+        updateAirplaneModeTile()
+        updateBluetoothTile()
     }
 
     private fun updateWifiTile() {

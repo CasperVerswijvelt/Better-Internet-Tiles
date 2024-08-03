@@ -51,7 +51,7 @@ fun LiveTile(
     modifier: Modifier = Modifier,
     tileBehaviour: TileBehaviour
 ) {
-    var tileState by remember { mutableStateOf(tileBehaviour.tileState) }
+    var tileState by remember { mutableStateOf(tileBehaviour.finalTileState) }
     val context = LocalContext.current
 
     Tile(
