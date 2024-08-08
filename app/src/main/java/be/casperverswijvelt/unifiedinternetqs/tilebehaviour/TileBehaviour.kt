@@ -3,7 +3,9 @@ package be.casperverswijvelt.unifiedinternetqs.tilebehaviour
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.Icon
+import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
 import be.casperverswijvelt.unifiedinternetqs.data.RequireUnlockSetting
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
@@ -28,8 +30,22 @@ abstract class TileBehaviour(
     abstract val tileName: String
     abstract val defaultIcon: Icon
     abstract val tileServiceClass: Class<TileService>
-    abstract val tileState: TileState
+    protected abstract val tileState: TileState
     abstract val onLongClickIntentAction: String
+
+    val finalTileState: TileState
+        get() {
+            return if (TileSyncService.isRunning) {
+                tileState
+            } else {
+                TileState().apply {
+                    icon = defaultIcon.resId
+                    label = tileName
+                    subtitle = "Service not active"
+                    state = Tile.STATE_INACTIVE
+                }
+            }
+        }
 
     abstract fun onClick()
 
@@ -57,7 +73,7 @@ abstract class TileBehaviour(
         }
 
     fun updateTile() {
-        updateTileListeners.forEach { it(tileState) }
+        updateTileListeners.forEach { it(finalTileState) }
     }
 
     fun addUpdateTileListeners(listener: (TileState) -> Unit) {

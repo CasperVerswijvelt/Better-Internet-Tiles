@@ -51,7 +51,7 @@ fun LiveTile(
     modifier: Modifier = Modifier,
     tileBehaviour: TileBehaviour
 ) {
-    var tileState by remember { mutableStateOf(tileBehaviour.tileState) }
+    var tileState by remember { mutableStateOf(tileBehaviour.finalTileState) }
     val context = LocalContext.current
 
     Tile(
@@ -104,16 +104,19 @@ fun Tile(
             if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
         else
             disabledBgColor,
-        animationSpec = colorAnimationSpec
+        animationSpec = colorAnimationSpec,
+        label = "tile background color"
     )
     val fgColor by animateColorAsState(
         targetValue = if (active) Color.Black else if (darkTheme) Color.White else Color.Black,
-        animationSpec = colorAnimationSpec
+        animationSpec = colorAnimationSpec,
+        label = "tile foreground color"
     )
     val fgColorLight = Color(fgColor.red, fgColor.green, fgColor.blue, .7f)
     val alpha by animateFloatAsState(
         targetValue = if (unavailable) .35f else 1f,
-        animationSpec = tween(350, easing = EaseInOut)
+        animationSpec = tween(350, easing = EaseInOut),
+        label = "tile alpha"
     )
 
     Box(

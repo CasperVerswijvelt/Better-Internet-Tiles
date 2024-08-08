@@ -2,7 +2,6 @@ package be.casperverswijvelt.unifiedinternetqs.ui.components
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -61,7 +60,7 @@ fun PermissionVisualizer (
     val errorContentColor = MaterialTheme.colorScheme.onErrorContainer
     val successBgColor = if (isSystemInDarkTheme()) Color(0xFF365F32) else Color(0xFFCCEECC)
     val successContentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    val rounding = 15.dp
+    val rounding = 25.dp
     val contentPadding = 18.dp
 
     var permissionWarnings by remember {
@@ -71,9 +70,13 @@ fun PermissionVisualizer (
     var expanded by remember { mutableStateOf(false) }
     val dynamicRounding by animateDpAsState(
         targetValue = if (expanded && permissionWarnings.isNotEmpty()) 0.dp else rounding,
-        animationSpec = tween(durationMillis = 400, easing = EaseOut)
+        animationSpec = tween(durationMillis = 400, easing = EaseOut),
+        label = "dynamic rounding"
     )
-    val expandIconRotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
+    val expandIconRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "expand icon rotation"
+    )
 
     val syncPermissionWarnings = {
         val tempPermissionWarnings = arrayListOf<PermissionInfo>()
@@ -85,23 +88,13 @@ fun PermissionVisualizer (
         if (
             ActivityCompat.checkSelfPermission(
                 context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            tempPermissionWarnings.add(PermissionInfo.Location)
-        }
-
-        if (
-            ActivityCompat.checkSelfPermission(
-                context,
                 Manifest.permission.READ_PHONE_STATE
             ) == PackageManager.PERMISSION_DENIED
         ) {
             tempPermissionWarnings.add(PermissionInfo.ReadPhoneState)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(
+        if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.BLUETOOTH_CONNECT
             ) == PackageManager.PERMISSION_DENIED
@@ -190,13 +183,8 @@ fun PermissionVisualizer (
                                     PermissionInfo.Shell -> {
                                         navController.navigate(NavRoute.SettingsShell.route)
                                     }
-                                    PermissionInfo.Location -> {
-                                        launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                                    }
                                     PermissionInfo.BluetoothConnect -> {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                            launcher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-                                        }
+                                        launcher.launch(Manifest.permission.BLUETOOTH_CONNECT)
                                     }
                                     PermissionInfo.ReadPhoneState -> {
                                         launcher.launch(Manifest.permission.READ_PHONE_STATE)

@@ -16,19 +16,19 @@ sealed class NavigationItem(
     var filledIcon: ImageVector,
     var titleId: Int
     ) {
-    object Home: NavigationItem(
+    data object Home: NavigationItem(
         NavRoute.HomeBase.route,
         Icons.Outlined.Home,
         Icons.Filled.Home,
         R.string.home
     )
-    object Settings: NavigationItem(
+    data object Settings: NavigationItem(
         NavRoute.SettingsBase.route,
         Icons.Outlined.Settings,
         Icons.Filled.Settings,
         R.string.settings
     )
-    object Info: NavigationItem(
+    data object Info: NavigationItem(
         NavRoute.Info.route,
         Icons.Outlined.Info,
         Icons.Filled.Info,

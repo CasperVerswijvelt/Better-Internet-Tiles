@@ -87,7 +87,7 @@ fun InfoPage() {
                 DrawableIcon(R.drawable.donate)
             },
             title = stringResource(R.string.donate),
-            subTitle = stringResource(R.string.donate_summarry)
+            subTitle = stringResource(R.string.donate_summary)
         ) {
             uriHandler.openUri("https://ko-fi.com/casperverswijvelt")
         }

@@ -24,14 +24,14 @@
     <string name="network_not_available">Netwerk niet beschikbaar</string>
     <string name="no_service">Geen service</string>
     <string name="on">Aan</string>
-    <string name="shell_access_not_set_up">Je hebt ofwel root of Shizuku nodig om deze tegel te gebruiek</string>
+    <string name="shell_access_not_set_up">Je hebt ofwel root of Shizuku nodig om deze tegel te gebruiken</string>
     <string name="airplane_mode">Vliegtuigmodus</string>
     <string name="help_translate">Help met het vertalen van deze app!</string>
     <string name="language">Taal</string>
     <string name="tile_added">Tile toegevoegd</string>
     <string name="tile_already_added">Tile reeds toegevoegd</string>
     <string name="donate">Doneer</string>
-    <string name="donate_summarry">Toon je steun via een vrijblijvende donatie</string>
+    <string name="donate_summary">Toon je steun via een vrijblijvende donatie</string>
     <string name="battery_level">batterijniveau</string>
     <string name="connecting">"Verbinden…"</string>
 </resources>

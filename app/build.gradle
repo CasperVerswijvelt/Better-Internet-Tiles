@@ -8,13 +8,12 @@ ext {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "33.0.0"
 
     defaultConfig {
         applicationId "be.casperverswijvelt.unifiedinternetqs"
-        minSdkVersion 29
         targetSdkVersion 33
+        compileSdk 34
+        minSdkVersion 31
         versionCode 3000002
         versionName "3.0.0-beta.2"
 
@@ -30,7 +29,7 @@ android {
             ext.enableCrashlytics = false
         }
     }
-    flavorDimensions "distribution"
+    flavorDimensions = ["distribution"]
     productFlavors {
         playstore {
             dimension "distribution"
@@ -61,7 +60,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.6"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 repositories {
@@ -70,16 +69,16 @@ repositories {
 }
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.10.1"
-    implementation "com.google.android.material:material:1.9.0"
+    implementation "androidx.core:core-ktx:1.12.0"
+    implementation "com.google.android.material:material:1.11.0"
     implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Compose UI
-    implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation 'androidx.compose.animation:animation:1.4.3'
-    implementation 'androidx.compose.ui:ui-tooling:1.4.3'
-    implementation "androidx.compose.material3:material3:1.1.1"
-    implementation "androidx.navigation:navigation-compose:2.6.0"
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.compose.animation:animation:1.6.4'
+    implementation 'androidx.compose.ui:ui-tooling:1.6.4'
+    implementation "androidx.compose.material3:material3:1.2.1"
+    implementation "androidx.navigation:navigation-compose:2.7.7"
 
     // App restarting
     implementation "com.jakewharton:process-phoenix:2.1.2"
@@ -96,12 +95,12 @@ dependencies {
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 
     // Firebase Analytics
-    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.4.0"
-    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.4.0"
+    githubImplementation "com.google.firebase:firebase-crashlytics-ktx:18.6.3"
+    playstoreImplementation "com.google.firebase:firebase-crashlytics-ktx:18.6.3"
 }
 
 configurations {
-    all {
+    configureEach {
         exclude group: "androidx.lifecycle", module: "lifecycle-viewmodel-ktx"
     }
 }

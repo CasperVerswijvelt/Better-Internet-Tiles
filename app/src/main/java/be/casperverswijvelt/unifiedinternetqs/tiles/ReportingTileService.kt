@@ -68,6 +68,11 @@ abstract class ReportingTileService: TileService() {
         syncTile()
     }
 
+    override fun onStopListening() {
+        super.onStopListening()
+        log("Stop listening")
+    }
+
     override fun onClick() {
         super.onClick()
         tileBehaviour.onClick()
@@ -75,7 +80,7 @@ abstract class ReportingTileService: TileService() {
 
     private fun syncTile() {
         qsTile?.let {
-            val tileState = tileBehaviour.tileState
+            val tileState = tileBehaviour.finalTileState
             it.label = tileState.label
             it.subtitle = tileState.subtitle
             it.state = tileState.state

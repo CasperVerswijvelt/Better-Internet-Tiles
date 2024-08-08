@@ -9,14 +9,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.nfc.NfcManager
 import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.TileService
-import android.telephony.ServiceState
 import android.telephony.SubscriptionInfo
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyDisplayInfo
@@ -104,12 +102,37 @@ fun getConnectedWifiSSID(context: Context): String? {
     return ssid.substring(1, ssid.length - 1)
 }
 
+fun getConnectedWifiSSID(
+    context: Context,
+    callback: ((String?) -> Unit)
+) {
+
+    if (hasShellAccess(context)) {
+        executeShellCommandAsync(
+            "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'",
+            context = context
+        ) {
+            val pattern = "(?<=(networkId|wifiNetworkKey)=\").*(?=\")".toRegex()
+            it?.out?.forEach { wifiString ->
+                pattern.find(wifiString)?.let { matchResult ->
+                    callback(matchResult.value)
+                    return@executeShellCommandAsync
+                }
+            }
+            callback(null)
+        }
+    } else {
+        callback(null)
+    }
+}
+
 fun getWifiIcon(context: Context): Int {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     val rssi = cm.activeNetwork?.let {
         (cm.getNetworkCapabilities(it)?.transportInfo as? WifiInfo)?.rssi
     }
+
     val signalStrength = rssi?.let {
         // We use 5 levels for our icon visualisation, so we use this deprecated
         //  calculation with 'numLevels' parameter. We don't want to use the system's
@@ -168,16 +191,13 @@ fun getCellularNetworkText(
         return context.getString(R.string.no_service)
     }
 
-    var connType: String? = null
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        connType = telephonyDisplayInfo?.let {
-            when (telephonyDisplayInfo.overrideNetworkType) {
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> "4G+"
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> "5Ge"
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> "5G"
-                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> "5G+"
-                else -> null
-            }
+    var connType: String? = telephonyDisplayInfo?.let {
+        when (telephonyDisplayInfo.overrideNetworkType) {
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_CA -> "4G+"
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -> "5Ge"
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -> "5G"
+            TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_ADVANCED -> "5G+"
+            else -> null
         }
     }
 
@@ -206,11 +226,7 @@ fun getDataSubscriptionInfo(context: Context): SubscriptionInfo? {
         val sm =
             context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as
                     SubscriptionManager
-        val subId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            SubscriptionManager.getActiveDataSubscriptionId()
-        } else {
-            SubscriptionManager.getDefaultSubscriptionId()
-        }
+        val subId = SubscriptionManager.getActiveDataSubscriptionId()
 
         if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
 

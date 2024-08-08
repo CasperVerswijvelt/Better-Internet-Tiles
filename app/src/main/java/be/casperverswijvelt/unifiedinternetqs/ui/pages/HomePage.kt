@@ -128,7 +128,6 @@ fun TileOverview (
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LiveTileWithButtons(
     modifier: Modifier = Modifier,

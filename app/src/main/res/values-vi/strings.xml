@@ -18,7 +18,7 @@
     <string name="help_translate">Hãy giúp chúng tôi dịch ứng dụng này!</string>
     <string name="language">Ngôn ngữ</string>
     <string name="available_tiles">Các ô khả dụng</string>
-    <string name="donate_summarry">Hỗ trợ chúng tôi bằng cách donate</string>
+    <string name="donate_summary">Hỗ trợ chúng tôi bằng cách donate</string>
     <string name="good_to_go_description">Các quyền cần thiết đã được cấp, hãy xem các ô có sẵn phía dưới.</string>
     <string name="missing_permissions">Các quyền còn thiếu</string>
     <string name="xda_title">XDA Developers thread</string>
@@ -40,12 +40,10 @@
     <string name="ok">OK</string>
     <string name="yes">Có</string>
     <string name="no">Không</string>
-    <string name="use_default">Sử dụng mặc định</string>
+    <string name="use_default">Mặc định</string>
     <string name="donate">Donate</string>
     <string name="missing_permissions_description">Một vài chức năng có thể hoạt động không như mong muốn. Mở rộng để biết thêm chi tiết.</string>
     <string name="shell_access">Truy cập shell</string>
-    <string name="location">Vị trí</string>
-    <string name="location_description">Cần có quyền \'Vị trí chính xác\' để đọc tên mạng Wi-Fi đang được kết nối hiện tại.</string>
     <string name="read_phone_state">Đọc trạng thái điện thoại</string>
     <string name="bluetooth_connect">Kết nối bluetooth</string>
     <string name="bluetooth_connect_description">Cần có quyền \'Kết nối bluetooth\' để đọc tên thiết bị đã được kết nối bluetooth.</string>

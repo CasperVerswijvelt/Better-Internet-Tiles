@@ -70,9 +70,9 @@ class WifiChangeListener(private val callback: (type: NetworkChangeType?, networ
         }
 
     private val wifiStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(context: Context?, intent: Intent) {
 
-            when (intent?.action) {
+            when (intent.action) {
                 WifiManager.RSSI_CHANGED_ACTION,
                 WifiManager.NETWORK_STATE_CHANGED_ACTION,
                 WifiManager.WIFI_STATE_CHANGED_ACTION -> callback(
