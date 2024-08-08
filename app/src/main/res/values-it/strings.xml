@@ -52,14 +52,13 @@
     <string name="yes">Sì</string>
     <string name="no">No</string>
     <string name="use_default">Usa default</string>
-    <string name="donate_summarry">Mostra il tuo supporto con una donazione</string>
+    <string name="donate_summary">Mostra il tuo supporto con una donazione</string>
     <string name="good_to_go">Tutto pronto!</string>
     <string name="good_to_go_description">Tutte le autorizzazioni necessarie sono state concesse, scopri i riquadri disponibili qui sotto!</string>
     <string name="missing_permissions">Autorizzazioni mancanti</string>
     <string name="missing_permissions_description">Alcune cose potrebbero non funzionare regolarmente. Espandi per ottenere più informazioni.</string>
     <string name="shell_access">Accesso shell</string>
     <string name="shell_access_description">L\'accesso shell è necessario per abilitare/disabilitare alcune funzioni di sistema. Puoi usare l\'accesso root o l\'app Shizuku per questo.</string>
-    <string name="location">Posizione</string>
     <string name="read_phone_state">Leggere lo stato del telefono</string>
     <string name="read_phone_state_description">L\'autorizzazione \'leggere lo stato del telefono\' è necessaria per ottenere informazioni sulla connessione dati mobili.</string>
     <string name="bluetooth_connect">Connessione Bluetooth</string>
@@ -68,5 +67,4 @@
     <string name="allow_root_access_description">Si prega di concedere l\'accesso root a \"Better Internet Tiles\'\" nella tua app di gestione dei permessi root (es. Magisk Manager)</string>
     <string name="allow_shizuku_access">Consenti accesso Shizuku</string>
     <string name="allow_shizuku_access_description">Si prega di accertarsi che \"Better Internet Tiles\" abbia accesso all\'app Shizuku e che il processo Shizuku sia in esecuzione</string>
-    <string name="location_description">L\'autorizzazione \'posizione esatta\' è necessaria per ottenere il nome della rete Wi-Fi utilizzata.</string>
 </resources>

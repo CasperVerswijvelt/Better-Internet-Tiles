@@ -47,7 +47,7 @@
     <string name="use_default">Use default</string>
     <string name="bluetooth" translatable="false">Bluetooth</string>
     <string name="donate">Donate</string>
-    <string name="donate_summarry">Show your support via a donation</string>
+    <string name="donate_summary">Show your support via a donation</string>
 
     <string name="good_to_go">Good to go!</string>
     <string name="good_to_go_description">All needed permissions are granted, check out the available tiles below!</string>
@@ -56,8 +56,6 @@
     <string name="missing_permissions_description">Some things might not work as expected. Expand for more info.</string>
     <string name="shell_access">Shell access</string>
     <string name="shell_access_description">Shell access is needed to enable/disable certain system features. You can use either root or Shizuku to do this.</string>
-    <string name="location">Location</string>
-    <string name="location_description">The \'exact location\' permission is required to read out the name of the current connected Wi-Fi network.</string>
     <string name="read_phone_state">Read phone state</string>
     <string name="read_phone_state_description">The \'read phone state\' permission is required to read the mobile data connection info.</string>
     <string name="bluetooth_connect">Bluetooth connect</string>

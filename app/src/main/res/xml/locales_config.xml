@@ -15,4 +15,6 @@
     <locale android:name="hu"/>
     <locale android:name="or"/>
     <locale android:name="vi"/>
+    <locale android:name="ckb"/>
+    <locale android:name="ko"/>
 </locale-config>

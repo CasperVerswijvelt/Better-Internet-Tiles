@@ -13,7 +13,7 @@ android {
         applicationId "be.casperverswijvelt.unifiedinternetqs"
         targetSdkVersion 33
         compileSdk 34
-        minSdkVersion 29
+        minSdkVersion 31
         versionCode 2060101
         versionName "2.6.1"
 
@@ -29,7 +29,7 @@ android {
             ext.enableCrashlytics = false
         }
     }
-    flavorDimensions "distribution"
+    flavorDimensions = ["distribution"]
     productFlavors {
         playstore {
             dimension "distribution"

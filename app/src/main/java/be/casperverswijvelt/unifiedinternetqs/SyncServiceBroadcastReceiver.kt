@@ -10,7 +10,7 @@ class SyncServiceBroadcastReceiver: BroadcastReceiver() {
         const val TAG = "SyncBroadcastReceiver"
     }
     override fun onReceive(context: Context?, intent: Intent) {
-        Log.d(TAG, "Received '${intent?.action}' intent, starting TileSyncService")
+        Log.d(TAG, "Received '${intent.action}' intent, starting TileSyncService")
         context?.startForegroundService(Intent(
             context,
             TileSyncService::class.java

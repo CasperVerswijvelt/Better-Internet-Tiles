@@ -33,11 +33,10 @@
     <string name="ok">Ok</string>
     <string name="missing_permissions">Fehlende Berechtigungen</string>
     <string name="read_phone_state_description">Die Berechtigung \"Telefonstatus lesen\" wird benötigt um Verbindungsinformationen der Mobilen Daten auszulesen.</string>
-    <string name="location_description">Die Berechtigung \"exakter Standort\" wird benötigt um den WLAN-Name des aktuell verbundenen Netzwerks auszulesen.</string>
     <string name="home">Startseite</string>
     <string name="donate">Spenden</string>
     <string name="read_phone_state">Telefonstatus auslesen</string>
-    <string name="donate_summarry">Zeige deine Unterstützung mit einer Spende</string>
+    <string name="donate_summary">Zeige deine Unterstützung mit einer Spende</string>
     <string name="allow_root_access_description">Bitte erlauben Sie den Root Zugriff für die Anwendung \"Better Internet Tiles\" in Ihrer Root Verwaltungsapplikation (z.B. Magisk Manager)</string>
     <string name="shell_access_description">Shell Zugriff ist erforderlich, um bestimmte Systemfunktionen zu aktivieren/deaktivieren. Dazu kann man entweder root oder Shizuku verwenden.</string>
     <plurals name="used_for_tiles">
@@ -65,7 +64,6 @@
     <string name="version">Version</string>
     <string name="tile_already_added">Kachel bereits hinzugefügt</string>
     <string name="available_tiles">Verfügbare Kacheln</string>
-    <string name="location">Ort</string>
     <string name="tile_added">Kachel hinzugefügt</string>
     <string name="good_to_go_description">Alle benötigen Bereichtigungen wurden erteilt. Schau dir unten die verfügbaren Kacheln an!</string>
 </resources>

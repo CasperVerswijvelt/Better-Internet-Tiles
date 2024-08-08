@@ -2,7 +2,6 @@ package be.casperverswijvelt.unifiedinternetqs.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -47,6 +46,7 @@ import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.MobileDataTileBehavi
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.NFCTileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.WifiTileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.ui.components.AlertDialog
 import be.casperverswijvelt.unifiedinternetqs.ui.components.NavRoute
 import be.casperverswijvelt.unifiedinternetqs.ui.components.NavigationItem
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.HomePage
@@ -55,7 +55,6 @@ import be.casperverswijvelt.unifiedinternetqs.ui.pages.InfoPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.SettingsPage
 import be.casperverswijvelt.unifiedinternetqs.ui.pages.ShellMethodPage
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
-import be.casperverswijvelt.unifiedinternetqs.ui.components.AlertDialog
 import be.casperverswijvelt.unifiedinternetqs.util.reportException
 
 class MainActivity : ComponentActivity() {
@@ -67,29 +66,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val edgeToEdge = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
-        if (edgeToEdge) {
-            // Display edge to edge
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            )
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-        }
+
+        // Display edge to edge
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
             val darkTheme = isSystemInDarkTheme()
-            val colorScheme = when {
-                dynamicColor && darkTheme -> dynamicDarkColorScheme(
-                    LocalContext.current
-                )
-                dynamicColor && !darkTheme -> dynamicLightColorScheme(
-                    LocalContext.current
-                )
-                darkTheme -> darkColorScheme()
-                else -> lightColorScheme()
-            }
+            val colorScheme = if (darkTheme)
+                dynamicDarkColorScheme(LocalContext.current)
+            else
+                dynamicLightColorScheme(LocalContext.current)
+
             MaterialTheme(colorScheme = colorScheme) {
                 Surface(
                     Modifier

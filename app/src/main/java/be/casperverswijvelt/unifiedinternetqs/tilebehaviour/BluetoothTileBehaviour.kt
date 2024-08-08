@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
@@ -49,12 +48,10 @@ class BluetoothTileBehaviour(
             val tile = TileState()
             val bluetoothEnabled = getBluetoothEnabled(context)
 
-            val hasBluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) == PackageManager.PERMISSION_GRANTED
-            } else true
+            val hasBluetoothPermission = ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
 
             var bluetoothName: String? = null
             var connectedBluetoothBattery = -1
@@ -64,10 +61,7 @@ class BluetoothTileBehaviour(
 
                 val connectedBluetoothDevice =
                     TileSyncService.bluetoothProfile?.connectedDevices?.getOrNull(0)
-                bluetoothName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    connectedBluetoothDevice?.alias
-                else
-                    connectedBluetoothDevice?.name
+                bluetoothName = connectedBluetoothDevice?.alias
 
                 connectedBluetoothBattery = connectedBluetoothDevice?.let {
                     TileSyncService.bluetoothBatteryLevel[it.address]

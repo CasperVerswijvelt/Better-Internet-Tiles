@@ -1,15 +1,15 @@
 package be.casperverswijvelt.unifiedinternetqs.listeners
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
-import android.telephony.*
-import androidx.core.app.ActivityCompat
+import android.telephony.ServiceState
+import android.telephony.SignalStrength
+import android.telephony.TelephonyCallback
+import android.telephony.TelephonyDisplayInfo
+import android.telephony.TelephonyManager
 
 class CellularChangeListener(private val callback: (type: NetworkChangeType?, args: List<Any?>?) -> Unit) {
 
@@ -32,37 +32,23 @@ class CellularChangeListener(private val callback: (type: NetworkChangeType?, ar
             }
         }
 
-    private val phoneStateListener = object : PhoneStateListener() {
-        @Deprecated("Deprecated in Java",
-            ReplaceWith("callback(NetworkChangeType.SIGNAL_STRENGTH)")
-        )
+    private val telephonyCallback = object : TelephonyCallback(),
+        TelephonyCallback.SignalStrengthsListener,
+        TelephonyCallback.DisplayInfoListener,
+        TelephonyCallback.ServiceStateListener {
         override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
             callback(NetworkChangeType.SIGNAL_STRENGTH, null)
         }
-    }
 
-    private val telephonyCallback: TelephonyCallback? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            object : TelephonyCallback(),
-                TelephonyCallback.SignalStrengthsListener,
-                TelephonyCallback.DisplayInfoListener,
-                TelephonyCallback.ServiceStateListener {
-                override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-                    callback(NetworkChangeType.SIGNAL_STRENGTH, null)
-                }
-
-                override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
-                    currentTelephonyDisplayInfo = telephonyDisplayInfo
-                    callback(NetworkChangeType.DISPLAY_INFO, null)
-                }
-
-                override fun onServiceStateChanged(serviceState: ServiceState) {
-                    callback(NetworkChangeType.SERVICE_STATE, listOf(serviceState))
-                }
-            }
-        } else {
-            null
+        override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) {
+            currentTelephonyDisplayInfo = telephonyDisplayInfo
+            callback(NetworkChangeType.DISPLAY_INFO, null)
         }
+
+        override fun onServiceStateChanged(serviceState: ServiceState) {
+            callback(NetworkChangeType.SERVICE_STATE, listOf(serviceState))
+        }
+    }
 
     fun startListening(context: Context) {
 
@@ -77,28 +63,10 @@ class CellularChangeListener(private val callback: (type: NetworkChangeType?, ar
         // Mobile signal strength listener
         val tm =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            tm.registerTelephonyCallback(
-                context.mainExecutor,
-                telephonyCallback!!
-            )
-        } else {
-            tm.listen(
-                phoneStateListener,
-                PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
-            )
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_PHONE_STATE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            callback(NetworkChangeType.SERVICE_STATE, listOf(tm.serviceState))
-        }
+        tm.registerTelephonyCallback(
+            context.mainExecutor,
+            telephonyCallback
+        )
 
         isListening = true
     }
@@ -117,11 +85,7 @@ class CellularChangeListener(private val callback: (type: NetworkChangeType?, ar
             // Mobile signal strength listener
             val tm =
                 context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                tm.unregisterTelephonyCallback(telephonyCallback!!)
-            } else {
-                tm.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
-            }
+            tm.unregisterTelephonyCallback(telephonyCallback)
 
             currentTelephonyDisplayInfo = null
         }

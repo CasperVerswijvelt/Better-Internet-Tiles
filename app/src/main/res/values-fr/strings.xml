@@ -44,12 +44,11 @@
     <string name="no">Non</string>
     <string name="use_default">Par défaut</string>
     <string name="donate">Faire un don</string>
-    <string name="donate_summarry">Montrez votre soutien avec un don</string>
+    <string name="donate_summary">Montrez votre soutien avec un don</string>
     <string name="good_to_go">Tout est prêt !</string>
     <string name="good_to_go_description">Toutes les permissions nécessaires sont accordées, regardez les tuiles disponibles ci-dessous !</string>
     <string name="missing_permissions">Permissions manquantes</string>
     <string name="shell_access">Accès shell</string>
-    <string name="location">Localisation</string>
     <string name="read_phone_state">Lire l\'état du téléphone</string>
     <string name="read_phone_state_description">La permission \"Lire l\'état du téléphone\" est nécessaire pour lire les infos de la connexion mobile.</string>
     <string name="bluetooth_connect">Connexion Bluetooth</string>
@@ -68,5 +67,4 @@
         <item quantity="other">Utilisée pour %1$s tuiles</item>
     </plurals>
     <string name="allow_root_access_description">Veuillez autoriser l\'accès root pour l\'application \"Better Internet Tiles\" dans votre gestionnaire de root (ex : Magisk Manager)</string>
-    <string name="location_description">La permission \"Localisation exacte\" est nécessaire pour lire le nom du réseau Wi-Fi connecté.</string>
 </resources>

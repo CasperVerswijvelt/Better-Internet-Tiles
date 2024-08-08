@@ -48,5 +48,4 @@
     <string name="require_unlock_summary">ロック画面でのタイルのアクションを防止します</string>
     <string name="sim_not_available">SIMが挿入されていません</string>
     <string name="use_default">デフォルトを使用</string>
-    <string name="location">位置情報</string>
 </resources>

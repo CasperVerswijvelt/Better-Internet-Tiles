@@ -31,7 +31,7 @@
     <string name="tile_added">Tile toegevoegd</string>
     <string name="tile_already_added">Tile reeds toegevoegd</string>
     <string name="donate">Doneer</string>
-    <string name="donate_summarry">Toon je steun via een vrijblijvende donatie</string>
+    <string name="donate_summary">Toon je steun via een vrijblijvende donatie</string>
     <string name="battery_level">batterijniveau</string>
     <string name="connecting">"Verbinden…"</string>
 </resources>

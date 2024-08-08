@@ -43,13 +43,11 @@
     <string name="tile_added_error">Nem sikerült hozzáadni a csempét</string>
     <string name="tile_already_added">Csempe már hozzáadva</string>
     <string name="available_tiles">Elérhető csempék</string>
-    <string name="location">Helyadatok</string>
     <string name="auto_start_shizuku_description">Tudta, hogy a Shizuku automatikusan elindulhat, amikor a készüléke elindul, anélkül, hogy root-ra lenne szüksége\? Nézze meg $$ezt a reddit fórumot$$$ ennek beállításához és további információkért.</string>
     <string name="shell_access_not_set_up">Root vagy Shizuku szükséges a csempe átkapcsolásához</string>
     <string name="missing_permissions">Hiányzó engedélyek</string>
     <string name="about">Névjegy</string>
     <string name="read_phone_state_description">A mobil adatkapcsolati adatok olvasásához a \"telefon állapotának olvasása\" engedély szükséges.</string>
-    <string name="location_description">A \"pontos hely\" engedély szükséges a jelenleg csatlakoztatott Wi-Fi hálózat nevének olvasásához.</string>
     <string name="bluetooth_connect">Bluetooth csatlakozás</string>
     <string name="require_unlock_summary">A csempék szerkesztésének megakadályozása a zárolási képernyőn</string>
     <string name="tile_added">Csempe hozzáadva</string>
@@ -62,7 +60,7 @@
     <string name="donate">Támogatás</string>
     <string name="settings">Beállítások</string>
     <string name="read_phone_state">A telefon állapotának olvasása</string>
-    <string name="donate_summarry">Mutassa ki támogatását adományozással</string>
+    <string name="donate_summary">Mutassa ki támogatását adományozással</string>
     <string name="missing_permissions_description">Előfordulhat, hogy néhány dolog nem a várt módon működik. További részletekért kattintson ide.</string>
     <string name="hide_service_title">Rejts el!</string>
     <string name="allow_shizuku_access">Shizuku hozzáférés engedélyezése</string>

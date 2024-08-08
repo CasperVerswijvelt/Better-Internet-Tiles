@@ -42,15 +42,13 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="use_default">По умолчанию</string>
-    <string name="donate_summarry">Поддержите нас с помощью пожертвования</string>
+    <string name="donate_summary">Поддержите нас с помощью пожертвования</string>
     <string name="donate">Пожертвовать</string>
     <string name="good_to_go">Всё готово!</string>
     <string name="good_to_go_description">Все необходимые разрешения предоставлены, посмотрите доступные плитки внизу!</string>
     <string name="missing_permissions">Разрешения не предоставлены</string>
     <string name="shell_access">Корневой доступ</string>
-    <string name="location_description">Разрешение \"Точное местоположение\" необходимо для считывания названия текущей подключенной сети Wi-Fi.</string>
     <string name="shell_method">Метод предоставления привилегий</string>
-    <string name="location">Местоположение</string>
     <string name="read_phone_state">Получение данных о статусе телефона</string>
     <string name="read_phone_state_description">Разрешение \'Получение данных о статусе телефона\' требуется для чтения информации о подключении к мобильной сети.</string>
     <string name="bluetooth_connect">Подключение с помощью Bluetooth</string>

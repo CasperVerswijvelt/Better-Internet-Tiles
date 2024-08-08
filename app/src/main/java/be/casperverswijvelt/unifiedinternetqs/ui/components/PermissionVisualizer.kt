@@ -2,7 +2,6 @@ package be.casperverswijvelt.unifiedinternetqs.ui.components
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -89,23 +88,13 @@ fun PermissionVisualizer (
         if (
             ActivityCompat.checkSelfPermission(
                 context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            tempPermissionWarnings.add(PermissionInfo.Location)
-        }
-
-        if (
-            ActivityCompat.checkSelfPermission(
-                context,
                 Manifest.permission.READ_PHONE_STATE
             ) == PackageManager.PERMISSION_DENIED
         ) {
             tempPermissionWarnings.add(PermissionInfo.ReadPhoneState)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(
+        if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.BLUETOOTH_CONNECT
             ) == PackageManager.PERMISSION_DENIED
@@ -194,13 +183,8 @@ fun PermissionVisualizer (
                                     PermissionInfo.Shell -> {
                                         navController.navigate(NavRoute.SettingsShell.route)
                                     }
-                                    PermissionInfo.Location -> {
-                                        launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                                    }
                                     PermissionInfo.BluetoothConnect -> {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                            launcher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-                                        }
+                                        launcher.launch(Manifest.permission.BLUETOOTH_CONNECT)
                                     }
                                     PermissionInfo.ReadPhoneState -> {
                                         launcher.launch(Manifest.permission.READ_PHONE_STATE)

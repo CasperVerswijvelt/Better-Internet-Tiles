@@ -101,12 +101,18 @@ class TileSyncService: Service() {
             }
             else -> {}
         }
-        wifiSSID = if (wifiConnected)
-            getConnectedWifiSSID(applicationContext)
-        else
-            null
-        updateWifiTile()
-        updateInternetTile()
+
+        val setSSID: (ssid: String?) -> Unit = {
+            wifiSSID = it
+            updateWifiTile()
+            updateInternetTile()
+        }
+
+        if (wifiConnected) {
+            getConnectedWifiSSID(applicationContext) { setSSID(it) }
+        } else {
+            setSSID(null)
+        }
     }
     private val cellularChangeListener: CellularChangeListener = CellularChangeListener { type, data ->
         when(type) {
