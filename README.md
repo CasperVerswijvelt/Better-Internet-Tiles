@@ -37,7 +37,7 @@ If you are on Android 13 or higher, you can also add them using the shortcut but
 
 ## Contribute
 Feel free to check out the source code and create an issue or pull request if you want to see more features added.
-Less tech savvy but also want to contribute? Check out this project on [weblate](https://hosted.weblate.org/guide/better-internet-tiles/translations/) to help out with translations!
+Less tech savvy but also want to contribute? Check out this project on [Weblate](https://hosted.weblate.org/guide/better-internet-tiles/translations/) to help out with translations!
 
 <a href="https://hosted.weblate.org/engage/better-internet-tiles/">
 <img src="https://hosted.weblate.org/widgets/better-internet-tiles/-/translations/287x66-grey.png" alt="Translation status" />
