@@ -95,13 +95,6 @@ fun getAirplaneModeEnabled(context: Context): Boolean {
     ) != 0
 }
 
-fun getConnectedWifiSSID(context: Context): String? {
-    val ssid = (context.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.connectionInfo?.ssid
-    if (ssid == null || ssid == WifiManager.UNKNOWN_SSID) return null
-    // Trim off first and last character as they are quotes
-    return ssid.substring(1, ssid.length - 1)
-}
-
 fun getConnectedWifiSSID(
     context: Context,
     callback: ((String?) -> Unit)
