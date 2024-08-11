@@ -14,8 +14,8 @@ android {
         targetSdkVersion 34
         compileSdk 34
         minSdkVersion 31
-        versionCode 3000003
-        versionName "3.0.0-beta.3"
+        versionCode 3000006
+        versionName "3.0.0-beta.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
