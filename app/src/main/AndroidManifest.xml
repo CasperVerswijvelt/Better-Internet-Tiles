@@ -24,7 +24,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UnifiedInternetQS"
         android:exported="false"
-        android:localeConfig="@xml/locales_config"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="tiramisu">
 

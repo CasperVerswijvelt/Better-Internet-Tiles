@@ -1,4 +1,4 @@
-NOTE: This app requires shell accesss, which can be granted using either Shizuku or root.
+NOTE: This app requires shell access, which can be granted using either Shizuku or root.
 
 This application aims to create a unified internet quick-settings tile, which is actually useful (I'm looking at you, Android 12). Next to this, separate Wi-Fi and mobile data tiles are also available if you just want to go back to the behaviour of Android 11 or lower.
 
