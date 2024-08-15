@@ -5,15 +5,32 @@ import android.content.res.Resources
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import androidx.compose.ui.graphics.vector.ImageVector
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.RequireUnlockSetting
+import be.casperverswijvelt.unifiedinternetqs.data.TileChoiceOption
+import be.casperverswijvelt.unifiedinternetqs.tile_options.FollowSetting
+import be.casperverswijvelt.unifiedinternetqs.tile_options.requireUnlockOption
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+
+interface ITileSetting<T> {
+    val icon: ImageVector
+    val nameResource: Int
+    val defaultValue: T
+    fun getValue(preferences: BITPreferences, tileType: TileType?): Flow<T>
+    fun setValue(preferences: BITPreferences, tileType: TileType?, coroutineScope: CoroutineScope, value: T)
+}
+
+interface IChoiceSetting<T: TileChoiceOption>: ITileSetting<T> {
+    val choices: List<T>
+}
 
 abstract class TileBehaviour(
     protected val context: Context,
@@ -21,7 +38,7 @@ abstract class TileBehaviour(
     protected val unlockAndRun: (Runnable) -> Unit = { it.run() }
 ) {
 
-    private val preferences = BITPreferences(context)
+    protected val preferences = BITPreferences(context)
     protected val resources: Resources = context.resources
 
     private val updateTileListeners = arrayListOf<(TileState) -> Unit>()
@@ -32,6 +49,8 @@ abstract class TileBehaviour(
     abstract val tileServiceClass: Class<TileService>
     protected abstract val tileState: TileState
     abstract val onLongClickIntentAction: String
+
+    open val settings: Array<ITileSetting<*>> = arrayOf(requireUnlockOption)
 
     val finalTileState: TileState
         get() {
@@ -64,11 +83,11 @@ abstract class TileBehaviour(
     val requiresUnlock: Boolean
         get() = runBlocking {
             when(preferences.getRequireUnlock(type).first()) {
-                RequireUnlockSetting.FOLLOW -> {
+                FollowSetting.FOLLOW -> {
                     preferences.getRequireUnlock.first()
                 }
-                RequireUnlockSetting.YES -> true
-                RequireUnlockSetting.NO -> false
+                FollowSetting.YES -> true
+                FollowSetting.NO -> false
             }
         }
 

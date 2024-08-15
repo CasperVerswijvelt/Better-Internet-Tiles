@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import be.casperverswijvelt.unifiedinternetqs.BuildConfig
 import be.casperverswijvelt.unifiedinternetqs.R
+import be.casperverswijvelt.unifiedinternetqs.tile_options.FollowSetting
+import be.casperverswijvelt.unifiedinternetqs.tile_options.WifiSSIDVisibilityOption
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileType
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.ShizukuUtil
@@ -32,13 +34,15 @@ class BITPreferences(private val context: Context) {
             }
         )
 
-        private val KEY_REQUIRE_UNLOCK = booleanPreferencesKey("require_unlock")
-
         // All caps because legacy
         private val KEY_INSTALLATION_ID = stringPreferencesKey(
             "INSTALLATION_ID"
         )
+
+        private val KEY_REQUIRE_UNLOCK = booleanPreferencesKey("require_unlock")
         private val KEY_SHELL_METHOD = stringPreferencesKey("shell_method")
+
+        private val KEY_SSID_VISIBILITY = stringPreferencesKey("SSID_VISIBILITY")
     }
 
     fun loadPreferences() {
@@ -88,23 +92,38 @@ class BITPreferences(private val context: Context) {
         }
     }
 
+    // SSID method
+
+    val getSSIDVisibility: Flow<WifiSSIDVisibilityOption> = context
+        .dataStore.data.map {
+            it[KEY_SSID_VISIBILITY]?.let { option ->
+                TileChoiceOption.getByValue(option)
+            } ?: WifiSSIDVisibilityOption.HIDDEN_DURING_RECORDING
+        }
+
+    suspend fun setSSIDVisibility(option: WifiSSIDVisibilityOption) {
+        context.dataStore.edit {
+            it[KEY_SSID_VISIBILITY] = option.value
+        }
+    }
+
     // Require unlock (tile specific)
 
     private fun getRequireUnlockKey(tileType: TileType): Preferences.Key<String> {
         return stringPreferencesKey("require_unlock/${tileType.value}")
     }
 
-    suspend fun setRequireUnlock(tileType: TileType, setting: RequireUnlockSetting) {
+    suspend fun setRequireUnlock(tileType: TileType, setting: TileChoiceOption) {
         context.dataStore.edit {
             it[getRequireUnlockKey(tileType)] = setting.value
         }
     }
 
-    fun getRequireUnlock(tileType: TileType): Flow<RequireUnlockSetting> {
+    fun getRequireUnlock(tileType: TileType): Flow<FollowSetting> {
         return context.dataStore.data.map {
             it[getRequireUnlockKey(tileType)]?.let { value ->
-                RequireUnlockSetting.getByValue(value)
-            } ?: RequireUnlockSetting.FOLLOW
+                TileChoiceOption.getByValue(value)
+            } ?: FollowSetting.FOLLOW
         }
     }
 }
@@ -153,14 +172,14 @@ enum class ShellMethod(
         }
     }
 }
-enum class RequireUnlockSetting(val value: String, val stringResource: Int) {
-    FOLLOW("follow", R.string.use_default),
-    YES("yes", R.string.yes),
-    NO("no", R.string.no);
+
+interface TileChoiceOption {
+    val value: String
+    val stringResource: Int
 
     companion object {
-        infix fun getByValue(value: String): RequireUnlockSetting {
-            return RequireUnlockSetting.values().firstOrNull { it.value == value } ?: FOLLOW
+        inline fun <reified T> getByValue(value: String): T where T : Enum<T>, T : TileChoiceOption {
+            return enumValues<T>().firstOrNull { it.value == value } ?: enumValues<T>().first()
         }
     }
 }

@@ -133,6 +133,7 @@ fun App() {
             .fillMaxSize())
 
     val navController = rememberNavController()
+
     val context = LocalContext.current
     var alertDialog: AlertDialogData? by remember {
         mutableStateOf(null)

@@ -10,6 +10,7 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
+import be.casperverswijvelt.unifiedinternetqs.tile_options.wifiSSIDVisibilityOption
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
@@ -38,6 +39,11 @@ class InternetTileBehaviour(
         get() = Icon.createWithResource(
             context,
             R.drawable.ic_baseline_public_24
+        )
+    override val settings: Array<ITileSetting<*>>
+        get() = arrayOf(
+            *super.settings,
+            wifiSSIDVisibilityOption
         )
     @Suppress("UNCHECKED_CAST")
     override val tileServiceClass: Class<TileService>
