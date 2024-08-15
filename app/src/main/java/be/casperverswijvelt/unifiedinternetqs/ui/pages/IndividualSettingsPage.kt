@@ -81,7 +81,7 @@ fun IndividualSettingsPage(
             LiveTile(
                 modifier = Modifier
                     .width(220.dp)
-                    .padding(vertical = 64.dp)
+                    .padding(vertical = 24.dp + (40 * (1 - scrollBehavior.state.collapsedFraction)).dp)
                     .align(Alignment.CenterHorizontally),
                 tileBehaviour = tileBehaviour
             )
