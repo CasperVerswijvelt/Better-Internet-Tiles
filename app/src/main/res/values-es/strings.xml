@@ -67,4 +67,12 @@
     <string name="auto_start_shizuku_description">¿Sabías que puedes iniciar automáticamente Shizuku cuando se inicia el dispositivo, sin necesidad de root\? Echa un vistazo a $$este hilo de reddit$$ para obtener más información sobre cómo configurarlo.</string>
     <string name="battery_level">batería</string>
     <string name="allow_shizuku_access">Permitir el acceso a Shizuku</string>
+    <string name="hide_wifi_name">Ocultar el nombre de la wifi</string>
+    <string name="hide_wifi_name_description">Configuración que se aplica tanto a los mosaicos de wifi como a Internet</string>
+    <string name="behaviour">Comportamiento</string>
+    <string name="look">Mirar</string>
+    <string name="hidden">Oculto</string>
+    <string name="connected">Conectad@</string>
+    <string name="visible">Visible</string>
+    <string name="hidden_during_recording">Oculto durante la grabación</string>
 </resources>
