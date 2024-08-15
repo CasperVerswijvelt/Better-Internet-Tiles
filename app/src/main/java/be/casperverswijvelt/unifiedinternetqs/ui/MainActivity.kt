@@ -8,6 +8,9 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -186,7 +189,13 @@ fun App() {
         Box(Modifier.padding(it)) {
             NavHost(
                 navController = navController,
-                startDestination = NavRoute.Home.route
+                startDestination = NavRoute.Home.route,
+                enterTransition = {
+                    fadeIn(animationSpec = tween(300))
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(300))
+                }
             ) {
                 homeGraph(
                     navController = navController,
