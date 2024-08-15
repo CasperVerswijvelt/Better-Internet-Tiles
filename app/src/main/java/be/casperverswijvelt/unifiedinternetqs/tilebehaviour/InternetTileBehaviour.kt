@@ -43,9 +43,9 @@ class InternetTileBehaviour(
             context,
             R.drawable.ic_baseline_public_24
         )
-    override val settings: Array<ISetting<*>>
+    override val lookSettings: Array<ISetting<*>>
         get() = arrayOf(
-            *super.settings,
+            *super.lookSettings,
             wifiSSIDVisibilityOption
         )
     @Suppress("UNCHECKED_CAST")

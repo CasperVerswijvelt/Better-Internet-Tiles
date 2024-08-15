@@ -78,4 +78,6 @@
     <string name="hidden">Hidden</string>
     <string name="hidden_during_recording">Hidden during recording</string>
     <string name="hide_wifi_name_description">Setting applies to both Wi-Fi and Internet tiles</string>
+    <string name="behaviour">Behaviour</string>
+    <string name="look">Look</string>
 </resources>

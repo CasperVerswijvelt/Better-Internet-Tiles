@@ -35,7 +35,8 @@ abstract class TileBehaviour(
     protected abstract val tileState: TileState
     abstract val onLongClickIntentAction: String
 
-    open val settings: Array<ISetting<*>> = arrayOf(requireUnlockSetting)
+    open val behaviourSettings: Array<ISetting<*>> = arrayOf(requireUnlockSetting)
+    open val lookSettings: Array<ISetting<*>> = arrayOf()
 
     val finalTileState: TileState
         get() {

@@ -41,6 +41,8 @@ import be.casperverswijvelt.unifiedinternetqs.ui.components.LiveTile
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.RadioEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.GenericSetting
+import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceCategoryTitle
+import be.casperverswijvelt.unifiedinternetqs.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +52,6 @@ fun IndividualSettingsPage(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val context = LocalContext.current
-    val preferences = BITPreferences(context)
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier
@@ -86,8 +86,24 @@ fun IndividualSettingsPage(
                 tileBehaviour = tileBehaviour
             )
 
-            tileBehaviour.settings.forEach { setting ->
-                GenericSetting(setting, tileBehaviour.type)
+
+            if (tileBehaviour.behaviourSettings.isNotEmpty()) {
+                PreferenceCategoryTitle(text = stringResource(
+                    id = R.string.behaviour
+                ))
+                tileBehaviour.behaviourSettings.forEach { setting ->
+                    GenericSetting(setting, tileBehaviour.type)
+                }
+            }
+
+            if (tileBehaviour.lookSettings.isNotEmpty()) {
+
+                PreferenceCategoryTitle(text = stringResource(
+                    id = R.string.look
+                ))
+                tileBehaviour.lookSettings.forEach { setting ->
+                    GenericSetting(setting, tileBehaviour.type)
+                }
             }
         }
     }

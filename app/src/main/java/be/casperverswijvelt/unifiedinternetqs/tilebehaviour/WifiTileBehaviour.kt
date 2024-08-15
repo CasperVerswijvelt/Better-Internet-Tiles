@@ -85,9 +85,9 @@ class WifiTileBehaviour(
     override val onLongClickIntentAction: String
         get() = Settings.ACTION_WIFI_SETTINGS
 
-    override val settings: Array<ISetting<*>>
+    override val lookSettings: Array<ISetting<*>>
         get() = arrayOf(
-            *super.settings,
+            *super.lookSettings,
             wifiSSIDVisibilityOption
         )
 
