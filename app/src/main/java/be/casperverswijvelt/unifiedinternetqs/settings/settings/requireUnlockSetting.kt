@@ -1,32 +1,31 @@
-package be.casperverswijvelt.unifiedinternetqs.tile_options
+package be.casperverswijvelt.unifiedinternetqs.settings.settings
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.TileChoiceOption
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.IChoiceSetting
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
+import be.casperverswijvelt.unifiedinternetqs.settings.IChoiceSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.TileChoiceOption
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-enum class FollowSetting(override val value: String, override val stringResource: Int) :
+enum class FollowOption(override val value: String, override val stringResource: Int) :
     TileChoiceOption {
     FOLLOW("follow", R.string.use_default),
     YES("yes", R.string.yes),
     NO("no", R.string.no)
 }
 
-val requireUnlockOption = object : IChoiceSetting<FollowSetting> {
+val requireUnlockSetting = object : IChoiceSetting<FollowOption> {
     override val icon = Icons.Outlined.Lock
     override val nameResource = R.string.require_unlock_title
-    override val defaultValue = FollowSetting.FOLLOW
+    override val defaultValue = FollowOption.FOLLOW
     override fun getValue(
         preferences: BITPreferences,
         tileType: TileType?
-    ): Flow<FollowSetting> {
+    ): Flow<FollowOption> {
         return preferences.getRequireUnlock(tileType!!)
     }
 
@@ -34,7 +33,7 @@ val requireUnlockOption = object : IChoiceSetting<FollowSetting> {
         preferences: BITPreferences,
         tileType: TileType?,
         coroutineScope: CoroutineScope,
-        value: FollowSetting
+        value: FollowOption
     ) {
         coroutineScope.launch {
             preferences.setRequireUnlock(tileType!!, value)
@@ -42,8 +41,8 @@ val requireUnlockOption = object : IChoiceSetting<FollowSetting> {
     }
 
     override val choices = listOf(
-        FollowSetting.FOLLOW,
-        FollowSetting.YES,
-        FollowSetting.NO,
+        FollowOption.FOLLOW,
+        FollowOption.YES,
+        FollowOption.NO,
     )
 }

@@ -73,8 +73,9 @@
     <string name="battery_level">battery</string>
     <string name="connecting">Connecting…</string>
     <string name="connected">Connected</string>
-    <string name="ssid_visibility">Wi-Fi SSID visibility</string>
+    <string name="hide_wifi_name">Hide Wi-Fi name</string>
     <string name="visible">Visible</string>
     <string name="hidden">Hidden</string>
     <string name="hidden_during_recording">Hidden during recording</string>
+    <string name="hide_wifi_name_description">Setting applies to both Wi-Fi and Internet tiles</string>
 </resources>

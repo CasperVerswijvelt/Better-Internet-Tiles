@@ -8,9 +8,8 @@ import android.service.quicksettings.TileService
 import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
-import be.casperverswijvelt.unifiedinternetqs.tile_options.FollowSetting
-import be.casperverswijvelt.unifiedinternetqs.tile_options.WifiSSIDVisibilityOption
-import be.casperverswijvelt.unifiedinternetqs.tile_options.wifiSSIDVisibilityOption
+import be.casperverswijvelt.unifiedinternetqs.settings.ISetting
+import be.casperverswijvelt.unifiedinternetqs.settings.settings.wifiSSIDVisibilityOption
 import be.casperverswijvelt.unifiedinternetqs.tiles.WifiTileService
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
@@ -54,11 +53,7 @@ class WifiTileBehaviour(
                 if (wifiEnabled) TileSyncService.isTurningOnWifi = false
 
                 val showSSID = runBlocking {
-                    when(preferences.getSSIDVisibility.first()) {
-                        WifiSSIDVisibilityOption.VISIBLE -> true
-                        WifiSSIDVisibilityOption.HIDDEN -> false
-                        WifiSSIDVisibilityOption.HIDDEN_DURING_RECORDING -> false
-                    }
+                    !preferences.getHideWiFiSSID.first()
                 } && TileSyncService.wifiSSID?.isNotEmpty() == true
 
                 tile.label = when {
@@ -90,7 +85,7 @@ class WifiTileBehaviour(
     override val onLongClickIntentAction: String
         get() = Settings.ACTION_WIFI_SETTINGS
 
-    override val settings: Array<ITileSetting<*>>
+    override val settings: Array<ISetting<*>>
         get() = arrayOf(
             *super.settings,
             wifiSSIDVisibilityOption

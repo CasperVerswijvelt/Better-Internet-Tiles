@@ -10,7 +10,8 @@ import android.util.Log
 import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.listeners.CellularChangeListener
-import be.casperverswijvelt.unifiedinternetqs.tile_options.wifiSSIDVisibilityOption
+import be.casperverswijvelt.unifiedinternetqs.settings.ISetting
+import be.casperverswijvelt.unifiedinternetqs.settings.settings.wifiSSIDVisibilityOption
 import be.casperverswijvelt.unifiedinternetqs.tiles.InternetTileService
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.executeShellCommandAsync
@@ -20,6 +21,8 @@ import be.casperverswijvelt.unifiedinternetqs.util.getDataEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiEnabled
 import be.casperverswijvelt.unifiedinternetqs.util.getWifiIcon
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class InternetTileBehaviour(
     context: Context,
@@ -40,7 +43,7 @@ class InternetTileBehaviour(
             context,
             R.drawable.ic_baseline_public_24
         )
-    override val settings: Array<ITileSetting<*>>
+    override val settings: Array<ISetting<*>>
         get() = arrayOf(
             *super.settings,
             wifiSSIDVisibilityOption
@@ -62,16 +65,23 @@ class InternetTileBehaviour(
                         TileSyncService.isTurningOnWifi = false
                     }
 
+                    val showSSID = runBlocking {
+                        !preferences.getHideWiFiSSID.first()
+                    } && TileSyncService.wifiSSID?.isNotEmpty() == true
+
                     tile.state = Tile.STATE_ACTIVE
                     tile.icon = if (TileSyncService.wifiConnected)
                         getWifiIcon(context)
                     else
                         R.drawable.ic_baseline_signal_wifi_0_bar_24
-                    tile.label = if (TileSyncService.isTurningOnWifi)
-                        resources.getString(R.string.turning_on)
-                    else
-                        (if (TileSyncService.wifiConnected) TileSyncService.wifiSSID else null)
-                            ?: resources.getString(R.string.not_connected)
+
+                    tile.label = when {
+                        TileSyncService.isTurningOnWifi -> resources.getString(R.string.turning_on)
+                        TileSyncService.wifiConnected && showSSID -> TileSyncService.wifiSSID!!
+                        TileSyncService.wifiConnected -> resources.getString(R.string.connected)
+                        else -> resources.getString(R.string.on)
+                    }
+
                 }
                 TileSyncService.isTurningOnData || dataEnabled -> {
 

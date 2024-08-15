@@ -34,8 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.TileChoiceOption
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.IChoiceSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.TileChoiceOption
+import be.casperverswijvelt.unifiedinternetqs.settings.IChoiceSetting
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.ui.components.LiveTile
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry

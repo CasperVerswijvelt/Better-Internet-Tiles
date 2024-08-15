@@ -23,20 +23,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.TileChoiceOption
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.IChoiceSetting
-import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.ITileSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.IBooleanTileSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.IChoiceSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.ISetting
+import be.casperverswijvelt.unifiedinternetqs.settings.TileChoiceOption
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GenericSetting(setting: ITileSetting<*>, tileType: TileType? = null) {
+fun GenericSetting(setting: ISetting<*>, tileType: TileType? = null) {
     val context = LocalContext.current
     val preferences = remember { BITPreferences(context) }
     val coroutineScope = rememberCoroutineScope()
-    when(setting) {
+
+    when (setting) {
         is IChoiceSetting<*> -> {
-            val value by setting.getValue(preferences, tileType).collectAsState(initial = setting.defaultValue)
+            val value by setting.getValue(preferences, tileType)
+                .collectAsState(initial = setting.defaultValue)
             var dialogOpen by remember { mutableStateOf(false) }
 
             PreferenceEntry(
@@ -77,7 +80,12 @@ fun GenericSetting(setting: ITileSetting<*>, tileType: TileType? = null) {
                                     title = stringResource(choice.stringResource),
                                     enabled = value == choice,
                                     onClick = {
-                                        (setting as? IChoiceSetting<TileChoiceOption>)?.setValue(preferences, tileType, coroutineScope, choice)
+                                        (setting as? IChoiceSetting<TileChoiceOption>)?.setValue(
+                                            preferences,
+                                            tileType,
+                                            coroutineScope,
+                                            choice
+                                        )
                                         dialogOpen = false
                                     }
                                 )
@@ -86,6 +94,20 @@ fun GenericSetting(setting: ITileSetting<*>, tileType: TileType? = null) {
                     }
                 }
             }
+        }
+
+        is IBooleanTileSetting -> {
+            val value by setting.getValue(preferences, tileType)
+                .collectAsState(initial = setting.defaultValue)
+            TogglePreferenceEntry(
+                icon = { Icon(setting.icon, "") },
+                title = stringResource(id = setting.nameResource),
+                subTitle = stringResource(id = setting.summaryResource),
+                checked = value,
+                onToggled = {
+                    setting.setValue(preferences, tileType, coroutineScope, !value)
+                }
+            )
         }
     }
 }
