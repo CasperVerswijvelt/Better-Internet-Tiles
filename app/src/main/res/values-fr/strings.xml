@@ -67,4 +67,12 @@
         <item quantity="other">Utilisée pour %1$s tuiles</item>
     </plurals>
     <string name="allow_root_access_description">Veuillez autoriser l\'accès root pour l\'application \"Better Internet Tiles\" dans votre gestionnaire de root (ex : Magisk Manager)</string>
+    <string name="connected">Connecté</string>
+    <string name="hide_wifi_name">Cacher le nom du Wi-Fi</string>
+    <string name="visible">Visible</string>
+    <string name="hidden">Caché</string>
+    <string name="hidden_during_recording">Caché durant l\'enregistrement</string>
+    <string name="hide_wifi_name_description">Paramètre s\'appliquant à la fois aux tuiles Wi-Fi et Internet</string>
+    <string name="look">Apparence</string>
+    <string name="behaviour">Comportement</string>
 </resources>
