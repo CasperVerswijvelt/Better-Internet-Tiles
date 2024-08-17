@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.casperverswijvelt.unifiedinternetqs.R
@@ -30,8 +31,7 @@ fun PreferenceEntry(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxSize()
             .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -80,7 +80,7 @@ fun RadioEntry(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable{ onClick() }
+            .clickable { onClick() }
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -93,7 +93,9 @@ fun RadioEntry(
             RadioButton(selected = enabled, onClick = { onClick() })
         }
         Text(
-            modifier = Modifier.padding(bottom = 4.dp).weight(1f),
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+                .weight(1f),
             fontSize = 18.sp,
             text = title
         )
@@ -119,6 +121,17 @@ fun TogglePreferenceEntry(
     )
 }
 
+@Composable
+fun PreferenceCategoryTitle(text: String) {
+    Text(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        text = text,
+        color = MaterialTheme.colorScheme.primary
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LargeTopBarPage(
@@ -136,7 +149,7 @@ fun LargeTopBarPage(
             )
         },
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .padding(top = it.calculateTopPadding())
                 .verticalScroll(rememberScrollState()),
@@ -156,7 +169,7 @@ fun buttonBackgroundColor(): State<Color> {
 }
 
 @Composable
-fun ColorPalette () {
+fun ColorPalette() {
     val colors = arrayOf(
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.onPrimary,
@@ -188,11 +201,13 @@ fun ColorPalette () {
         MaterialTheme.colorScheme.outlineVariant,
         MaterialTheme.colorScheme.scrim
     )
-    colors.forEach {color ->
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(30.dp)
-            .background(color))
+    colors.forEach { color ->
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(color)
+        )
     }
 }
 
@@ -218,12 +233,12 @@ fun AlertDialog(
     )
 }
 
-sealed class PermissionInfo (
+sealed class PermissionInfo(
     val tileResourceId: Int,
     val descriptionResourceId: Int,
     val tiles: Array<Int> = arrayOf()
 ) {
-    data object Shell: PermissionInfo(
+    data object Shell : PermissionInfo(
         R.string.shell_access,
         R.string.shell_access_description,
         arrayOf(
@@ -235,7 +250,8 @@ sealed class PermissionInfo (
             R.string.bluetooth,
         )
     )
-    data object ReadPhoneState: PermissionInfo(
+
+    data object ReadPhoneState : PermissionInfo(
         R.string.read_phone_state,
         R.string.read_phone_state_description,
         arrayOf(
@@ -243,7 +259,8 @@ sealed class PermissionInfo (
             R.string.internet,
         )
     )
-    data object BluetoothConnect: PermissionInfo(
+
+    data object BluetoothConnect : PermissionInfo(
         R.string.bluetooth_connect,
         R.string.bluetooth_connect_description,
         arrayOf(

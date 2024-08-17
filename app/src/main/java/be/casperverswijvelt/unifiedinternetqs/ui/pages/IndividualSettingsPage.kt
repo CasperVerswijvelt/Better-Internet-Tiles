@@ -9,7 +9,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,14 +33,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import be.casperverswijvelt.unifiedinternetqs.R
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.RequireUnlockSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.TileChoiceOption
+import be.casperverswijvelt.unifiedinternetqs.settings.IChoiceSetting
 import be.casperverswijvelt.unifiedinternetqs.tilebehaviour.TileBehaviour
 import be.casperverswijvelt.unifiedinternetqs.ui.components.LiveTile
 import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceEntry
 import be.casperverswijvelt.unifiedinternetqs.ui.components.RadioEntry
-import kotlinx.coroutines.launch
+import be.casperverswijvelt.unifiedinternetqs.ui.components.GenericSetting
+import be.casperverswijvelt.unifiedinternetqs.ui.components.PreferenceCategoryTitle
+import be.casperverswijvelt.unifiedinternetqs.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,18 +52,6 @@ fun IndividualSettingsPage(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val context = LocalContext.current
-    val preferences = BITPreferences(context)
-    val coroutineScope = rememberCoroutineScope()
-    val requireUnlock by preferences
-        .getRequireUnlock(tileBehaviour.type)
-        .collectAsState(initial = RequireUnlockSetting.FOLLOW)
-    val setRequireUnlock: (RequireUnlockSetting) -> Unit = {
-        coroutineScope.launch {
-            preferences.setRequireUnlock(tileBehaviour.type, it)
-        }
-    }
-
-    var requireUnlockDialogOpen by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier
@@ -92,59 +81,28 @@ fun IndividualSettingsPage(
             LiveTile(
                 modifier = Modifier
                     .width(220.dp)
-                    .padding(vertical = 64.dp)
+                    .padding(vertical = 24.dp + (40 * (1 - scrollBehavior.state.collapsedFraction)).dp)
                     .align(Alignment.CenterHorizontally),
                 tileBehaviour = tileBehaviour
             )
-            PreferenceEntry(
-                title = stringResource(R.string.require_unlock_title),
-                subTitle = stringResource(requireUnlock.stringResource),
-                icon = {
-                    Icon(Icons.Outlined.Lock, "")
-                },
-                onClick = {
-                    requireUnlockDialogOpen = true
+
+
+            if (tileBehaviour.behaviourSettings.isNotEmpty()) {
+                PreferenceCategoryTitle(text = stringResource(
+                    id = R.string.behaviour
+                ))
+                tileBehaviour.behaviourSettings.forEach { setting ->
+                    GenericSetting(setting, tileBehaviour.type)
                 }
-            )
-        }
-    }
+            }
 
-    if (requireUnlockDialogOpen) {
-        val padding = 16.dp
+            if (tileBehaviour.lookSettings.isNotEmpty()) {
 
-        BasicAlertDialog(onDismissRequest = {
-            requireUnlockDialogOpen = false
-        }) {
-            val color = AlertDialogDefaults.containerColor
-            Surface(
-                shape = AlertDialogDefaults.shape,
-                color = color,
-                tonalElevation = AlertDialogDefaults.TonalElevation,
-            ) {
-                Column(modifier = Modifier.padding(vertical = padding)) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = padding * 2, vertical = padding)
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.require_unlock_title),
-                        fontSize = 26.sp,
-                        lineHeight = 36.sp
-                    )
-                    listOf(
-                        RequireUnlockSetting.FOLLOW,
-                        RequireUnlockSetting.YES,
-                        RequireUnlockSetting.NO
-                    ).forEach {
-                        RadioEntry(
-                            modifier = Modifier.height(50.dp),
-                            title = stringResource(it.stringResource),
-                            enabled = requireUnlock == it,
-                            onClick = {
-                                setRequireUnlock(it)
-                                requireUnlockDialogOpen = false
-                            }
-                        )
-                    }
+                PreferenceCategoryTitle(text = stringResource(
+                    id = R.string.look
+                ))
+                tileBehaviour.lookSettings.forEach { setting ->
+                    GenericSetting(setting, tileBehaviour.type)
                 }
             }
         }

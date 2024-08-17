@@ -202,24 +202,29 @@ class TileSyncService: Service() {
 
         // Wi-Fi
         wifiChangeListener.startListening(applicationContext)
+
+        // Cellular
         cellularChangeListener.startListening(applicationContext)
         registerReceiver(
             airplaneModeReceiver,
             IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
         )
+
+        // NFC
         registerReceiver(
             nfcReceiver,
             IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
         )
-        val btIntentFilter = IntentFilter()
-        btIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
-        btIntentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
-        btIntentFilter.addAction(ACT_BATTERY_LEVEL_CHANGED)
+
+        // Bluetooth
         registerReceiver(
             bluetoothReceiver,
-            btIntentFilter
+            IntentFilter().apply {
+                addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+                addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
+                addAction(ACT_BATTERY_LEVEL_CHANGED)
+            }
         )
-
         (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter?.getProfileProxy(
             applicationContext,
             object : BluetoothProfile.ServiceListener {

@@ -7,7 +7,9 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import be.casperverswijvelt.unifiedinternetqs.TileSyncService
 import be.casperverswijvelt.unifiedinternetqs.data.BITPreferences
-import be.casperverswijvelt.unifiedinternetqs.data.RequireUnlockSetting
+import be.casperverswijvelt.unifiedinternetqs.settings.settings.FollowOption
+import be.casperverswijvelt.unifiedinternetqs.settings.ISetting
+import be.casperverswijvelt.unifiedinternetqs.settings.settings.requireUnlockSetting
 import be.casperverswijvelt.unifiedinternetqs.util.AlertDialogData
 import be.casperverswijvelt.unifiedinternetqs.util.getShellAccessRequiredDialog
 import be.casperverswijvelt.unifiedinternetqs.util.hasShellAccess
@@ -21,7 +23,7 @@ abstract class TileBehaviour(
     protected val unlockAndRun: (Runnable) -> Unit = { it.run() }
 ) {
 
-    private val preferences = BITPreferences(context)
+    protected val preferences = BITPreferences(context)
     protected val resources: Resources = context.resources
 
     private val updateTileListeners = arrayListOf<(TileState) -> Unit>()
@@ -32,6 +34,9 @@ abstract class TileBehaviour(
     abstract val tileServiceClass: Class<TileService>
     protected abstract val tileState: TileState
     abstract val onLongClickIntentAction: String
+
+    open val behaviourSettings: Array<ISetting<*>> = arrayOf(requireUnlockSetting)
+    open val lookSettings: Array<ISetting<*>> = arrayOf()
 
     val finalTileState: TileState
         get() {
@@ -64,11 +69,11 @@ abstract class TileBehaviour(
     val requiresUnlock: Boolean
         get() = runBlocking {
             when(preferences.getRequireUnlock(type).first()) {
-                RequireUnlockSetting.FOLLOW -> {
+                FollowOption.FOLLOW -> {
                     preferences.getRequireUnlock.first()
                 }
-                RequireUnlockSetting.YES -> true
-                RequireUnlockSetting.NO -> false
+                FollowOption.YES -> true
+                FollowOption.NO -> false
             }
         }
 

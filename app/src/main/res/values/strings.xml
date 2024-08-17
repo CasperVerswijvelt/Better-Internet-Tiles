@@ -71,5 +71,13 @@
     <string name="auto_start_shizuku_description">Did you know you can automatically start Shizuku when your device boots up, no root required? Check out $$this reddit thread$$ for more information on how to set this up.</string>
     <string name="sim_not_available">SIM not available</string>
     <string name="battery_level">battery</string>
-    <string name="connecting">"Connecting…"</string>
+    <string name="connecting">Connecting…</string>
+    <string name="connected">Connected</string>
+    <string name="hide_wifi_name">Hide Wi-Fi name</string>
+    <string name="visible">Visible</string>
+    <string name="hidden">Hidden</string>
+    <string name="hidden_during_recording">Hidden during recording</string>
+    <string name="hide_wifi_name_description">Setting applies to both Wi-Fi and Internet tiles</string>
+    <string name="behaviour">Behaviour</string>
+    <string name="look">Look</string>
 </resources>
