@@ -1,0 +1,15 @@
+New
+- Added Airplane mode and Bluetooth tiles, so you can restrict usage of these tiles on the lock screen
+- Added a tile preview in the app itself
+- Added individual tile configuration (currently only contains override for the general ‘require unlock’ setting)
+
+Improvements
+- A clean new user interface built on Material You
+- User must now explicitly choose between root and Shizuku (before, it just tried both)
+- Better permission requesting/handling:
+  - No more automatic permission granting using shell commands (this was used to grant the 'READ_PHONE_STATE' permission without user knowledge)
+  - When permissions are missing, this is now clearly visualized on the homepage, where you can then easily request them
+- Switched all tiles to [active mode](https://developer.android.com/develop/ui/views/quicksettings-tiles#active_mode_recommended). Instead of the tiles only updating when the quick settings were open, they will now be updated instantly through a background service that is always running. During the last weeks of testing this, I have noticed 0 battery usage using this new method. This should fix #1 and #20
+- Bumped minimum Android  SDK to 31 (Android 12)
+- Dependency updates
+- Translations updates
