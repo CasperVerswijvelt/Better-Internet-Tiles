@@ -34,4 +34,12 @@
     <string name="donate_summary">Toon je steun via een vrijblijvende donatie</string>
     <string name="battery_level">batterijniveau</string>
     <string name="connecting">"Verbinden…"</string>
+    <string name="connected">Verbonden</string>
+    <string name="available_tiles">Beschikbare tiles</string>
+    <string name="home">Thuis</string>
+    <string name="version">versie</string>
+    <string name="app_info">Appinfo</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="bluetooth_connect">Bluetooth verbinden</string>
 </resources>
