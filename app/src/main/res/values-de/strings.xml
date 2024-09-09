@@ -55,7 +55,7 @@
     <string name="shell_access_not_set_up">Du benötigst entweder Root Zugriff oder Shizuku, um diese App zu nutzen</string>
     <string name="bluetooth_connect">Bluetooth Verbindung</string>
     <string name="require_unlock_summary">Kachelaktionen auf dem Sperrbildschirm verhindern</string>
-    <string name="battery_level">batterie</string>
+    <string name="battery_level">Batterie</string>
     <string name="auto">Automatisch</string>
     <string name="shell_method">Shell methode</string>
     <string name="missing_permissions_description">Einige Dinge funktionieren möglicherweise nicht wie erwartet. Für weitere Informationen ausklappen.</string>
