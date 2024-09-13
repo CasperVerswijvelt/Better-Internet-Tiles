@@ -48,4 +48,29 @@
     <string name="require_unlock_summary">ロック画面でのタイルのアクションを防止します</string>
     <string name="sim_not_available">SIMが挿入されていません</string>
     <string name="use_default">デフォルトを使用</string>
+    <string name="donate_summary">寄付を通じてサポートしてください</string>
+    <string name="auto_start_shizuku_description">デバイスの起動時に root 権限なしで Shizuku を実行できることをご存知ですか？設定方法の詳細ついては、$$reddit のスレッド$$ をご覧ください。</string>
+    <string name="allow_shizuku_access_description">「Better Internet Tiles」を Shizuku アプリでアクセスを許可しています。Shizuku のプロセスが実行中か確認してください</string>
+    <string name="visible">表示</string>
+    <string name="look">ルック</string>
+    <string name="connected">接続済み</string>
+    <string name="hidden">非表示</string>
+    <string name="hide_wifi_name">Wi-Fi の名前を非表示</string>
+    <string name="hidden_during_recording">録音中は非表示</string>
+    <string name="behaviour">動作</string>
+    <string name="hide_wifi_name_description">設定は Wi-Fi タイルとインターネットタイルの両方に適用されます</string>
+    <string name="bluetooth_connect">Bluetooth の接続</string>
+    <string name="read_phone_state">電話の状態を読み取り</string>
+    <plurals name="used_for_tiles">
+        <item quantity="other">%1$s 個のタイルを使用中です</item>
+    </plurals>
+    <string name="good_to_go">準備完了！</string>
+    <string name="read_phone_state_description">モバイルデータの接続情報を読み取るために「電話の状態を読み取り」の権限が必要です。</string>
+    <string name="bluetooth_connect_description">接続されている Bluetooth デバイス名を読み取るために「Bluetooth の接続」の権限が必要です。</string>
+    <string name="good_to_go_description">必要な権限はすべて付与されています。以下の利用可能なタイルをご確認ください！</string>
+    <string name="missing_permissions_description">一部は期待通りの動作をしない可能性があります。詳細は展開で確認できます。</string>
+    <string name="shell_access_description">特定のシステム機能を有効化、無効化するにはシェルアクセスが必要です。これを行うには root 権限または Shizuku を使用します。</string>
+    <string name="root_description">デバイスが root 化されている場合、シェルレベルでのアクセスを最も簡単に行う方法です</string>
+    <string name="allow_root_access_description">root 管理アプリ (Magisk など) で「Better Internet Tiles」の root アクセスを許可してください</string>
+    <string name="shizuku_description">Shizuku は root 化されていないデバイス上で ADB を使用することで、通常のアプリを昇格した権限でシステム API を直接的に使用する方法です</string>
 </resources>
