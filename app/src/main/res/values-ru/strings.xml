@@ -68,4 +68,12 @@
         <item quantity="many">Используется для %1$s плиток</item>
         <item quantity="other">Используется для %1$s плиток</item>
     </plurals>
+    <string name="hidden_during_recording">Скрыт во время записи</string>
+    <string name="connected">Подключено</string>
+    <string name="hide_wifi_name">Скрыть название Wi-Fi</string>
+    <string name="visible">Видимый</string>
+    <string name="hidden">Скрытый</string>
+    <string name="hide_wifi_name_description">Настройка применяется как к Wi-Fi, так и к интернет-плиткам</string>
+    <string name="behaviour">Поведение</string>
+    <string name="look">Смотрите</string>
 </resources>
