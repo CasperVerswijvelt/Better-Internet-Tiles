@@ -308,7 +308,8 @@ class TileSyncService: Service() {
     }
 
     private fun <T>requestTileBehaviourUpdate(cls: Class<T>) {
-        behaviourListeners.forEach {
+        // Clone list before iterating to avoid ConcurrentModificationException
+        (behaviourListeners.clone() as List<TileBehaviour>).forEach {
             if (it.javaClass == cls) it.updateTile()
         }
     }
