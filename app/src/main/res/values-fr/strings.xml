@@ -28,7 +28,7 @@
     <string name="help_translate">Aidez-nous à traduire cette application !</string>
     <string name="shell_access_not_set_up">Accès root ou Shizuku nécessaire</string>
     <string name="sim_not_available">SIM non disponible</string>
-    <string name="battery_level">batterie</string>
+    <string name="battery_level">de batterie</string>
     <string name="connecting">Connexion…</string>
     <string name="tile_added">Tuile ajoutée</string>
     <string name="tile_already_added">Tuile déjà ajoutée</string>

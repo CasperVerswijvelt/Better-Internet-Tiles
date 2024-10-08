@@ -55,7 +55,7 @@
     <string name="shell_access_not_set_up">Du benötigst entweder Root Zugriff oder Shizuku, um diese App zu nutzen</string>
     <string name="bluetooth_connect">Bluetooth Verbindung</string>
     <string name="require_unlock_summary">Kachelaktionen auf dem Sperrbildschirm verhindern</string>
-    <string name="battery_level">batterie</string>
+    <string name="battery_level">Batterie</string>
     <string name="auto">Automatisch</string>
     <string name="shell_method">Shell methode</string>
     <string name="missing_permissions_description">Einige Dinge funktionieren möglicherweise nicht wie erwartet. Für weitere Informationen ausklappen.</string>
@@ -66,4 +66,12 @@
     <string name="available_tiles">Verfügbare Kacheln</string>
     <string name="tile_added">Kachel hinzugefügt</string>
     <string name="good_to_go_description">Alle benötigen Bereichtigungen wurden erteilt. Schau dir unten die verfügbaren Kacheln an!</string>
+    <string name="connected">Verbunden</string>
+    <string name="hide_wifi_name">Versteckter Wi-Fi Name</string>
+    <string name="visible">Sichtbar</string>
+    <string name="hidden">Versteckt</string>
+    <string name="hidden_during_recording">Versteckt während Aufzeichnung</string>
+    <string name="hide_wifi_name_description">Einstellung betrifft beide Wi-Fi und Internet Kacheln</string>
+    <string name="behaviour">Verhalten</string>
+    <string name="look">Aussehen</string>
 </resources>
