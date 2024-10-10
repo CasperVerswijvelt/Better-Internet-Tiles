@@ -20,8 +20,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -94,14 +94,15 @@ fun Tile(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val darkTheme = isSystemInDarkTheme()
-    val scheme = MaterialTheme.colorScheme
+    val scheme = dynamicDarkColorScheme(context)
     val colorAnimationSpec = tween<Color>(350, easing = EaseInOut)
     val disabledBgColor by buttonBackgroundColor()
 
     val bgColor by animateColorAsState(
         targetValue = if (active)
-            if (darkTheme) scheme.onPrimaryContainer else scheme.primaryContainer
+            scheme.secondary
         else
             disabledBgColor,
         animationSpec = colorAnimationSpec,
