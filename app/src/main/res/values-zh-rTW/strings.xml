@@ -56,7 +56,7 @@
     <string name="on">啟用</string>
     <string name="off">停用</string>
     <string name="good_to_go_description">已取得所有必要權限，請往下查看可用方塊！</string>
-    <string name="restart_app_summary">如果發生問題，請試著重新啟動本應用程式</string>
+    <string name="restart_app_summary">發生問題時請試著重新啟動應用程式</string>
     <string name="tile_added_error">無法新增方塊</string>
     <string name="help_translate">協助翻譯這個應用程式！</string>
     <string name="root_description">若您的裝置已取得 Root，這將是最快速進入殼層的方式</string>
