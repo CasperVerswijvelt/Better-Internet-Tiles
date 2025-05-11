@@ -105,7 +105,7 @@ fun getConnectedWifiSSID(
             "dumpsys netstats | grep -E 'iface=wlan.*(networkId|wifiNetworkKey)'",
             context = context
         ) {
-            val pattern = "(?<=(networkId|wifiNetworkKey)=\").*(?=\")".toRegex()
+            val pattern = "(?<=(networkId|wifiNetworkKey)=\").*?(?=\")".toRegex()
             it?.out?.forEach { wifiString ->
                 pattern.find(wifiString)?.let { matchResult ->
                     callback(matchResult.value)
