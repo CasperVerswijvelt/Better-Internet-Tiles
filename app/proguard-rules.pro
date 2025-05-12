@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Fix for https://github.com/CasperVerswijvelt/Better-Internet-Tiles/issues/62
+-dontobfuscate
